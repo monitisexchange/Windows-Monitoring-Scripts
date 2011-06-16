@@ -3,6 +3,7 @@ This repository contains sample scripts to interact with Monitis API.
 PowerShell
 - Exchange2010 : create a custom monitor and then upload the current number of queued messages
 - Hyper-V: creates a pages and adds several custom monitors gathering data from Performance Counters
+- ParseLog: creates a pages and adds several custom. Script for parsing text log files.
 
 VBScript
 - Active Directory : create a custom monitor and then upload values obtained from counting users in an Active Directory group
