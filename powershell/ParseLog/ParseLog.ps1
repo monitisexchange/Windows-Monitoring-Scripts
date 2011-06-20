@@ -25,7 +25,7 @@ function AddResult() {
   [text.encoding]::ascii.getstring($resp)
 }
 
-$files = (Get-ChildItem $LogName | Sort-Object LastWriteTime -descending)
+$files = @(Get-ChildItem $LogName | Sort-Object LastWriteTime -descending)
 $LogName = $files[0].FullName
 Write-host "Parsing file:" $LogName
 $dfLen = $DateFormat.length
