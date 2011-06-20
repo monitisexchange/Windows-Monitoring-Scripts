@@ -1,4 +1,4 @@
-﻿param([string]$LogName = ".", [string]$DateFormat, [string]$MatchText, [Boolean]$ShouldMatch = $true, [int]$MinutesBack, [string]$Tag, [string]$Name)
+﻿param([string]$LogName = ".", [string]$DateFormat, [string]$MatchText, [Boolean]$ShouldMatch = $true, [int]$MinutesBack, [string]$Tag, [string]$Name, [int] $DateOffset = 0)
 
 function FindMonitor([string] $name) {
   foreach ($node in $monitors.monitors.childnodes) {
@@ -32,7 +32,7 @@ $dfLen = $DateFormat.length
 $matchRes = 0;
 foreach ($line in Get-Content $LogName) {
   try {
-    $dtLine = [datetime]::ParseExact($line.substring(0,$dfLen), $DateFormat, $null)
+    $dtLine = [datetime]::ParseExact($line.substring($DateOffset, $dfLen), $DateFormat, $null)
     $diff = New-TimeSpan -Start $dtLine -End (Get-Date)
   
     if ($diff.TotalMinutes -le $MinutesBack) {
