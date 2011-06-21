@@ -1,4 +1,4 @@
-﻿param([string]$LogName = ".", [string]$DateFormat, [string]$MatchText, [Boolean]$ShouldMatch = $true, [int]$MinutesBack, [string]$Tag, [string]$Name, [int] $DateOffset = 0)
+﻿param([string]$LogName = ".", [string]$DateFormat, [string]$MatchText, [Boolean]$ShouldMatch = $true, [int]$MinutesBack, [string]$Tag, [string]$Name)
 
 function FindMonitor([string] $name) {
   foreach ($node in $monitors.monitors.childnodes) {
@@ -28,11 +28,11 @@ function AddResult() {
 $files = @(Get-ChildItem $LogName | Sort-Object LastWriteTime -descending)
 $LogName = $files[0].FullName
 Write-host "Parsing file:" $LogName
-$dfLen = $DateFormat.length
+$dfre = [regex]("(?<date>" +  ($DateFormat -replace "\w", "\d") +")")
 $matchRes = 0;
 foreach ($line in Get-Content $LogName) {
   try {
-    $dtLine = [datetime]::ParseExact($line.substring($DateOffset, $dfLen), $DateFormat, $null)
+    $dtLine = [datetime]::ParseExact($dfre.matches($line)[0].Value, $DateFormat, $null)
     $diff = New-TimeSpan -Start $dtLine -End (Get-Date)
   
     if ($diff.TotalMinutes -le $MinutesBack) {
@@ -46,6 +46,7 @@ foreach ($line in Get-Content $LogName) {
     }
   }
   catch {
+    Write-Host "Unk"
   }
 }
 if ($ShouldMatch -eq $false) {
