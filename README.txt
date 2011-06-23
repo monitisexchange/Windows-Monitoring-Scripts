@@ -1,4 +1,4 @@
-This repository contains sample scripts to interact with Monitis API.
+This repository contains sample scripts to interact with Monitis API (http://www.monitis.com).
 
 PowerShell
 - Exchange2010 : create a custom monitor and then upload the current number of queued messages
