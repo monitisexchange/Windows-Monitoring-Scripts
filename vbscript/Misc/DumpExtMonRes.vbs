@@ -152,7 +152,7 @@ Sub WriteMonRes(ID, location, locname)
   dim dt, oRes, filename, oCell, oNode, row, oFile, oLocRes
   
   'Set the output file name
-  filename = outdir + ID & "-" & locname & "-" & year(dtStart) & right("0" & month(dtStart),2) & right("0" & day(dtStart),2) & "-" & year(dtStart) & right("0" & month(dtStart),2) & right("0" & day(dtStart),2) & ".csv"
+  filename = outdir + ID & "-" & locname & "-" & year(dtStart) & right("0" & month(dtStart),2) & right("0" & day(dtStart),2) & "-" & year(dtEnd) & right("0" & month(dtEnd),2) & right("0" & day(dtEnd),2) & ".csv"
   Set oFile = oFso.CreateTextFile(filename, True)
   
   dt = dtStart
@@ -207,7 +207,7 @@ Function GMTDate()
 End function
 
 Sub ShowUsage
-  wscript.echo "DumpMonRes.vbs parameters:"
+  wscript.echo "DumpExtMonRes.vbs parameters:"
   wscript.echo " /apiKey:<apiKey> Your API key"
   wscript.echo " /secretKey:<secretKey> Your Secret Key"
   wscript.echo " [/tag:<tag>] the tag of the monitors to dump results for"

@@ -37,7 +37,6 @@ Set objHTTP = CreateObject("Microsoft.XMLHTTP")
 'Request a token to use in following calls
 url = "http://www.monitis.com/api?action=authToken&apikey=" + apiKey + "&secretkey=" + secretKey
 wscript.echo "Requesting token"
-wscript.echo "GET: " + url
 objHTTP.open "GET", url, False
 objHTTP.send
 resp = objHTTP.responseText
@@ -48,7 +47,6 @@ token = mid(resp, pos, len(resp) - pos - 1)
 url = "http://www.monitis.com/api?action=agents&apikey=" + apiKey + "&output=xml"
 objHTTP.open "GET", url, False
 wscript.echo "Requesting agents list"
-wscript.echo "GET: " + url
 objHTTP.send
 
 Set oAgents = CreateObject("Microsoft.XMLDOM")
