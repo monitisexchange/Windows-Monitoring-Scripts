@@ -1,12 +1,10 @@
 Option Explicit
-dim apiKey, secretKey, objHTTP, url, postData, resp, token, tag, computer, monitorName
+dim apiKey, secretKey, objHTTP, url, postData, resp, token, tag, computer, monitorName, cfgfile, oConf
 dim oResp, oNode, oWMI, oRes, oEntry, IDs, pos, name, dtStart, dtEnd, locations, oFso, aLocations, oLocations, aLocIDs, outdir, timezone
 
 Set oFso = CreateObject("Scripting.FileSystemObject")
 Set objHTTP = CreateObject("Microsoft.XMLHTTP")
 
-apiKey = WScript.arguments.named.item("apiKey")
-secretKey = WScript.arguments.named.item("secretKey")
 tag = WScript.arguments.named.item("tag")
 name = WScript.arguments.named.item("name")
 locations = WScript.arguments.named.item("locations")
@@ -14,14 +12,26 @@ dtStart = WScript.arguments.named.item("dtStart")
 dtEnd = WScript.arguments.named.item("dtEnd")
 outdir = WScript.arguments.named.item("outdir")
 
+cfgfile = left(Wscript.ScriptFullName,InStrRev(Wscript.ScriptFullName, "\")) + "config.xml"
+Set oConf = CreateObject("Microsoft.XMLDOM")
+oConf.async = False
+if oFso.FileExists(cfgfile) then
+  oConf.Load(cfgfile)
+else
+  oConf.LoadXML("<monitis><APIKey/><SecretKey/></monitis>")
+end if
+
+apiKey = oConf.documentElement.selectSingleNode("APIKey").text
+secretKey = oConf.documentElement.selectSingleNode("SecretKey").text
+
 if apiKey = "" then
-  wscript.echo "apiKey parameter not specified"
-  ShowUsage
+  wscript.echo "APIKey not configured"
+  wscript.quit
 end if
 
 if secretKey = "" then
-  wscript.echo "secretKey parameter not specified"
-  ShowUsage
+  wscript.echo "SecretKey not configured"
+  wscript.quit
 end if
 
 if dtStart = "" then

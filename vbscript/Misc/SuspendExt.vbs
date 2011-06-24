@@ -1,19 +1,29 @@
 Option Explicit
 dim apiKey, secretKey, objHTTP, url, postData, resp, token, tag, computer, unixDate, dtGMT
-dim oResp, oNode, oWMI, oRes, oEntry, IDs, pos
+dim oResp, oNode, oWMI, oRes, oEntry, IDs, pos, cfgfile, oConf, oFso
 
-'You API key and Secret Key
-apiKey = WScript.arguments.named.item("apiKey")
-secretKey = WScript.arguments.named.item("secretKey")
 tag = WScript.arguments.named.item("tag")
 
+cfgfile = left(Wscript.ScriptFullName,InStrRev(Wscript.ScriptFullName, "\")) + "config.xml"
+Set oConf = CreateObject("Microsoft.XMLDOM")
+oConf.async = False
+Set oFso = CreateObject("Scripting.FileSystemObject")
+if oFso.FileExists(cfgfile) then
+  oConf.Load(cfgfile)
+else
+  oConf.LoadXML("<monitis><APIKey/><SecretKey/></monitis>")
+end if
+
+apiKey = oConf.documentElement.selectSingleNode("APIKey").text
+secretKey = oConf.documentElement.selectSingleNode("SecretKey").text
+
 if apiKey = "" then
-  wscript.echo "apiKey parameter not specified"
+  wscript.echo "APIKey not configured"
   wscript.quit
 end if
 
 if secretKey = "" then
-  wscript.echo "secretKey parameter not specified"
+  wscript.echo "SecretKey not configured"
   wscript.quit
 end if
 

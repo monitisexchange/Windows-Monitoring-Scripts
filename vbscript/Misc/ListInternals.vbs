@@ -1,35 +1,31 @@
 Option Explicit
-dim apiKey, secretKey, objHTTP, url, postData, resp, token, tag, computer, unixDate, dtGMT
-dim oAgents, oAgent, oWMI, oRes, oEntry, IDs, pos, oAgentInfo, oInfo
+dim apiKey, secretKey, objHTTP, url, resp, token, tag
+dim oAgents, oAgent, oWMI, oRes, oEntry, IDs, pos, oAgentInfo, oInfo, cfgfile, oConf, oFso
 
-'You API key and Secret Key
-apiKey = WScript.arguments.named.item("apiKey")
-secretKey = WScript.arguments.named.item("secretKey")
 tag = WScript.arguments.named.item("tag")
 
+cfgfile = left(Wscript.ScriptFullName,InStrRev(Wscript.ScriptFullName, "\")) + "config.xml"
+Set oConf = CreateObject("Microsoft.XMLDOM")
+oConf.async = False
+Set oFso = CreateObject("Scripting.FileSystemObject")
+if oFso.FileExists(cfgfile) then
+  oConf.Load(cfgfile)
+else
+  oConf.LoadXML("<monitis><APIKey/><SecretKey/></monitis>")
+end if
+
+apiKey = oConf.documentElement.selectSingleNode("APIKey").text
+secretKey = oConf.documentElement.selectSingleNode("SecretKey").text
+
 if apiKey = "" then
-  wscript.echo "apiKey parameter not specified"
+  wscript.echo "APIKey not configured"
   wscript.quit
 end if
 
 if secretKey = "" then
-  wscript.echo "secretKey parameter not specified"
+  wscript.echo "SecretKey not configured"
   wscript.quit
 end if
-
-'Connecting to WMI, "." is for local computer, specify computer name for another computer
-computer = "."
-Set oWMI = GetObject("winmgmts:{impersonationLevel=impersonate}!\\" + computer + "\root\cimv2")
-
-'Finds current timezone to obtain GMT date
-dtGMT = now
-Set oRes = oWMI.ExecQuery("Select LocalDateTime from Win32_OperatingSystem")
-For each oEntry in oRes
-  dtGMT = DateAdd("n", -CInt(right(oEntry.LocalDateTime, 4)), dtGMT)
-next
-
-dtGMT = GMTDate()
-unixDate = CStr(DateDiff("s", "01/01/1970 00:00:00", DateSerial(Year(dtGMT), Month(dtGMT), Day(dtGMT)) + TimeSerial(Hour(dtGMT), Minute(dtGMT), Second(dtGMT)))) + "000"
 
 'Initialize HTTP connection object
 Set objHTTP = CreateObject("Microsoft.XMLHTTP")
@@ -37,6 +33,7 @@ Set objHTTP = CreateObject("Microsoft.XMLHTTP")
 'Request a token to use in following calls
 url = "http://www.monitis.com/api?action=authToken&apikey=" + apiKey + "&secretkey=" + secretKey
 wscript.echo "Requesting token"
+wscript.echo "GET: " + url
 objHTTP.open "GET", url, False
 objHTTP.send
 resp = objHTTP.responseText
@@ -47,6 +44,7 @@ token = mid(resp, pos, len(resp) - pos - 1)
 url = "http://www.monitis.com/api?action=agents&apikey=" + apiKey + "&output=xml"
 objHTTP.open "GET", url, False
 wscript.echo "Requesting agents list"
+wscript.echo "GET: " + url
 objHTTP.send
 
 Set oAgents = CreateObject("Microsoft.XMLDOM")
