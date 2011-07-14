@@ -30,11 +30,11 @@ Computer = "."
 MonitorPage = "Printers"
 PageTitle = "Printers"
 MonitorGroup = "printers"
-PageColumns = "2"
+PageColumns = "1"
 MonitorName = "printers"
 MonitorTag = "Printers"
-Row = 1
-Column = 0
+Row = 0
+Column = 1
 
 'Initialize WMI. Use "." for local computer, otherwise specify the remote computer name
 Set objWMI = GetObject("winmgmts:{impersonationLevel=impersonate}!\\" + computer + "\root\cimv2")
@@ -74,15 +74,10 @@ For Each objPrinter in colInstalledPrinters
 	If UCase(objPrinter.PortName) <> "NUL:" And _
 	   UCase(objPrinter.PortName) <> "XPSPORT:" And _
 	   UCase(objPrinter.PortName) <> "SHRFAX:" Then
-			Column = Column + 1
-			If Column > 2 Then
-				Row = Row + 1
-				Column = 1
-			End If
-			
+			Row = Row + 1
 			MonitorName = objPrinter.Name
 			monitorParams = "printer:Printer+Status:Printer+Status:3:false;"
-			resultParams = "status:Status:N%2FA:2;detectedError:Detected+Error:N%2FA:2;"
+			resultParams = "notReadyErrors:NotReadyErrors:N%2FA:2;outOfPaperErrors:OutOfPaperErrors:N%2FA:2;jobsPrinted:JobsPrinted:N%2FA:2;pagesPrinted:PagesPrinted:N%2FA:2;status:Status:N%2FA:2;detectedError:Detected+Error:N%2FA:2;"
 			AddCustMon
 	End If
 Next	

@@ -20,6 +20,7 @@ Dim MonitorID			'Monitor identifier
 Dim MonitorName			'Name the monitor
 Dim MonitorTag			'Monitor identifier tag
 Dim Results				'Values to be pushed to the monitor
+Dim FirstStartUp
 
 'Initialize the API and Secret Key
 apiKey = "AVUU86JKUKERMF4LUF15RAAPS" 
@@ -33,12 +34,12 @@ MonitorTag = "Printers"
 'Initialize WMI
 Set objWMI = GetObject("winmgmts:{impersonationLevel=impersonate}!\\" + computer + "\root\cimv2")
 
+'Initialize HTTP connection object
+Set objHTTP = CreateObject("Microsoft.XMLHTTP")
+
 'Get current local date and time using the timezone from the obtained GMT date
 dtGMT = GMTDate()
 unixDate = CStr(DateDiff("s", "01/01/1970 00:00:00", DateSerial(Year(dtGMT), Month(dtGMT), Day(dtGMT)) + TimeSerial(Hour(dtGMT), Minute(dtGMT), Second(dtGMT)))) + "000"
-
-'Initialize HTTP connection object
-Set objHTTP = CreateObject("Microsoft.XMLHTTP")
 
 'Request a token to use in following calls
 url = "http://www.monitis.com/api?action=authToken&apikey=" + apiKey + "&secretkey=" + secretKey + "&version=2"
@@ -59,49 +60,63 @@ Set objResponse = CreateObject("Microsoft.XMLDOM")
 objResponse.async = False
 objResponse.LoadXML(resp)
 
+
 'Loop through all printers and post the printer values to the custom printer monitor for each printer
 Set colInstalledPrinters = objWMI.ExecQuery("Select * from Win32_Printer")
 For Each objPrinter in colInstalledPrinters
 	
-    Select Case objPrinter.PrinterStatus
-        Case 1 : strPrinterStatus = "Not responding"
-        Case 2 : strPrinterStatus = "Not responding"
-        Case 3 : strPrinterStatus = "Idle"
-        Case 4 : strPrinterStatus = "Printing"
-        Case 5 : strPrinterStatus = "Warmup"
-        Case 6 : strPrinterStatus = "Stopped Printing"
-        Case 7 : strPrinterStatus = "Offline"
-        Case Else 
-        	strPrinterStatus = "Unknown"
-    End Select
+	strPrinterStatus = GetPrinterStatus(objPrinter.PrinterStatus)
+	strErrorState = GetPrinterErrorState(objPrinter.DetectedErrorState)
     
-	Select Case objPrinter.DetectedErrorState
-		Case 0 : strErrorState = "No Error"    
-		Case 1 : strErrorState = "Other"    
-		Case 2 : strErrorState = "No Error"    
-		Case 3 : strErrorState = "Low Paper"    
-		Case 4 : strErrorState = "No Paper"    
-		Case 5 : strErrorState = "Low Toner"    
-		Case 6 : strErrorState = "No Toner"    
-		Case 7 : strErrorState = "Door Open"    
-		Case 8 : strErrorState = "Jammed"    
-		Case 9 : strErrorState = "Offline"    
-		Case 10 : strErrorState = "Service Requested"    
-		Case 11 : strErrorState = "Output Bin Full"    
-        Case Else 
-        	strErrorState = "Unknown"
-	End Select
+	'Get current local date and time using the timezone from the obtained GMT date
+	dtGMT = GMTDate()
+	unixDate = CStr(DateDiff("s", "01/01/1970 00:00:00", DateSerial(Year(dtGMT), Month(dtGMT), Day(dtGMT)) + TimeSerial(Hour(dtGMT), Minute(dtGMT), Second(dtGMT)))) + "000"
     
     'Find the monitorId for the current printer
 	MonitorID = FindMonitorID(objPrinter.Name)
 	If Trim(MonitorID) <> "" Then
 		WScript.Echo "Printer: " & objPrinter.Name & " - " & strPrinterStatus & " - " & strErrorState
 		WScript.Echo "MonitorID: " & MonitorID
-		
-		Results = "status:" & strPrinterStatus & ";detectedError:" & strErrorState
+
+		Results = "status:" & strPrinterStatus & ";detectedError:" & strErrorState & GetPerformanceCounters(objPrinter.Name)
 		AddResult
 	End If
+	
 Next	
+
+
+'Start the continuous monitoring, only recording event data when the status of a printer changes
+Set colPrinters = objWMI.ExecNotificationQuery("Select * from __instancemodificationevent within 30 where TargetInstance isa 'Win32_Printer'")
+
+Monitoring = True
+Do While Monitoring = True
+	
+	Set objPrinter = colPrinters.NextEvent
+	If objPrinter.TargetInstance.PrinterStatus <> objPrinter.PreviousInstance.PrinterStatus Or _
+	   objPrinter.TargetInstance.DetectedErrorState <> objPrinter.PreviousInstance.DetectedErrorState Then
+	   
+		strPrinterStatus = GetPrinterStatus(objPrinter.TargetInstance.PrinterStatus)
+		strErrorState = GetPrinterErrorState(objPrinter.TargetInstance.DetectedErrorState)
+
+		'Get current local date and time using the timezone from the obtained GMT date
+		dtGMT = GMTDate()
+		unixDate = CStr(DateDiff("s", "01/01/1970 00:00:00", DateSerial(Year(dtGMT), Month(dtGMT), Day(dtGMT)) + TimeSerial(Hour(dtGMT), Minute(dtGMT), Second(dtGMT)))) + "000"
+	    
+	    'Find the monitorId for the current printer
+		MonitorID = FindMonitorID(objPrinter.TargetInstance.Name)
+		If Trim(MonitorID) <> "" Then
+			WScript.Echo "Printer: " & objPrinter.TargetInstance.Name & " - " & strPrinterStatus & " - " & strErrorState
+			WScript.Echo "MonitorID: " & MonitorID
+
+			Results = "status:" & strPrinterStatus & ";detectedError:" & strErrorState & GetPerformanceCounters(objPrinter.TargetInstance.Name)
+			AddResult
+		End If
+
+	End If
+
+	WScript.Sleep(1000)
+Loop
+
 
 'Cleanup
 Set objHTTP = Nothing
@@ -184,3 +199,77 @@ Function GMTDate()
   Next
 End function
 
+'---------------------------------------------------------------------
+
+Function GetPrinterStatus(aStatus)
+	Dim strState
+	
+    Select Case aStatus
+        Case 1 : strState = "Other"
+        Case 2 : strState = "Unknown"
+        Case 3 : strState = "Idle"
+        Case 4 : strState = "Printing"
+        Case 5 : strState = "Warmup"
+        Case 6 : strState = "Stopped Printing"
+        Case 7 : strState = "Offline"
+        Case Else 
+        	strState = "Unknown"
+    End Select
+    
+    GetPrinterStatus = strState
+End Function
+
+'---------------------------------------------------------------------
+
+Function GetPrinterErrorState(aState) 
+	Dim strState
+	 
+	Select Case aState
+		Case 0 : strState = "No Error"    
+		Case 1 : strState = "Other"    
+		Case 2 : strState = "No Error"    
+		Case 3 : strState = "Low Paper"    
+		Case 4 : strState = "No Paper"    
+		Case 5 : strState = "Low Toner"    
+		Case 6 : strState = "No Toner"    
+		Case 7 : strState = "Door Open"    
+		Case 8 : strState = "Jammed"    
+		Case 9 : strState = "Offline"    
+		Case 10 : strState = "Service Requested"    
+		Case 11 : strState = "Output Bin Full"    
+        Case Else 
+        	strState = "Unknown"
+	End Select
+
+	GetPrinterErrorState = strState
+End Function
+
+'---------------------------------------------------------------------
+
+Function GetPerformanceCounters(aPrinterName)
+	Dim objInstances
+	Dim strCounters
+	
+	strCounters = ""
+	Set objInstances = objWMI.InstancesOf("Win32_PerfFormattedData_Spooler_PrintQueue",48)
+	
+	On Error Resume Next
+	For Each objInstance in objInstances
+		If objInstance.Name = aPrinterName Then
+	        WScript.Echo "NotReadyErrors: " & objInstance.NotReadyErrors
+	        WScript.Echo "OutOfPaperErrors: " & objInstance.OutofPaperErrors
+	        WScript.Echo "JobsPrinted: " & objInstance.TotalJobsPrinted
+	        WScript.Echo "PagesPrinted: " & objInstance.TotalPagesPrinted
+		    
+		    strCounters = ";notReadyErrors:" & CStr(objInstance.NotReadyErrors) & _
+		    			  ";outOfPaperErrors:" & CStr(objInstance.OutofPaperErrors) & _
+		    			  ";jobsPrinted:" & CStr(objInstance.TotalJobsPrinted) & _
+		    			  ";pagesPrinted:" & CStr(objInstance.TotalPagesPrinted)
+		    Exit For
+		End If
+	Next
+	On Error Goto 0
+	
+	GetPerformanceCounters = strCounters
+	Set objInstances = Nothing
+End Function
