@@ -30,7 +30,7 @@ strComputer = "."
 MonitorPage = "ISA+Server"
 PageTitle = "ISA+Server"
 MonitorGroup = "isaServer"
-PageColumns = "1"
+PageColumns = "2"
 MonitorName = "isaServer"
 MonitorTag = "IsaServer"
 
@@ -68,32 +68,50 @@ wscript.echo "PageID: " + MonitorPageID
 '----------------------------------------------------------------------
 
 'ISA Services to monitor
-MonitorName = "ISA+Services" : Row = 1 : Column = 1
-monitorParams = "isa:ISAServices:ISA+Service+Status:3:false;"
+Row = 1 : Column = 1
+MonitorName = "ISA+Services"
+monitorParams = "isaServices:ISAServices:ISA+Service+Status:3:false;"
 resultParams = "isaFirewall:Firewall:N%2FA:2;isaSrvCtrl:Server+Control:N%2FA:2;isaJobSched:Job+Scheduler:N%2FA:2;isaSrvStorage:Server+Storage:N%2FA:2;"
 AddCustMon
 
-'Packets
-MonitorName = "ISA+Packets+Monitor" : Row = 2 : Column = 1
-monitorParams = "packets:Packets:Packets:3:false;"
-resultParams = "totalPackets:Total Packets:N%2FA:2;passedPerSec:Packets/Sec:N%2FA:2;" & _
-		       "allowedPackets:Allowed:N%2FA:2;allowedPerSec:Allowed/Sec:N%2FA:2;" & _
-		       "droppedPackets:Dropped:N%2FA:2;droppedPerSec:Dropped/Sec:N%2FA:2;" & _
-		       "backloggedPackets:BackLogged:N%2FA:2;"
+'ISA Subsystems monitor
+Row = 1 : Column = 2
+MonitorName = "ISA+Subsystems"
+monitorParams = "isaSubsystems:ISASubsystems:ISA+Subsystems:3:false;"
+resultParams = "isaCPU:Processor+Time:N%2FA:2;isaMemory:Available+Memory:N%2FA:2;isaDiskUtil:Disk+Utilization:N%2FA:2;"
+AddCustMon
+
+'Packets/Sec
+Row = 2 : Column = 1
+MonitorName = "ISA+Packets+Monitor+PerSec"
+monitorParams = "isaPacketsPerSec:Packets:Packets/Sec:3:false;"
+resultParams = "packetsPerSec:Packets/Sec:N%2FA:2;allowedPerSec:Allowed/Sec:N%2FA:2;droppedPerSec:Dropped/Sec:N%2FA:2;"
+AddCustMon
+
+'Total Packets
+Row = 2 : Column = 2
+MonitorName = "ISA+Packets+Monitor+Totals"
+monitorParams = "isaPacketsTotal:Packets:Total Packets:3:false;"
+resultParams = "totalPackets:Total Packets:N%2FA:2;allowedPackets:Allowed:N%2FA:2;droppedPackets:Dropped:N%2FA:2;backloggedPackets:BackLogged:N%2FA:2;"
 AddCustMon
 
 'Active Connections
-MonitorName = "ISA+TCP+Connections+Monitor" : Row = 3 : Column = 1
-monitorParams = "TCPConnections:TCP Connections:TCP Connections:3:false;"
+Row = 3 : Column = 1
+MonitorName = "ISA+TCP+Connections+Monitor"
+monitorParams = "ISATCPConnections:TCP+Connections:TCP+Connections:3:false;"
 resultParams = "active:Total Active:N%2FA:2;activePerSec:Active/Sec:N%2FA:2;established:Established/Sec:N%2FA:2;"
 AddCustMon
 
 'Bytes passed through ISA Server
-MonitorName = "ISA+Throughput+in+Bytes+Monitor" : Row = 4 : Column = 1
-monitorParams = "Bytes:BytesPassedThrough:Bytes Passed Through:3:false;"
+Row = 3 : Column = 2
+MonitorName = "ISA+Throughput+in+Bytes+Monitor"
+monitorParams = "isaBytes:BytesPassedThrough:Bytes+Passed+Through:3:false;"
 resultParams = "totalPassed:Total Bytes Passed:N%2FA:2;passedPerSec:Passed/Sec:N%2FA:2;"
 AddCustMon
 
+'ISA Network Monitor
+Row = 4 : Column = 1
+AddNetworkAdapterMonitors
 
 
 '----------------------------------------------------------------------
@@ -106,6 +124,37 @@ Set objTimeStamp = Nothing
 
 '---------------------------------------------------------------------
 ' FUNCTIONS
+'---------------------------------------------------------------------
+
+Sub AddNetworkAdapterMonitors
+	Set colConfs = objWMI.ExecQuery ("SELECT * FROM Win32_NetworkAdapterConfiguration WHERE IPEnabled = True")
+	For Each objConf in colConfs 
+	
+		strAdapterName = GetAdapterName(objConf.Caption)
+		strIPAddress = GetMultiString_FromArray(objConf.IPAddress, ", ")
+
+		Set colNetAdapters = objWMI.ExecQuery("Select * From Win32_NetworkAdapter WHERE Caption = '" & objConf.Caption & "'")
+		For Each objAdapter In colNetAdapters
+		
+			WScript.Echo "Adding monitor for network connection: " & objAdapter.NetConnectionID
+
+			'ISA network subsystem monitor
+			MonitorName = "ISA+Network+Adapter:+" & Replace(objAdapter.NetConnectionID, " ", "+") 
+			monitorParams = "isaNetwork:ISANetwork:Network+Performance:3:false;"
+			resultParams = "isaNetBytesSentPersec:Bytes+Sent/sec:N%2FA:2;isaNetBytesReceivedPersec:Bytes+Received/sec:N%2FA:2;isaNetPacketsSentPersec:Packets+Sent/sec:N%2FA:2;isaNetPacketsReceivedPersec:Packets+Received/sec:N%2FA:2;"
+			AddCustMon
+			
+			'Make sure we add the monitor on the correct row and column
+			Column = Column + 1
+			If Column > 2 Then
+				Column = 1
+				Row = Row + 1
+			End If
+			
+		Next
+	Next
+End Sub
+
 '---------------------------------------------------------------------
 
 Sub AddCustMon
@@ -181,3 +230,25 @@ Function GMTDate()
   Next
 End function
 
+'------------------------------------------------------------------------------------
+
+Function GetAdapterName(strName)
+	If InStr(strName, "]") Then
+		GetAdapterName = Trim(Mid(strName, InStr(strName, "]")+1))
+	Else 
+		GetAdapterName = strName
+	End If
+
+End Function
+
+'------------------------------------------------------------------------------------
+
+Function GetMultiString_FromArray( ArrayString, Seprator)
+     If IsNull ( ArrayString ) Then
+         StrMultiArray = ArrayString
+     else
+         StrMultiArray = Join( ArrayString, Seprator )
+    end if
+    GetMultiString_FromArray = StrMultiArray
+    
+End Function
