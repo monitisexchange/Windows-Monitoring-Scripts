@@ -96,12 +96,13 @@ Do While Monitoring = True
 	objRefresher.Refresh
     
 	'Get performance data
-	'GetISAServicesStatus
-	'GetISASubsystems
-	GetNetworkUtilization
+	GetISAServicesStatus
+	GetISASubsystemData
+	GetNetworkData
+	GetISAFirewallData
 
 	'Wait 30 seconds
-	WScript.Sleep(3000)
+	WScript.Sleep(30000)
 Loop
 
 
@@ -147,10 +148,10 @@ Function GetISAServicesStatus
 	WScript.Echo "Monitor ID: " & MonitorID
 	
 	If Trim(MonitorID) <> "" Then
-		Results = "isaSrvCtrl:" & ISAServiceState(objServices, "isactrl", "Microsoft ISA Server Control") & _
-		 	      ";isaFirewall:" & ISAServiceState(objServices, "fwsrv", "Microsoft Firewall") & _
-				  ";isaSrvStorage:" & ISAServiceState(objServices, "isastg", "Microsoft ISA Server Storage") & _
-				  ";isaJobSched:" & ISAServiceState(objServices, "isasched", "Microsoft ISA Server Job Scheduler")
+		Results = "isaSrvCtrl:" & ISAServiceState(objServices, "isactrl", "Microsoft ISA Server Control") & ";" & _
+		 	      "isaFirewall:" & ISAServiceState(objServices, "fwsrv", "Microsoft Firewall") & ";" & _
+				  "isaSrvStorage:" & ISAServiceState(objServices, "isastg", "Microsoft ISA Server Storage")  & ";" & _
+				  "isaJobSched:" & ISAServiceState(objServices, "isasched", "Microsoft ISA Server Job Scheduler")
 	
 		AddResult
 	End If
@@ -160,9 +161,10 @@ End Function
 
 '---------------------------------------------------------------------
 
-Function GetNetworkUtilization
-
-	Set colNetAdapters = objWMIService.ExecQuery("Select * From Win32_NetworkAdapter") ' WHERE Caption = '" & objConf.Caption & "'")
+Function GetNetworkData
+	Dim colNetAdapters
+	
+	Set colNetAdapters = objWMIService.ExecQuery("Select * From Win32_NetworkAdapter")
 	For Each objAdapter In colNetAdapters
 
 		strAdapterName = GetAdapterName(objAdapter.Name)
@@ -170,10 +172,9 @@ Function GetNetworkUtilization
 		MonitorID = FindMonitorID(MonitorName)
 		
 		If Trim(MonitorID) <> "" Then
-		
 			For Each objItem in objNetworkData
-	
 				strPerfDataName = GetAdapterName(objItem.Name)
+				
 				If strPerfDataName = strAdapterName Then
 					Wscript.echo "Name: " & strPerfDataName
 					Wscript.Echo "Bytes Received/Sec: " & objItem.BytesReceivedPersec
@@ -181,23 +182,75 @@ Function GetNetworkUtilization
 					Wscript.Echo "Packets Received/Sec: " & objItem.PacketsReceivedPersec
 					Wscript.Echo "Packets Sent/Sec : " & objItem.PacketsSentPersec
 				
-					Results = "isaNetBytesSentPersec:" & CStr(objItem.BytesSentPersec) & _
-							  "isaNetBytesReceivedPersec:" & CStr(objItem.BytesReceivedPersec) & _
-							  "isaNetPacketsSentPersec:" & CStr(objItem.PacketsSentPersec) & _
+					Results = "isaNetBytesSentPersec:" & CStr(objItem.BytesSentPersec) & ";" & _
+							  "isaNetBytesReceivedPersec:" & CStr(objItem.BytesReceivedPersec) & ";" & _
+							  "isaNetPacketsSentPersec:" & CStr(objItem.PacketsSentPersec) & ";" & _
 							  "isaNetPacketsReceivedPersec:" & CStr(objItem.PacketsReceivedPersec)
 				
 					AddResult
 				End If
 			Next
-		
 		End If
 	Next
 
+	Set colNetAdapters = Nothing
+End Function
+'---------------------------------------------------------------------
+
+Function GetISAFirewallData
+	Dim colISAFirewallObjects
+	
+	Set colISAFirewallObjects = objWMIService.ExecQuery("SELECT * FROM Win32_PerfFormattedData_Fweng_ISAServerFirewallPacketEngine")
+	For Each objFirewall In colISAFirewallObjects
+	
+		'Firewall Packets/sec counters
+		MonitorName = "ISA Packets Monitor PerSec"
+		MonitorID = FindMonitorID(MonitorName)
+		If Trim(MonitorID) <> "" Then
+			Results = "isaPacketsPerSec:" & CStr(objFirewall.PacketsPersec) & ";" & _
+					  "isaAllowedPerSec:" & CStr(objFirewall.AllowedPacketsPersec) & ";" & _
+					  "isaDroppedPerSec:" & CStr(objFirewall.DroppedPacketsPersec) 
+			AddResult
+		End If	
+	
+		'Firewall Total Packets counters
+		MonitorName = "ISA Packets Monitor Totals"
+		MonitorID = FindMonitorID(MonitorName)
+		If Trim(MonitorID) <> "" Then
+			Results = "isaTotalPackets:" & CStr(objFirewall.Packets) & ";" & _
+					  "isaAllowedPackets:" & CStr(objFirewall.AllowedPackets) & ";" & _
+					  "isaDroppedPackets:" & CStr(objFirewall.DroppedPackets) & ";" & _
+					  "isaBackloggedPackets:" & CStr(objFirewall.BackloggedPackets) 
+			AddResult
+		End If	
+	
+		'Firewall TCP Connections
+		MonitorName = "ISA TCP Connections Monitor"
+		MonitorID = FindMonitorID(MonitorName)
+		If Trim(MonitorID) <> "" Then
+			Results = "isaActiveConnections:" & CStr(objFirewall.ActiveConnections) & ";" & _
+					  "activeConnectionsPerSec:" & CStr(objFirewall.ConnectionsPersec) & ";" & _
+					  "isaEstablishedConnections:" & CStr(objFirewall.TCPEstablishedConnections) 
+			AddResult
+		End If	
+	
+		'Firewall Packets/sec counters
+		MonitorName = "ISA Throughput in Bytes Monitor"
+		MonitorID = FindMonitorID(MonitorName)
+		If Trim(MonitorID) <> "" Then
+			Results = "isaBytesPassedTotal:" & CStr(objFirewall.Bytes) & ";" & _
+					  "isaBytesPassedPerSec:" & CStr(objFirewall.BytesPersec) 
+			AddResult
+		End If	
+	
+	Next
+
+	Set colISAFirewallObjects = Nothing 
 End Function
 
 '---------------------------------------------------------------------
 
-Function GetISASubsystems
+Function GetISASubsystemData
 
 	MonitorName = "ISA Subsystems"
 	MonitorID = FindMonitorID(MonitorName)

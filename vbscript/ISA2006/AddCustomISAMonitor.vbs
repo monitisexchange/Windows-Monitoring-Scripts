@@ -85,28 +85,28 @@ AddCustMon
 Row = 2 : Column = 1
 MonitorName = "ISA+Packets+Monitor+PerSec"
 monitorParams = "isaPacketsPerSec:Packets:Packets/Sec:3:false;"
-resultParams = "packetsPerSec:Packets/Sec:N%2FA:2;allowedPerSec:Allowed/Sec:N%2FA:2;droppedPerSec:Dropped/Sec:N%2FA:2;"
+resultParams = "isaPacketsPerSec:Packets/Sec:N%2FA:2;isaAllowedPerSec:Allowed/Sec:N%2FA:2;isaDroppedPerSec:Dropped/Sec:N%2FA:2;"
 AddCustMon
 
 'Total Packets
 Row = 2 : Column = 2
 MonitorName = "ISA+Packets+Monitor+Totals"
 monitorParams = "isaPacketsTotal:Packets:Total Packets:3:false;"
-resultParams = "totalPackets:Total Packets:N%2FA:2;allowedPackets:Allowed:N%2FA:2;droppedPackets:Dropped:N%2FA:2;backloggedPackets:BackLogged:N%2FA:2;"
+resultParams = "isaTotalPackets:Total Packets:N%2FA:2;isaAllowedPackets:Allowed:N%2FA:2;isaDroppedPackets:Dropped:N%2FA:2;isaBackloggedPackets:BackLogged:N%2FA:2;"
 AddCustMon
 
 'Active Connections
 Row = 3 : Column = 1
 MonitorName = "ISA+TCP+Connections+Monitor"
 monitorParams = "ISATCPConnections:TCP+Connections:TCP+Connections:3:false;"
-resultParams = "active:Total Active:N%2FA:2;activePerSec:Active/Sec:N%2FA:2;established:Established/Sec:N%2FA:2;"
+resultParams = "isaActiveConnections:Total Active:N%2FA:2;activeConnectionsPerSec:Active/Sec:N%2FA:2;isaEstablishedConnections:Established/Sec:N%2FA:2;"
 AddCustMon
 
 'Bytes passed through ISA Server
 Row = 3 : Column = 2
 MonitorName = "ISA+Throughput+in+Bytes+Monitor"
 monitorParams = "isaBytes:BytesPassedThrough:Bytes+Passed+Through:3:false;"
-resultParams = "totalPassed:Total Bytes Passed:N%2FA:2;passedPerSec:Passed/Sec:N%2FA:2;"
+resultParams = "isaBytesPassedTotal:Total Bytes Passed:N%2FA:2;isaBytesPassedPerSec:Passed/Sec:N%2FA:2;"
 AddCustMon
 
 'ISA Network Monitor
@@ -233,12 +233,23 @@ End function
 '------------------------------------------------------------------------------------
 
 Function GetAdapterName(strName)
-	If InStr(strName, "]") Then
-		GetAdapterName = Trim(Mid(strName, InStr(strName, "]")+1))
-	Else 
-		GetAdapterName = strName
-	End If
+	Dim strTemp
+	strTemp = strName
+	
+	'If InStr(strTemp, "]") Then
+	'	strTemp = Trim(Mid(strTemp, InStr(strTemp, "]")+1))
+	'End If
 
+	strTemp = Replace(strTemp, "[", "")
+	strTemp = Replace(strTemp, "]", "")
+	strTemp = Replace(strTemp, "(", "")
+	strTemp = Replace(strTemp, ")", "")
+	strTemp = Replace(strTemp, "/", " ")
+	strTemp = Replace(strTemp, "\", " ")
+	strTemp = Replace(strTemp, "_", " ")
+	strTemp = Replace(strTemp, "-", " ")
+	
+	GetAdapterName = strTemp
 End Function
 
 '------------------------------------------------------------------------------------
