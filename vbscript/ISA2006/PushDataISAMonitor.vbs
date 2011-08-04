@@ -26,8 +26,8 @@ Dim objMemoryData		'WMI Memory counters
 
 
 'Initialize the API and Secret Key
-apiKey = "AVUU86JKUKERMF4LUF15RAAPS" 
-secretKey = "1S29IOT3MOQNJUCL2MOEO76SN4" 
+apiKey = "Replace with your key" 
+secretKey = "Replace with your key" 
 
 'Initialize monitor variables
 Computer = "."
