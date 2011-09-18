@@ -22,8 +22,8 @@ Dim Row					'Current row in the dashboard page
 Dim Column				'Current column in the dashboard page
 
 'Initialize the API and Secret Key
-apiKey = "Replace with your key" 
-secretKey = "Replace with your key" 
+apiKey = "AVUU86JKUKERMF4LUF15RAAPS" 
+secretKey = "1S29IOT3MOQNJUCL2MOEO76SN4" 
 
 'Specify the monitor tag we're working with
 Computer = "."

@@ -23,8 +23,8 @@ Dim Results				'Values to be pushed to the monitor
 Dim FirstStartUp
 
 'Initialize the API and Secret Key
-apiKey = "Replace with your key" 
-secretKey = "Replace with your key" 
+apiKey = "AVUU86JKUKERMF4LUF15RAAPS" 
+secretKey = "1S29IOT3MOQNJUCL2MOEO76SN4" 
 
 'Initialize monitor variables
 Computer = "."
