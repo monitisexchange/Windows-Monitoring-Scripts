@@ -6,7 +6,9 @@
 
 ' Return the monitor name given "obj.selectSingleNode("name").text" 
 Function GetMonitorName(strInput)
-	GetMonitorName = Left(strInput, InStr(strInput, "@")-1)
+	Dim strTemp
+	strTemp = Left(strInput, InStr(strInput, "@")-1)
+	GetMonitorName = Replace(strTemp, "processes_", "")
 End Function
 
 '-----------------------------------------------------------------------------------------------
