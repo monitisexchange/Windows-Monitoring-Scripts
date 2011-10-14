@@ -72,8 +72,8 @@ Function GetGlobalMonitors(aObjHttp, oNames, aObjAgent, aShowMonitors)
 			Set Monitor = New class_Monitor
 			Monitor.Name = GetMonitorName(oName.selectSingleNode("name").text)
 		    strMonitorName = LCase(GetMonitorBaseName(Monitor.Name))
-			Monitor.Id = oName.selectSingleNode("id").text
-			Monitor.DisplayName = Monitor.Name
+			Monitor.Id = UCase(oName.selectSingleNode("id").text)
+			Monitor.DisplayName = UCase(Monitor.Name)
 			
 			'Get the monitor data 
 			dt = DateSerial(year(now), month(now), day(now))
@@ -169,48 +169,3 @@ Function GetResult(aNode, aMonitor, aFields)
 	
 End Function
 		
-'-----------------------------------------------------------------------------------------------
-	
-Sub ShowInternalAgents
-	'Write the list of agents to the screen	
-	For Each agent In InternalAgents.Items
-		WScript.Echo "" 
-		WScript.Echo "-------------------------------------------------------------------------------"
-		WScript.Echo " AGENT: " & agent.Name
-		WScript.Echo "-------------------------------------------------------------------------------"
-
-		'Determine the width of the column for the display name of the monitor
-		maxMonitorWidth = 0
-		maxMetricWidth = 0
-		For Each monitor In agent.MonitorList.Items
-			If Len(Monitor.DisplayName) > maxMonitorWidth Then
-				maxMonitorWidth = Len(Monitor.DisplayName)+4
-			End If
-			
-			For Each objMetric In Monitor.MetricList.Items
-				If Len(objMetric.Name) > maxMetricWidth Then
-					maxMetricWidth = Len(objMetric.Name)+4
-				End If
-			Next
-		Next
-		
-		'Build the output strings to show the monitor data
-		strTemp = "*"
-		strHeader = ""
-		strRow = ""
-		For Each monitor In agent.MonitorList.Items
-			strHeader = format(UCase(Monitor.DisplayName), maxMonitorWidth)
-			strRow = format(" ", maxMonitorWidth)
-			
-			For Each objMetric In Monitor.MetricList.Items
-				strHeader = strHeader & format(objMetric.Name, maxMetricWidth)
-				strRow = strRow & format(objMetric.Result & objMetric.Suffix, maxMetricWidth)
-			Next
-
-			WScript.Echo strHeader
-			WScript.Echo strRow
-			WScript.Echo ""
-		Next
-
-	Next
-End Sub

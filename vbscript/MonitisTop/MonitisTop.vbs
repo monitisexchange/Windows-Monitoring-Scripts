@@ -7,7 +7,7 @@ Dim ShowMonitors
 Dim ShowProcesses
 
 'Setup dictionaries
-Set InternalAgents = CreateObject("Scripting.Dictionary")
+Set Agents = CreateObject("Scripting.Dictionary")
 Set SupportedMonitors = CreateObject("Scripting.Dictionary")
 Set ShowMonitors = CreateObject("Scripting.Dictionary")
 Set ShowProcesses = CreateObject("Scripting.Dictionary")
@@ -18,6 +18,7 @@ Call Include("funcString.vbs")
 Call Include("funcDates.vbs")
 Call Include("funcMonitisKeys.vbs")
 Call Include("funcInternalAgents.vbs")
+Call Include("funcExternalMonitors.vbs")
 
 'Initialize supported monitors. Key specifies monitor and value Item specifies monitor field to return
 SupportedMonitors.Add "cpu", "userValue,%|kernelValue,%"
@@ -41,7 +42,7 @@ Select Case LCase(argCmd)
 		
 	Case "listagents"
 		ListAgents argAgentType, argMonitors, argProcesses
-		ShowInternalAgents
+		ShowAgents
 		
 	Case "setkeys"
 		If Len(argApiKey) = 0 Then
@@ -61,7 +62,7 @@ End Select
 
 '-------------------------------------------------------------------------
 'Cleanup
-Set InternalAgents = Nothing
+Set Agents = Nothing
 Set SupportedMonitors = Nothing
 Set ShowMonitors = Nothing
 Set ShowProcesses = Nothing
@@ -103,16 +104,17 @@ Sub ListAgents(agentType, argMonitors, argProcesses)
 	
 	Select Case LCase(agentType)
 		Case "int"
-			GetInternalAgents objHttp, InternalAgents, ShowMonitors, ShowProcesses
+			GetInternalAgents objHttp, Agents, ShowMonitors, ShowProcesses
 		
 		Case "ext"
-			GetExternalMonitors objHttp, InternalAgents, ShowMonitors, ShowProcesses
+			GetExternalMonitors objHttp, Agents, ShowMonitors
 		
 		Case "all"
-			GetInternalAgents objHttp, InternalAgents, ShowMonitors, ShowProcesses
+			GetInternalAgents objHttp, Agents, ShowMonitors, ShowProcesses
+			GetExternalMonitors objHttp, Agents, ShowMonitors
 		
 		Case Else
-			GetInternalAgents objHttp, InternalAgents, ShowMonitors, ShowProcesses
+			GetInternalAgents objHttp, Agents, ShowMonitors, ShowProcesses
 	End Select
 	
 End Sub
@@ -162,156 +164,11 @@ Sub Include(strFilename)
 	On Error Goto 0
 End Sub
 
-
-
-'************************************************************************
-' VBSCRIPT: funcExternalMonitors
-'
-' Required include file(s): 
-' classAgents.vbs
-'************************************************************************
-
-Function GetExternalMonitors(aObjHttp, aObjAgents, aShowMonitors, aShowProcesses)
-	Dim objAgents, xmlAgents
-	Set objAgents = CreateObject("Scripting.Dictionary")
-	
-	WScript.Echo "Acquiring internal agents..."
-	
-	'Retrieve the list of agents
-	url = "http://www.monitis.com/api?apikey=" + apiKey + "&output=xml&version=2&action=tests"
-
-	aObjHttp.open "GET", url, False
-	aObjHttp.send
-	
-	WScript.Echo aObjHttp.responseText
-	
-	'Parse response
-	Set xmlMonitors = CreateObject("Microsoft.XMLDOM")
-	xmlMonitors.async = False
-	xmlMonitors.LoadXML(aObjHttp.responseText)
-	If xmlMonitors.parseError.errorCode <> 0 Then    
-		wscript.Echo xmlMonitors.parseError.errorCode    
-		wscript.Echo xmlMonitors.parseError.reason    
-		wscript.Echo xmlMonitors.parseError.line
-	End If  	
-	
-	'Retrieve the agent information for each agent
-	For Each monitor in xmlMonitors.documentElement.childnodes
-
-		WScript.Echo monitor.text
-		WScript.Echo monitor.nodename
-
-		'Create an InternalAgent Object	
-		Set IntAgent = New class_InternalAgent
-		'IntAgent.Id = monitor.selectSingleNode("id").text
-		'IntAgent.Name = monitor.selectSingleNode("key").text
-
-		url = "http://www.monitis.com/api?action=agentInfo&apikey=" + apiKey + "&output=xml&agentId=" + IntAgent.Id + "&loadTests=true"
-		aObjHttp.open "GET", url, False
-		aObjHttp.send
-
-		WScript.Echo aObjHttp.responseText
-	WScript.Quit
-		
-		'Retrieve the agent information 
-		Set xmlAgentInfo = CreateObject("Microsoft.XMLDOM")
-		xmlAgentInfo.async = False
-		xmlAgentInfo.LoadXML(aObjHttp.responseText)
-		
-		For Each info in xmlAgentInfo.documentElement.childnodes
-			If aShowProcesses.Count = 0 Then
-				GetGlobalMonitors aObjHttp, info.childnodes, IntAgent, aShowMonitors
-			Else
-				GetProcessMonitors aObjHttp, info.childnodes, IntAgent, aShowProcesses
-			End If
-		Next
-		
-		'Add the agent object to the list of agents
-		aObjAgents.Add IntAgent.Id, IntAgent
-	Next
-	
-End Function
-
-	
 '-----------------------------------------------------------------------------------------------
 	
-Function GetMonitorValues(aObjHttp, oNames, aObjAgent, aShowProcesses)
-	Dim oName
-  
-	For Each oName in oNames
-	
-		If oName.NodeName <> "#text" And _
-    		LCase(oName.NodeName) = "process" And _
-			SupportedMonitors.Exists(LCase(oName.NodeName)) Then
-			
-			'See if the current nodename contains the process we're looking for
-			Found = False
-			strCurrentProcess = ""
-			For Each showProcess In aShowProcesses
-				If InStr(LCase(oName.selectSingleNode("name").text), LCase(showProcess)) > 0 Then
-					Found = True
-					strCurrentProcess = showProcess
-				End If
-			Next
-			
-			If Found Then
-				Set Monitor = New class_Monitor
-				
-				Monitor.Id = oName.selectSingleNode("id").text
-				Monitor.Name = strCurrentProcess 
-				Monitor.DisplayName = GetMonitorName(oName.selectSingleNode("name").text)
-				
-				dt = DateSerial(year(now), month(now), day(now))
-				url = "http://www.monitis.com/api?apikey=" & apikey & "&output=xml&action=processResult&monitorId=" + Monitor.Id + "&timezone=" & timezone & "&day=" & day(dt) & "&month=" & month(dt) & "&year=" & year(dt)
-				
-				aObjHttp.open "GET", url, False
-				aObjHttp.send
-				Set oRes = CreateObject("Microsoft.XMLDOM")
-				oRes.async = False
-				oRes.LoadXML(aObjHttp.responseText)
-				
-				If Not oRes.firstchild.lastchild Is Nothing Then
-					Set oNode = oRes.firstChild.lastChild
-					GetResult oNode, Monitor, SupportedMonitors.Item("process")
-					aObjAgent.MonitorList.Add Monitor.Name, Monitor
-				End If
-				
-			End If
-		End If 
-	Next  
-End Function
-
-'-----------------------------------------------------------------------------------------------
-
-Function GetExtResult(aNode, aMonitor, aFields)
-	arrValues = Split(aFields, "|")
-	For Each value In arrValues 
-	
-		arrDetails = Split(value,",")
-		strValue = arrDetails(0)
-		strSuffix = arrDetails(1)
-	
-		Set Metric = New class_Metric
-		Metric.Name = strValue
-			
-		total = 0
-		For Each oCell In aNode.ChildNodes
-			If LCase(oCell.nodename) = LCase(strValue) Then
-				total = CDbl(oCell.text)
-			End If
-		Next
-	
-		Metric.Result = CStr(total) & strSuffix
-	 	aMonitor.MetricList.Add Metric.Name, Metric
-	Next
-	
-End Function
-		
-'-----------------------------------------------------------------------------------------------
-	
-Sub ShowExternalMonitors	
+Sub ShowAgents
 	'Write the list of agents to the screen	
-	For Each agent In InternalAgents.Items
+	For Each agent In Agents.Items
 		WScript.Echo "" 
 		WScript.Echo "-------------------------------------------------------------------------------"
 		WScript.Echo " AGENT: " & agent.Name
@@ -337,7 +194,7 @@ Sub ShowExternalMonitors
 		strHeader = ""
 		strRow = ""
 		For Each monitor In agent.MonitorList.Items
-			strHeader = format(UCase(Monitor.DisplayName), maxMonitorWidth)
+			strHeader = format(Monitor.DisplayName, maxMonitorWidth)
 			strRow = format(" ", maxMonitorWidth)
 			
 			For Each objMetric In Monitor.MetricList.Items
@@ -352,4 +209,3 @@ Sub ShowExternalMonitors
 
 	Next
 End Sub
-
