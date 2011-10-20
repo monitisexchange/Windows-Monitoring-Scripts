@@ -9,8 +9,6 @@ Function GetInternalAgents(aObjHttp, aObjAgents, aShowMonitors, aShowProcesses)
 	Dim objAgents, xmlAgents
 	Set objAgents = CreateObject("Scripting.Dictionary")
 	
-	WScript.Echo "Acquiring internal agents..."
-	
 	'Retrieve the list of agents
 	url = "http://www.monitis.com/api?action=agents&apikey=" + apiKey + "&output=xml"
 	aObjHttp.open "GET", url, False
@@ -26,6 +24,7 @@ Function GetInternalAgents(aObjHttp, aObjAgents, aShowMonitors, aShowProcesses)
 		wscript.Echo xmlAgents.parseError.line
 	End If  	
 	
+	
 	'Retrieve the agent information for each agent
 	For Each agent in xmlAgents.documentElement.childnodes
 
@@ -34,21 +33,25 @@ Function GetInternalAgents(aObjHttp, aObjAgents, aShowMonitors, aShowProcesses)
 		IntAgent.Id = agent.selectSingleNode("id").text
 		IntAgent.Name = agent.selectSingleNode("key").text
 
+		'Retrieve the agent information 
 		url = "http://www.monitis.com/api?action=agentInfo&apikey=" + apiKey + "&output=xml&agentId=" + IntAgent.Id + "&loadTests=true"
 		aObjHttp.open "GET", url, False
 		aObjHttp.send
 		
-		'Retrieve the agent information 
 		Set xmlAgentInfo = CreateObject("Microsoft.XMLDOM")
 		xmlAgentInfo.async = False
 		xmlAgentInfo.LoadXML(aObjHttp.responseText)
-		
+
 		For Each info in xmlAgentInfo.documentElement.childnodes
+		
 			If aShowProcesses.Count = 0 Then
 				GetGlobalMonitors aObjHttp, info.childnodes, IntAgent, aShowMonitors
 			Else
-				GetProcessMonitors aObjHttp, info.childnodes, IntAgent, aShowProcesses
+				If LCase(info.nodename) = "processes" Then
+					GetProcessMonitors aObjHttp, info.childnodes, IntAgent, aShowProcesses
+				End If
 			End If
+			
 		Next
 		
 		'Add the agent object to the list of agents
@@ -58,13 +61,13 @@ Function GetInternalAgents(aObjHttp, aObjAgents, aShowMonitors, aShowProcesses)
 End Function
 
 '-----------------------------------------------------------------------------------------------
-	
+
 Function GetGlobalMonitors(aObjHttp, oNames, aObjAgent, aShowMonitors)
 	Dim oName
   
 	For Each oName in oNames
 	
-    	If oName.NodeName <> "#text" And _
+    	If oName.NodeName <> "#text" And oName.NodeName <> "process" And _
 		  SupportedMonitors.Exists(LCase(oName.NodeName)) And _
 		  aShowMonitors.Exists(LCase(oName.NodeName)) Then
     
@@ -75,9 +78,7 @@ Function GetGlobalMonitors(aObjHttp, oNames, aObjAgent, aShowMonitors)
 			Monitor.Id = UCase(oName.selectSingleNode("id").text)
 			Monitor.DisplayName = UCase(Monitor.Name)
 			
-			'Get the monitor data 
-			dt = DateSerial(year(now), month(now), day(now))
-			url = "http://www.monitis.com/api?apikey=" & apikey & "&output=xml&action=" & strMonitorName & "Result&monitorId=" + Monitor.Id + "&timezone=" & timezone & "&day=" & day(dt) & "&month=" & month(dt) & "&year=" & year(dt)
+			url = "http://www.monitis.com/api?version=2&apikey=" & apikey & "&output=xml&action=top" & strMonitorName & "&limit=50&detailedResults=true"
 
 			aObjHttp.open "GET", url, False
 			aObjHttp.send
@@ -85,9 +86,11 @@ Function GetGlobalMonitors(aObjHttp, oNames, aObjAgent, aShowMonitors)
 			oRes.async = False
 			oRes.LoadXML(aObjHttp.responseText)
 			
-			If Not oRes.firstchild.lastchild Is Nothing Then
-				Set oNode = oRes.firstChild.lastChild
-				GetResult oNode, Monitor, SupportedMonitors(strMonitorName)
+			Set oNode = oRes.selectSingleNode("data/tests")
+			If Not oNode Is Nothing Then
+				For Each oCell In oNode.childnodes
+					GetResult oCell, Monitor, SupportedMonitors(strMonitorName)
+				Next
 				aObjAgent.MonitorList.Add Monitor.Name, Monitor
 			End If
 		End If 
@@ -98,74 +101,53 @@ End Function
 '-----------------------------------------------------------------------------------------------
 	
 Function GetProcessMonitors(aObjHttp, oNames, aObjAgent, aShowProcesses)
-	Dim oName
-  
-	For Each oName in oNames
+				
+	url = "http://www.monitis.com/api?version=2&apikey=" & apikey & "&output=xml&action=topProcessByCPUUsage&limit=50&detailedResults=true"
 	
-		If oName.NodeName <> "#text" And _
-    		LCase(oName.NodeName) = "process" And _
-			SupportedMonitors.Exists(LCase(oName.NodeName)) Then
-			
-			'See if the current nodename contains the process we're looking for
-			Found = False
-			strCurrentProcess = ""
-			For Each showProcess In aShowProcesses
-				If InStr(LCase(oName.selectSingleNode("name").text), LCase(showProcess)) > 0 Then
-					Found = True
-					strCurrentProcess = showProcess
-				End If
-			Next
-			
-			If Found Then
+	aObjHttp.open "GET", url, False
+	aObjHttp.send
+	Set oRes = CreateObject("Microsoft.XMLDOM")
+	oRes.async = False
+	oRes.LoadXML(aObjHttp.responseText)
+	
+	Set oNode = oRes.selectSingleNode("data/tests")
+	For Each t In oNode.childnodes
+		
+		Set oTest = t.selectSingleNode("testName")
+		If Not oTest Is Nothing Then
+		
+			If ShowThisProcess(oTest.text, aShowProcesses) Then
+
+				'Create a new monitor object
 				Set Monitor = New class_Monitor
+				Monitor.Id = t.selectSingleNode("id").text
+				Monitor.Name = t.selectSingleNode("testName").text
+				Monitor.DisplayName = GetMonitorName(t.selectSingleNode("testName").text)
+
+				'Retrieve the results for this monitor
+				GetResult t, Monitor, SupportedMonitors.Item("process")
 				
-				Monitor.Id = oName.selectSingleNode("id").text
-				Monitor.Name = strCurrentProcess 
-				Monitor.DisplayName = GetMonitorName(oName.selectSingleNode("name").text)
-				
-				dt = DateSerial(year(now), month(now), day(now))
-				url = "http://www.monitis.com/api?apikey=" & apikey & "&output=xml&action=processResult&monitorId=" + Monitor.Id + "&timezone=" & timezone & "&day=" & day(dt) & "&month=" & month(dt) & "&year=" & year(dt)
-				
-				aObjHttp.open "GET", url, False
-				aObjHttp.send
-				Set oRes = CreateObject("Microsoft.XMLDOM")
-				oRes.async = False
-				oRes.LoadXML(aObjHttp.responseText)
-				
-				If Not oRes.firstchild.lastchild Is Nothing Then
-					Set oNode = oRes.firstChild.lastChild
-					GetResult oNode, Monitor, SupportedMonitors.Item("process")
-					aObjAgent.MonitorList.Add Monitor.Name, Monitor
-				End If
-				
+				'Add the monitor to the list of agents
+				aObjAgent.MonitorList.Add Monitor.Id, Monitor
+			
 			End If
-		End If 
-	Next  
+			
+		End If
+
+	Next
+				
 End Function
 
 '-----------------------------------------------------------------------------------------------
 
-Function GetResult(aNode, aMonitor, aFields)
-	arrValues = Split(aFields, "|")
-	For Each value In arrValues 
-	
-		arrDetails = Split(value,",")
-		strValue = arrDetails(0)
-		strSuffix = arrDetails(1)
-	
-		Set Metric = New class_Metric
-		Metric.Name = strValue
-			
-		total = 0
-		For Each oCell In aNode.ChildNodes
-			If LCase(oCell.nodename) = LCase(strValue) Then
-				total = CDbl(oCell.text)
-			End If
-		Next
-	
-		Metric.Result = CStr(total) & strSuffix
-	 	aMonitor.MetricList.Add Metric.Name, Metric
+Function ShowThisProcess(aProcess, aShowProcesses)
+	ShowThisProcess = False
+	For Each sp In aShowProcesses
+		If (InStr(LCase(aProcess), LCase(sp)) > 0) Or (sp = "all") Then
+			ShowThisProcess = True
+		End If
 	Next
-	
 End Function
-		
+
+	
+	

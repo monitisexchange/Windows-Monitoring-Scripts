@@ -14,12 +14,12 @@ Function GetExternalMonitors(aObjHttp, aObjAgents, aShowMonitors)
 	Agent.Id = ""
 	Agent.Name = "EXTERNAL"
 	
-	WScript.Echo "Acquiring external monitors..."
 	
 	'Retrieve the list of agents
 	url = "http://www.monitis.com/api?apikey=" + apiKey + "&output=xml&version=2&action=tests"
 	aObjHttp.open "GET", url, False
 	aObjHttp.send
+	
 	
 	'Parse response
 	Set xmlMonitors = CreateObject("Microsoft.XMLDOM")

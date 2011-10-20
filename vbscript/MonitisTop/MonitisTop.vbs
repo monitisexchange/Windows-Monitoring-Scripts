@@ -19,13 +19,15 @@ Call Include("funcDates.vbs")
 Call Include("funcMonitisKeys.vbs")
 Call Include("funcInternalAgents.vbs")
 Call Include("funcExternalMonitors.vbs")
+Call Include("funcFullpageMonitors.vbs")
 
 'Initialize supported monitors. Key specifies monitor and value Item specifies monitor field to return
-SupportedMonitors.Add "cpu", "userValue,%|kernelValue,%"
-SupportedMonitors.Add "memory", "freeMemory,MB|totalMemory,MB"
-SupportedMonitors.Add "drive", "usedSpace,MB|freeSpace,MB"
-SupportedMonitors.Add "process", "memUsage,MB|cpuUsage,%"
+SupportedMonitors.Add "cpu", "user_value,%|kernel_value,%"
+SupportedMonitors.Add "memory", "free_memory,MB|total_memory,MB"
+SupportedMonitors.Add "drive", "result,MB"
+SupportedMonitors.Add "process", "memory_usage,MB|cpu_usage,%"
 SupportedMonitors.Add "http", "memUsage,MB|cpuUsage,%"
+SupportedMonitors.Add "fullpage", "result, |status, "
 
 'Command line arguments
 argCmd = WScript.Arguments.Named.Item("cmd")
@@ -79,13 +81,20 @@ Sub ListAgents(agentType, argMonitors, argProcesses)
 	
 	'Process monitor(s) command line parameter
 	If LCase(argMonitors) = "all" Then
-		For Each monitor In SupportedMonitors
-			ShowMonitors.Add monitor, monitor
-		Next
+		If LCase(agentType) = "fullpage" Then
+			tempList = Split(argMonitors, ",")
+			If Not ShowMonitors.Exists(LCase(tempList(i))) Then
+				ShowMonitors.Add tempList(i), tempList(i)
+			End If
+		Else
+			For Each monitor In SupportedMonitors
+				ShowMonitors.Add monitor, monitor
+			Next
+		End If
 	ElseIf Len(argMonitors) > 0 Then
 		tempList = Split(argMonitors, ",")
 		For i = 0 To UBound(tempList)
-			If SupportedMonitors.Exists(LCase(tempList(i))) And Not ShowMonitors.Exists(LCase(tempList(i))) Then
+			If Not ShowMonitors.Exists(LCase(tempList(i))) Then
 				ShowMonitors.Add tempList(i), tempList(i)
 			End If
 		Next
@@ -109,10 +118,14 @@ Sub ListAgents(agentType, argMonitors, argProcesses)
 		Case "ext"
 			GetExternalMonitors objHttp, Agents, ShowMonitors
 		
+		Case "fullpage"
+			GetFullpageMonitors objHttp, Agents, ShowMonitors
+
 		Case "all"
 			GetInternalAgents objHttp, Agents, ShowMonitors, ShowProcesses
 			GetExternalMonitors objHttp, Agents, ShowMonitors
-		
+			GetFullpageMonitors objHttp, Agents, ShowMonitors
+			
 		Case Else
 			GetInternalAgents objHttp, Agents, ShowMonitors, ShowProcesses
 	End Select
@@ -135,7 +148,7 @@ Sub ShowUsage(strError)
 	WScript.Echo "/cmd:setkeys /apikey:<apikey> /secretkey:<secretKey>"
 	WScript.Echo ""
 	WScript.Echo "Show global monitor results for defined agents:"
-	WScript.Echo "/cmd:listagents /type:<int>|<ext>|<all> [/monitors:<all><name>,<name>,...]"
+	WScript.Echo "/cmd:listagents /type:<int>|<ext>|<fullpage>|<all> [/monitors:<all><name>,<name>,...]"
 	WScript.Echo ""
 	WScript.Echo "Show monitor results for one or more specific processes:"
 	WScript.Echo "/cmd:listagents /type:<int>|<ext>|<all> [/process:<name>,<name>,...]"
@@ -209,3 +222,30 @@ Sub ShowAgents
 
 	Next
 End Sub
+
+'-----------------------------------------------------------------------------------------------
+
+Function GetResult(aNode, aMonitor, aFields)
+	arrValues = Split(aFields, "|")
+	For Each value In arrValues 
+	
+		'Split each value in the API field name and the suffix string 
+		arrDetails = Split(value,",")
+		strValue = arrDetails(0)
+		strSuffix = arrDetails(1)
+	
+		'Retrieve the result for the given counter
+		Set t = aNode.selectSingleNode(strValue)
+		If Not t Is Nothing Then
+			
+			'Create a new metric object
+			Set Metric = New class_Metric
+			Metric.Name = strValue
+			Metric.Result = t.text & strSuffix
+			
+			'Add the metric object to the current monitor object
+		 	aMonitor.MetricList.Add Metric.Name, Metric
+		End If
+	
+	Next
+End Function
