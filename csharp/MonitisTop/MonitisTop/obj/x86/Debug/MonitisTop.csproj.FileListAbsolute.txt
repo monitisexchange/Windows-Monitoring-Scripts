@@ -1,0 +1,15 @@
+\\ab-srv01\documents\ard-jan\my documents\visual studio 2010\Projects\MonitisTop\MonitisTop\obj\x86\Debug\ResolveAssemblyReference.cache
+\\ab-srv01\documents\ard-jan\my documents\visual studio 2010\Projects\MonitisTop\MonitisTop\bin\Debug\MonitisTop.exe
+\\ab-srv01\documents\ard-jan\my documents\visual studio 2010\Projects\MonitisTop\MonitisTop\bin\Debug\MonitisTop.pdb
+\\ab-srv01\documents\ard-jan\my documents\visual studio 2010\Projects\MonitisTop\MonitisTop\obj\x86\Debug\MonitisTop.exe
+\\ab-srv01\documents\ard-jan\my documents\visual studio 2010\Projects\MonitisTop\MonitisTop\obj\x86\Debug\MonitisTop.pdb
+C:\Projects\Visual Studio\Projects\MonitisTop\MonitisTop\obj\x86\Debug\MonitisTop.exe
+C:\Projects\Visual Studio\Projects\MonitisTop\MonitisTop\obj\x86\Debug\MonitisTop.pdb
+C:\Projects\Visual Studio\Projects\MonitisTop\MonitisTop\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Projects\Visual Studio\Projects\MonitisTop\MonitisTop\bin\Debug\MonitisTop.exe
+C:\Projects\Visual Studio\Projects\MonitisTop\MonitisTop\bin\Debug\MonitisTop.pdb
+C:\Projects\Visual Studio\Projects\MonitisTop\MonitisTop\bin\Debug\MonitisTop.exe.config
+C:\Projects\Visual Studio\Projects\MonitisTop\MonitisTop\bin\Debug\Microsoft.Http.dll
+C:\Projects\Visual Studio\Projects\MonitisTop\MonitisTop\bin\Debug\Microsoft.Http.Extensions.dll
+C:\Projects\Visual Studio\Projects\MonitisTop\MonitisTop\bin\Debug\Microsoft.Http.pdb
+C:\Projects\Visual Studio\Projects\MonitisTop\MonitisTop\bin\Debug\Microsoft.Http.Extensions.pdb
