@@ -124,6 +124,15 @@ namespace Monitis.Prototype.Logic {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HostWorkerRole_IN_0.
+        /// </summary>
+        internal static string RoleInstanceName {
+            get {
+                return ResourceManager.GetString("RoleInstanceName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to WADPerformanceCountersTable.
         /// </summary>
         internal static string WADPerformanceCountersTable {

@@ -123,7 +123,7 @@ namespace Monitis.Prototype.Logic.Mediation
 
                 //get perfomance counter data
                 List<PerformanceData> data = queryExecuter.GetPerformanceCounters(kvp.Key,
-                                                                                   _userSession.AzureInfo.DeploymentInfo.DeploymentID,
+                                                                                   _userSession.AzureInfo.DeploymentInfo.RoleInstanceName,
                                                                                    DateTime.UtcNow.AddSeconds(-_syncPeriod.TotalSeconds),
                                                                                    DateTime.UtcNow);
 

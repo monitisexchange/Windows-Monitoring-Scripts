@@ -145,6 +145,10 @@
     <value>\Processor(_Total)\% Processor Time</value>
     <comment>Windows style counter for CPU</comment>
   </data>
+  <data name="RoleInstanceName" xml:space="preserve">
+    <value>HostWorkerRole_IN_0</value>
+    <comment>Deployed role instance name</comment>
+  </data>
   <data name="WADPerformanceCountersTable" xml:space="preserve">
     <value>WADPerformanceCountersTable</value>
     <comment>Name of table perfomance counters table</comment>

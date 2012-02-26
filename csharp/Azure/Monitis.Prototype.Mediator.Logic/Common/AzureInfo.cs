@@ -22,5 +22,10 @@ namespace Monitis.Prototype.Logic.Common
         /// Deployment info
         /// </summary>
         public DeploymentInfo DeploymentInfo { get; set; }
+
+        /// <summary>
+        /// Gets or sets deployed role instance name 
+        /// </summary>
+        public String RoleInstanceName { get; set; }
     }
 }

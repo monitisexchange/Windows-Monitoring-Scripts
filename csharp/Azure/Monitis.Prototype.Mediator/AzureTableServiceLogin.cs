@@ -37,8 +37,7 @@ namespace Monitis.Prototype.UI
                                                          AccountName = tbxStorageAccountName.Text.Trim(),
                                                          DeploymentInfo = new DeploymentInfo
                                                                               {
-                                                                                  DeploymentID =
-                                                                                      tbxDeploymentID.Text.Trim()
+                                                                                  RoleInstanceName = tbxRoleInstanceName.Text.Trim()
                                                                               }
                                                      };
                         MediatorForm mediatorForm = new MediatorForm(_userSession, MdiParent);
@@ -80,7 +79,7 @@ namespace Monitis.Prototype.UI
         /// </summary>
         private void ChangeInputLock(Boolean isLocked)
         {
-            tbxStorageAccountName.Enabled = tbxAccountPrivateKey.Enabled = tbxDeploymentID.Enabled = !isLocked;
+            tbxStorageAccountName.Enabled = tbxAccountPrivateKey.Enabled = tbxRoleInstanceName.Enabled = !isLocked;
         }
 
         /// <summary>
@@ -88,7 +87,7 @@ namespace Monitis.Prototype.UI
         /// </summary>
         private void CleanStorageSettingsInput()
         {
-            tbxAccountPrivateKey.Text = tbxAccountPrivateKey.Text = tbxDeploymentID.Text = String.Empty;
+            tbxAccountPrivateKey.Text = tbxAccountPrivateKey.Text = tbxRoleInstanceName.Text = String.Empty;
         }
 
         /// <summary>
@@ -96,9 +95,10 @@ namespace Monitis.Prototype.UI
         /// </summary>
         private void LoadDefaultStorageSettings()
         {
+            
             tbxStorageAccountName.Text = TableServiceManager.DefaultAccountName;
             tbxAccountPrivateKey.Text = TableServiceManager.DefaultAccountKey;
-            tbxDeploymentID.Text = DeploymentInfo.DefaultDeploymentID;
+            tbxRoleInstanceName.Text = DeploymentInfo.DefaultRoleInstanceName;
         }
     }
 }

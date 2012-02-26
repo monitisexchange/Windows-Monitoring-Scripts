@@ -38,11 +38,11 @@ namespace Monitis.Prototype.Logic.Azure.TableService
         /// Retrive Performance counter data
         /// </summary>
         /// <param name="counterFullName">Perfomance counter specifier full name</param>
-        /// <param name="deploymentid">Deployment id</param>
+        /// <param name="roleInstanceName">Deployment id</param>
         /// <param name="startPeriod">Start sample date time</param>
         /// <param name="endPeriod">End sample date time</param>
         /// <returns></returns>
-        public List<PerformanceData> GetPerformanceCounters(String counterFullName, String deploymentid, DateTime startPeriod, DateTime endPeriod)
+        public List<PerformanceData> GetPerformanceCounters(String counterFullName, String roleInstanceName, DateTime startPeriod, DateTime endPeriod)
         {
             //create context for WAD table
             WADPerformanceTable context = new WADPerformanceTable(_accountStorage.TableEndpoint.ToString(), _accountStorage.Credentials);
@@ -56,7 +56,7 @@ namespace Monitis.Prototype.Logic.Azure.TableService
                      where row.CounterName == counterFullName
                         && row.EventTickCount >= startPeriod.Ticks
                         && row.EventTickCount <= endPeriod.Ticks
-                        && row.DeploymentId.Equals(deploymentid)
+                        && row.RoleInstance.Equals(roleInstanceName)
                      select row).AsTableServiceQuery();
 
             List<PerformanceData> selectedData = new List<PerformanceData>();

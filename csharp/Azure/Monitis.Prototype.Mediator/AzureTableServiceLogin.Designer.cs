@@ -33,7 +33,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tbxAccountPrivateKey = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.tbxDeploymentID = new System.Windows.Forms.TextBox();
+            this.tbxRoleInstanceName = new System.Windows.Forms.TextBox();
             this.cbUseDefault = new System.Windows.Forms.CheckBox();
             this.btnApplySettings = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -75,16 +75,16 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(12, 62);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(77, 13);
+            this.label3.Size = new System.Drawing.Size(104, 13);
             this.label3.TabIndex = 5;
-            this.label3.Text = "Deployment ID";
+            this.label3.Text = "Role Instance Name";
             // 
-            // tbxDeploymentID
+            // tbxRoleInstanceName
             // 
-            this.tbxDeploymentID.Location = new System.Drawing.Point(12, 78);
-            this.tbxDeploymentID.Name = "tbxDeploymentID";
-            this.tbxDeploymentID.Size = new System.Drawing.Size(253, 20);
-            this.tbxDeploymentID.TabIndex = 4;
+            this.tbxRoleInstanceName.Location = new System.Drawing.Point(12, 78);
+            this.tbxRoleInstanceName.Name = "tbxRoleInstanceName";
+            this.tbxRoleInstanceName.Size = new System.Drawing.Size(253, 20);
+            this.tbxRoleInstanceName.TabIndex = 4;
             // 
             // cbUseDefault
             // 
@@ -115,7 +115,7 @@
             this.Controls.Add(this.btnApplySettings);
             this.Controls.Add(this.cbUseDefault);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.tbxDeploymentID);
+            this.Controls.Add(this.tbxRoleInstanceName);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.tbxAccountPrivateKey);
             this.Controls.Add(this.label1);
@@ -135,7 +135,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tbxAccountPrivateKey;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox tbxDeploymentID;
+        private System.Windows.Forms.TextBox tbxRoleInstanceName;
         private System.Windows.Forms.CheckBox cbUseDefault;
         private System.Windows.Forms.Button btnApplySettings;
     }
