@@ -43,6 +43,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Azure\DeploymentInfo.cs" />
+    <Compile Include="Azure\Storage\Analytics\AnalyticsSettings.cs" />
+    <Compile Include="Azure\Storage\Analytics\AnalyticsSettingsExtension.cs" />
+    <Compile Include="Azure\Storage\Analytics\LoggingLevel.cs" />
+    <Compile Include="Azure\Storage\Analytics\MetricsType.cs" />
+    <Compile Include="Azure\Storage\Analytics\SettingsSerializerHelper.cs" />
+    <Compile Include="Azure\Storage\StorageResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StorageResource.resx</DependentUpon>
+    </Compile>
     <Compile Include="Azure\TableService\PerformanceData.cs" />
     <Compile Include="Azure\TableService\QueryExecuter.cs" />
     <Compile Include="Azure\TableService\TableServiceManager.cs" />
@@ -53,6 +63,13 @@
     <Compile Include="Mediation\CounterDataEventArgs.cs" />
     <Compile Include="Mediation\Mediator.cs" />
     <Compile Include="Mediation\StatusEventArgs.cs" />
+    <Compile Include="Monitis\MonitorDescriptors\AvailableMemory.cs" />
+    <Compile Include="Monitis\MonitorDescriptors\CPU.cs" />
+    <Compile Include="Monitis\MonitorDescriptors\MonitorDesriptorsResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MonitorDesriptorsResource.resx</DependentUpon>
+    </Compile>
     <Compile Include="PerfomanceCounter\CounterNames.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
@@ -60,6 +77,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="StorageMetrics\MetricNames.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Monitis.API\Monitis.API.csproj">
@@ -68,11 +86,20 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Azure\Storage\StorageResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>StorageResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Monitis\MonitorDescriptors\MonitorDesriptorsResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MonitorDesriptorsResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -10,6 +10,6 @@ namespace Monitis.Prototype.Logic.Mediation
     /// </summary>
     public class CounterDataEventArgs : EventArgs
     {
-        public List<PerformanceData> PerformanceDatas { get; set; }
+        public IEnumerable<PerformanceData> PerformanceDatas { get; set; }
     }
 }

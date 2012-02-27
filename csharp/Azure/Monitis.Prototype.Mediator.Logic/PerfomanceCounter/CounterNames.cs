@@ -12,7 +12,7 @@ namespace Monitis.Prototype.Logic.PerfomanceCounter
         /// </summary>
         public static String ProcessorTotalTime
         {
-            get { return @"\Processor(_Total)\% Processor Time"; }
+            get { return Resources.ProcessorTimeCounter; }
         }
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace Monitis.Prototype.Logic.PerfomanceCounter
         /// </summary>
         public static String MemoryAvailableBytes
         {
-            get { return @"\Memory\Available Bytes"; }
+            get { return Resources.MemoryAvailableBytes; }
         }
 
     }

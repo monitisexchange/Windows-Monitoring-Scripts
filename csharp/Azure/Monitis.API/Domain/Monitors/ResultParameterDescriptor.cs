@@ -6,7 +6,7 @@ namespace Monitis.API.Domain.Monitors
     /// <summary>
     /// Class contains information about <see cref="Monitor"/> <see cref="ResultParameter"/>
     /// </summary>
-    public class ResultParameterDescription
+    public class ResultParameterDescriptor
     {
         /// <summary>
         /// Name for internal usages

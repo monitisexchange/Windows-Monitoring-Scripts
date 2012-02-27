@@ -7,14 +7,11 @@ using Microsoft.WindowsAzure.StorageClient;
 namespace Monitis.Prototype.Logic.Azure.TableService
 {
     /// <summary>
-    /// Query helper for retrieving data from the WADPerformanceCountersTable
+    /// Query helper for retrieving data from the Windows Azure Table service
     /// </summary>
     public class QueryExecuter
     {
-        /// <summary>
-        /// Cloud storage account client
-        /// </summary>
-        private readonly CloudStorageAccount _accountStorage;
+        #region constructors
 
         /// <summary>
         /// Default Constructor - Use development storage emulator.
@@ -29,10 +26,14 @@ namespace Monitis.Prototype.Logic.Azure.TableService
         /// </summary>
         /// <param name="accountName">Azure storage name</param>
         /// <param name="privateKey">Azure storage private key</param>
-        public QueryExecuter(string accountName, string privateKey)
+        public QueryExecuter(String accountName, String privateKey)
         {
             _accountStorage = CloudStorageAccount.Parse(String.Format("DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}", accountName, privateKey));
         }
+
+        #endregion
+
+        #region public methods
 
         /// <summary>
         /// Retrive Performance counter data
@@ -42,24 +43,23 @@ namespace Monitis.Prototype.Logic.Azure.TableService
         /// <param name="startPeriod">Start sample date time</param>
         /// <param name="endPeriod">End sample date time</param>
         /// <returns></returns>
-        public List<PerformanceData> GetPerformanceCounters(String counterFullName, String roleInstanceName, DateTime startPeriod, DateTime endPeriod)
+        public IEnumerable<PerformanceData> GetPerformanceCounters(String counterFullName, String roleInstanceName, DateTime startPeriod, DateTime endPeriod)
         {
             //create context for WAD table
             WADPerformanceTable context = new WADPerformanceTable(_accountStorage.TableEndpoint.ToString(), _accountStorage.Credentials);
 
             IQueryable<PerformanceData> data = context.Data;
 
-            CloudTableQuery<PerformanceData> query = null;
-
             //query for pefomance counters
-            query = (from row in data
-                     where row.CounterName == counterFullName
-                        && row.EventTickCount >= startPeriod.Ticks
-                        && row.EventTickCount <= endPeriod.Ticks
-                        && row.RoleInstance.Equals(roleInstanceName)
-                     select row).AsTableServiceQuery();
+            CloudTableQuery<PerformanceData> query = (from row in data
+                                                      where row.CounterName == counterFullName
+                                                         && row.EventTickCount >= startPeriod.Ticks
+                                                         && row.EventTickCount <= endPeriod.Ticks
+                                                         && row.RoleInstance.Equals(roleInstanceName)
+                                                      select row).AsTableServiceQuery();
 
-            List<PerformanceData> selectedData = new List<PerformanceData>();
+           
+            List<PerformanceData> selectedData;
             try
             {
                 selectedData = query.Execute().ToList();
@@ -71,5 +71,21 @@ namespace Monitis.Prototype.Logic.Azure.TableService
             }
             return selectedData;
         }
+
+        public void GetMetricData()
+        {
+
+        }
+
+        #endregion
+
+        #region private fields
+
+        /// <summary>
+        /// Cloud storage account client
+        /// </summary>
+        private readonly CloudStorageAccount _accountStorage;
+
+        #endregion private fields
     }
 }

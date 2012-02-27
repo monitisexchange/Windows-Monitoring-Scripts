@@ -37,20 +37,20 @@ namespace Monitis.API.REST.CustomMonitors
         /// </summary>
         /// <param name="apiKey"></param>
         /// <param name="authToken"></param>
-        /// <param name="configuration">Configuration of monitor for add</param>
+        /// <param name="descriptor">Configuration of monitor for add</param>
         /// <returns></returns>
-        public AddMonitorResponse AddMonitor(String apiKey, String authToken, MonitorConfiguration configuration)
+        public AddMonitorResponse AddMonitor(String apiKey, String authToken, MonitorDescriptor descriptor)
         {
             Validation.ValidateAPIKey(apiKey);
             Validation.ValidateAuthToken(authToken);
 
             APIClient apiClient = new APIClient(APIType.Live, apiKey, RequestPath, ActionNames.AddMonitor, authToken);
 
-            string resultParams = Utils.JoinMonitorResultParams(configuration.ResultParams);
+            string resultParams = Utils.JoinMonitorResultParams(descriptor.ResultParams);
 
             apiClient.AddParam(ParamNames.ResultParams, resultParams);
-            apiClient.AddParam(ParamNames.Name, configuration.Name);
-            apiClient.AddParam(ParamNames.Tag, configuration.Tag);
+            apiClient.AddParam(ParamNames.Name, descriptor.Name);
+            apiClient.AddParam(ParamNames.Tag, descriptor.Tag);
             AddMonitorResponse addMonitorResponse = apiClient.InvokePost<AddMonitorResponse>();
             return addMonitorResponse;
         }

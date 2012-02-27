@@ -5,7 +5,7 @@ namespace Monitis.API.Domain.Monitors
     /// <summary>
     /// Class reprsents info about Monitor configuration
     /// </summary>
-    public class MonitorConfiguration
+    public class MonitorDescriptor
     {
         /// <summary>
         /// Monitor name
@@ -25,6 +25,6 @@ namespace Monitis.API.Domain.Monitors
         /// <summary>
         /// All monitors parameters
         /// </summary>
-        public ResultParameterDescription[] ResultParams { get; set; }
+        public ResultParameterDescriptor[] ResultParams { get; set; }
     }
 }

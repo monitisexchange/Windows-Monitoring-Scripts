@@ -57,9 +57,9 @@
     <Compile Include="Common\Validation.cs" />
     <Compile Include="Domain\Monitors\MeasureDataType.cs" />
     <Compile Include="Domain\Monitors\Monitor.cs" />
-    <Compile Include="Domain\Monitors\MonitorConfiguration.cs" />
+    <Compile Include="Domain\Monitors\MonitorDescriptor.cs" />
     <Compile Include="Domain\Monitors\ResultParameter.cs" />
-    <Compile Include="Domain\Monitors\ResultParameterDescription.cs" />
+    <Compile Include="Domain\Monitors\ResultParameterDescriptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="REST\CustomMonitors\Contract\AddMonitorResponse.cs" />
     <Compile Include="REST\CustomMonitors\CustomMonitorAPI.cs" />

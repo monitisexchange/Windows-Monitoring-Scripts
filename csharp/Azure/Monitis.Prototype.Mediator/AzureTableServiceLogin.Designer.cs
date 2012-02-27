@@ -99,7 +99,7 @@
             // 
             // btnApplySettings
             // 
-            this.btnApplySettings.Location = new System.Drawing.Point(458, 157);
+            this.btnApplySettings.Location = new System.Drawing.Point(458, 117);
             this.btnApplySettings.Name = "btnApplySettings";
             this.btnApplySettings.Size = new System.Drawing.Size(75, 23);
             this.btnApplySettings.TabIndex = 7;

@@ -18,12 +18,12 @@ namespace Monitis.API.Util
         /// <summary>
         /// Join monitor parameters description into single line with encoding
         /// </summary>
-        /// <param name="parametersDescription">Parameters description array</param>
+        /// <param name="parametersDescriptors">Parameters description array</param>
         /// <returns></returns>
-        public static String JoinMonitorResultParams(ResultParameterDescription[] parametersDescription)
+        public static String JoinMonitorResultParams(ResultParameterDescriptor[] parametersDescriptors)
         {
             //join by pattern : name1:displayName1:uom1:dataType1[;name2:displayName2:uom2:dataType2...]
-            String joinedParameters = parametersDescription
+            String joinedParameters = parametersDescriptors
                 .Aggregate(String.Empty, 
                            (current, parameter) => current + String.Format("{0}:{1}:{2}:{3};", 
                                parameter.Name, parameter.DisplayName,

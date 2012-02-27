@@ -104,33 +104,6 @@ namespace Monitis.Prototype.Logic.Common
         /// </summary>
         public AzureInfo AzureInfo { get; set; }
 
-        /// <summary>
-        /// Represents standart Monitis monitor for Windows Azure counters
-        /// </summary>
-        public MonitorConfiguration AzureMonitor
-        {
-            get
-            {
-                if (_azureMonitor == null)
-                {
-                    _azureMonitor = new MonitorConfiguration()
-                    {
-                        Name = "Windows Azure Monitor",
-                        Tag = "Azure",
-                        Type = "test",
-                        ResultParams = new[]
-                        {
-                            new ResultParameterDescription
-                            { Name = Resources.MonitisCPUParameter, DisplayName = "CPU instance Counter", DataType = MeasureDataType.Float, UOM = "Percent" },
-                            new ResultParameterDescription
-                            { Name = Resources.MonitisFreeMemoryParameter, DisplayName = "Free instance memory", DataType = MeasureDataType.Integer, UOM = "Bytes" }
-                        }
-                    };
-                }
-                return _azureMonitor;
-            }
-        }
-
         #endregion public properties
 
         #region public methods
@@ -147,16 +120,16 @@ namespace Monitis.Prototype.Logic.Common
         }
 
         /// <summary>
-        /// Create new Azure monitor to Monitis service
+        /// Create monitors for Azure metrics and counters in Monitis service
         /// </summary>
-        public void CreateAzureMonitor()
+        public void CreateAzureMonitors()
         {
             CustomMonitorAPI customMonitorAPI = new CustomMonitorAPI();
-            Monitor monitor = GetCustomMonitors().FirstOrDefault(f => f.Name.Equals(AzureMonitor.Name));
-            if (monitor == null)
-            {
-                AddMonitorResponse addMonitorResponse = customMonitorAPI.AddMonitor(APIKey, _authToken, AzureMonitor);
-            }
+            //Monitor monitor = GetCustomMonitors().FirstOrDefault(f => f.Name.Equals(AzureMonitor.Name));
+            //if (monitor == null)
+            //{
+            //    AddMonitorResponse addMonitorResponse = customMonitorAPI.AddMonitor(APIKey, _authToken, AzureMonitor);
+            //}
             //TODO: need case if monitor exists
         }
 
@@ -164,7 +137,7 @@ namespace Monitis.Prototype.Logic.Common
 
         #region private fields
 
-        private MonitorConfiguration _azureMonitor;
+        private MonitorDescriptor _azureMonitor;
         private String _secretKey;
         private String _authToken;
         private Monitor _customActiveMonitor;

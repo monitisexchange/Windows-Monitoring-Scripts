@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Timers;
 using Monitis.API.Domain.Monitors;
@@ -115,6 +116,8 @@ namespace Monitis.Prototype.Logic.Mediation
         /// <param name="e"></param>
         private void UpdatePerfomanceCounters(object sender, ElapsedEventArgs e)
         {
+            //TODO: look like template pattern
+
             //create query executer for access to data in Windows Azure Table Service
             QueryExecuter queryExecuter = new QueryExecuter(_userSession.AzureInfo.AccountName, _userSession.AzureInfo.AccountKey);
             foreach (var kvp in _counterNameEventUpdateMap)
@@ -122,12 +125,12 @@ namespace Monitis.Prototype.Logic.Mediation
                 InvokeStatusChanged(kvp.Key + "> start update");
 
                 //get perfomance counter data
-                List<PerformanceData> data = queryExecuter.GetPerformanceCounters(kvp.Key,
+                IEnumerable<PerformanceData> data = queryExecuter.GetPerformanceCounters(kvp.Key,
                                                                                    _userSession.AzureInfo.DeploymentInfo.RoleInstanceName,
                                                                                    DateTime.UtcNow.AddSeconds(-_syncPeriod.TotalSeconds),
                                                                                    DateTime.UtcNow);
 
-                InvokeStatusChanged(kvp.Key + "> retrieved records count from Azure:" + data.Count);
+                InvokeStatusChanged(kvp.Key + "> retrieved records count from Azure:" + data.Count());
 
                 CustomMonitorAPI customMonitorAPI = new CustomMonitorAPI();
 
@@ -141,7 +144,6 @@ namespace Monitis.Prototype.Logic.Mediation
 
                 //fire event to update all handlers
                 kvp.Value(this, new CounterDataEventArgs { PerformanceDatas = data });
-                Thread.Sleep(TimeSpan.FromSeconds(1));
             }
 
             InvokeStatusChanged(String.Format("Next update after {0} second", TimeSpan.FromMilliseconds(_updateTimer.Interval).TotalSeconds));

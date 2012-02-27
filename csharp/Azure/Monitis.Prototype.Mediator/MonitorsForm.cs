@@ -42,7 +42,7 @@ namespace Monitis.Prototype.UI
         private void OnAddAzureMonitorClick(object sender, EventArgs e)
         {
             Util.ShowWaitWindow("Try create monitor...");
-            _userSession.CreateAzureMonitor();
+            _userSession.CreateAzureMonitors();
             LoadMonitorList();
             Util.CloseWaitWindow();
         }
