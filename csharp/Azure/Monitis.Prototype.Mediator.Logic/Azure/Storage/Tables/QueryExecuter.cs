@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.StorageClient;
+using Monitis.Prototype.Logic.Azure.Storage.Tables.MetricsTransactions;
 
 namespace Monitis.Prototype.Logic.Azure.TableService
 {
@@ -48,16 +49,13 @@ namespace Monitis.Prototype.Logic.Azure.TableService
             //create context for WAD table
             WADPerformanceTable context = new WADPerformanceTable(_accountStorage.TableEndpoint.ToString(), _accountStorage.Credentials);
 
-            IQueryable<PerformanceData> data = context.Data;
-
             //query for pefomance counters
-            CloudTableQuery<PerformanceData> query = (from row in data
+            CloudTableQuery<PerformanceData> query = (from row in context.Queryable
                                                       where row.CounterName == counterFullName
                                                          && row.EventTickCount >= startPeriod.Ticks
                                                          && row.EventTickCount <= endPeriod.Ticks
                                                          && row.RoleInstance.Equals(roleInstanceName)
                                                       select row).AsTableServiceQuery();
-
            
             List<PerformanceData> selectedData;
             try
@@ -72,9 +70,10 @@ namespace Monitis.Prototype.Logic.Azure.TableService
             return selectedData;
         }
 
-        public void GetMetricData()
+        public MetricsTransactionsEntity[] GetMetricData(DateTime startPeriod, DateTime endPeriod)
         {
-
+            MetricsTransactionsQuery transactionsQuery = new MetricsTransactionsQuery();
+            return transactionsQuery.GetMetrics(_accountStorage, startPeriod, endPeriod);
         }
 
         #endregion

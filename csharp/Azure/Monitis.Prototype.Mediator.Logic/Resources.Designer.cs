@@ -131,14 +131,5 @@ namespace Monitis.Prototype.Logic {
                 return ResourceManager.GetString("RoleInstanceName", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to WADPerformanceCountersTable.
-        /// </summary>
-        internal static string WADPerformanceCountersTable {
-            get {
-                return ResourceManager.GetString("WADPerformanceCountersTable", resourceCulture);
-            }
-        }
     }
 }

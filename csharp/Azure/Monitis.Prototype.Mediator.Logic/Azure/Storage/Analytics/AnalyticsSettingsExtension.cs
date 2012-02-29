@@ -16,6 +16,9 @@ using Microsoft.WindowsAzure.StorageClient;
 
 namespace Monitis.Prototype.Logic.Azure.Storage.Analytics
 {
+    /// <summary>
+    /// Extenstions methods for Get/Set operation over Analytics configuration
+    /// </summary>
     public static class AnalyticsSettingsExtension
     {
         private static String RequestIdHeaderName = "x-ms-request-id";

@@ -53,10 +53,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StorageResource.resx</DependentUpon>
     </Compile>
-    <Compile Include="Azure\TableService\PerformanceData.cs" />
-    <Compile Include="Azure\TableService\QueryExecuter.cs" />
-    <Compile Include="Azure\TableService\TableServiceManager.cs" />
-    <Compile Include="Azure\TableService\WADPerformanceTable.cs" />
+    <Compile Include="Azure\Storage\Tables\MetricsTransactions\MetricsTransactionsEntity.cs" />
+    <Compile Include="Azure\Storage\Tables\MetricsTransactions\MetricsTransactionsQuery.cs" />
+    <Compile Include="Azure\Storage\Tables\MetricsTransactions\MetricsTransactionsTable.cs" />
+    <Compile Include="Azure\Storage\Tables\QueryExecuter.cs" />
+    <Compile Include="Azure\Storage\Tables\TableServiceManager.cs" />
+    <Compile Include="Azure\Storage\Tables\WADPerfomance\PerformanceData.cs" />
+    <Compile Include="Azure\Storage\Tables\WADPerfomance\WADPerformanceTable.cs" />
     <Compile Include="Common\ActionResult.cs" />
     <Compile Include="Common\AzureInfo.cs" />
     <Compile Include="Common\UserSession.cs" />

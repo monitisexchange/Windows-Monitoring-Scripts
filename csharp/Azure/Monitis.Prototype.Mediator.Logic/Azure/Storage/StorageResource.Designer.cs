@@ -68,5 +68,32 @@ namespace Monitis.Prototype.Logic.Azure.Storage {
                 return ResourceManager.GetString("AnalyticsSettingsVersion", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to $MetricsTransactionsTable.
+        /// </summary>
+        internal static string MetricsTransactionsTableName {
+            get {
+                return ResourceManager.GetString("MetricsTransactionsTableName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to yyyyMMddTHH00.
+        /// </summary>
+        internal static string TransactionPrimaryKeyTimeFormat {
+            get {
+                return ResourceManager.GetString("TransactionPrimaryKeyTimeFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WADPerformanceCountersTable.
+        /// </summary>
+        internal static string WADPerformanceCountersTableName {
+            get {
+                return ResourceManager.GetString("WADPerformanceCountersTableName", resourceCulture);
+            }
+        }
     }
 }

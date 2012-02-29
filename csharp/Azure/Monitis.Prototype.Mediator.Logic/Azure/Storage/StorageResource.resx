@@ -120,4 +120,14 @@
   <data name="AnalyticsSettingsVersion" xml:space="preserve">
     <value>1.0</value>
   </data>
+  <data name="MetricsTransactionsTableName" xml:space="preserve">
+    <value>$MetricsTransactionsTable</value>
+  </data>
+  <data name="TransactionPrimaryKeyTimeFormat" xml:space="preserve">
+    <value>yyyyMMddTHH00</value>
+    <comment>TransactionMetrics tables partition key format</comment>
+  </data>
+  <data name="WADPerformanceCountersTableName" xml:space="preserve">
+    <value>WADPerformanceCountersTable</value>
+  </data>
 </root>

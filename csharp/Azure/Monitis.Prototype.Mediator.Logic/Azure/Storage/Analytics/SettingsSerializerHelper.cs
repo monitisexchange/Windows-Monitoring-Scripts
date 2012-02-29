@@ -73,7 +73,8 @@ namespace Monitis.Prototype.Logic.Azure.Storage.Analytics
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement(SettingsSerializerHelper.RootPropertiesElementName);
 
-            //LOGGING STARTS HERE xmlWriter.WriteStartElement(SettingsSerializerHelper.LoggingElementName);
+            //LOGGING STARTS HERE 
+            xmlWriter.WriteStartElement(SettingsSerializerHelper.LoggingElementName);
 
             xmlWriter.WriteStartElement(SettingsSerializerHelper.VersionElementName);
             xmlWriter.WriteValue(settings.LogVersion);
@@ -95,7 +96,10 @@ namespace Monitis.Prototype.Logic.Azure.Storage.Analytics
             xmlWriter.WriteEndElement();
 
             SerializeRetentionPolicy(xmlWriter, settings.IsLogRetentionPolicyEnabled, settings.LogRetentionInDays);
-            xmlWriter.WriteEndElement(); // logging element //METRICS STARTS HERE xmlWriter.WriteStartElement(SettingsSerializerHelper.MetricsElementName);
+            xmlWriter.WriteEndElement(); // logging element 
+            
+            //METRICS STARTS HERE 
+            xmlWriter.WriteStartElement(SettingsSerializerHelper.MetricsElementName);
 
             xmlWriter.WriteStartElement(SettingsSerializerHelper.VersionElementName);
             xmlWriter.WriteValue(settings.MetricsVersion);
@@ -118,7 +122,11 @@ namespace Monitis.Prototype.Logic.Azure.Storage.Analytics
                 xmlWriter,
                 settings.IsMetricsRetentionPolicyEnabled,
                 settings.MetricsRetentionInDays);
-            xmlWriter.WriteEndElement(); // metrics xmlWriter.WriteEndElement(); // root element xmlWriter.WriteEndDocument();
+            xmlWriter.WriteEndElement(); 
+            // metrics 
+            xmlWriter.WriteEndElement(); 
+            // root element 
+            xmlWriter.WriteEndDocument();
         }
 
         private static void SerializeRetentionPolicy(XmlWriter xmlWriter, Boolean isRetentionEnabled, Int32 days)
@@ -224,7 +232,8 @@ namespace Monitis.Prototype.Logic.Azure.Storage.Analytics
                         xmlReader,
                         SettingsSerializerHelper.MetricsEnabledElementName))
                     {
-                        // only if metrics is enabled will we read include API settings.MetricsType = settings.MetricsType | MetricsType.ServiceSummary;
+                        // only if metrics is enabled will we read include API 
+                        settings.MetricsType = settings.MetricsType | MetricsType.ServiceSummary;
                     }
                 }
                 else if (xmlReader.IsStartElement(SettingsSerializerHelper.IncludeApiSummaryElementName))
@@ -253,7 +262,8 @@ namespace Monitis.Prototype.Logic.Azure.Storage.Analytics
 
             if ((settings.MetricsType & MetricsType.ServiceSummary) != MetricsType.None)
             {
-                // If Metrics is enabled, IncludeAPIs must be included. if (includeAPIs)
+                // If Metrics is enabled, IncludeAPIs must be included. 
+                if (includeAPIs)
                 {
                     settings.MetricsType = settings.MetricsType | MetricsType.ApiSummary;
                 }

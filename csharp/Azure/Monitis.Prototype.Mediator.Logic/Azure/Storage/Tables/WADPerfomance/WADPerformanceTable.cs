@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.StorageClient;
+using Monitis.Prototype.Logic.Azure.Storage;
 
 namespace Monitis.Prototype.Logic.Azure.TableService
 {
@@ -14,7 +15,7 @@ namespace Monitis.Prototype.Logic.Azure.TableService
         /// <summary>
         /// Azure table name
         /// </summary>
-        public static readonly String TableName = Resources.WADPerformanceCountersTable;
+        public static readonly String TableName = StorageResource.WADPerformanceCountersTableName;
 
         public WADPerformanceTable(String baseAddress, StorageCredentials credentials)
             : base(baseAddress, credentials)
@@ -29,9 +30,9 @@ namespace Monitis.Prototype.Logic.Azure.TableService
         }
 
         /// <summary>
-        /// Represents queryable object over table context
+        /// Represents queryable object over table context for LINQ queries
         /// </summary>
-        public IQueryable<PerformanceData> Data
+        public IQueryable<PerformanceData> Queryable
         {
             get { return CreateQuery<PerformanceData>(TableName); }
         }
