@@ -51,6 +51,7 @@
             this.tbxMonitisAPIKey.Name = "tbxMonitisAPIKey";
             this.tbxMonitisAPIKey.Size = new System.Drawing.Size(227, 20);
             this.tbxMonitisAPIKey.TabIndex = 1;
+            this.tbxMonitisAPIKey.Text = "GCGCA66Q3PJNQ5KEMCOMNSBTO";
             this.tbxMonitisAPIKey.TextChanged += new System.EventHandler(this.OnMonitisAPIKeyTextChanged);
             // 
             // label1

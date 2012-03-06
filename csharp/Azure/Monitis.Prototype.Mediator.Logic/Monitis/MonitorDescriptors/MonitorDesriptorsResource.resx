@@ -120,6 +120,9 @@
   <data name="Bytes" xml:space="preserve">
     <value>Bytes</value>
   </data>
+  <data name="Count" xml:space="preserve">
+    <value>Count</value>
+  </data>
   <data name="CPUCounterName" xml:space="preserve">
     <value>CPU Counter</value>
     <comment>Counter name for CPU in monitis service</comment>
@@ -138,5 +141,20 @@
   </data>
   <data name="PercentSign" xml:space="preserve">
     <value>%</value>
+  </data>
+  <data name="TableServiceTotalBillableRequests" xml:space="preserve">
+    <value>Total Billable Requests</value>
+  </data>
+  <data name="TableServiceTotalRequests" xml:space="preserve">
+    <value>Total Requests</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="MegaBytes" xml:space="preserve">
+    <value>MB</value>
+  </data>
+  <data name="TableServiceAvailability" xml:space="preserve">
+    <value>Availability</value>
   </data>
 </root>

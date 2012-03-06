@@ -26,5 +26,7 @@ namespace Monitis.API.Domain.Monitors
         /// All monitors parameters
         /// </summary>
         public ResultParameterDescriptor[] ResultParams { get; set; }
+
+        public Func<Double,String> Convert { get; set; }
     }
 }

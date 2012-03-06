@@ -70,6 +70,15 @@ namespace Monitis.Prototype.Logic.Monitis.MonitorDescriptors {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        internal static string Count {
+            get {
+                return ResourceManager.GetString("Count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CPU Counter.
         /// </summary>
         internal static string CPUCounterName {
@@ -97,6 +106,15 @@ namespace Monitis.Prototype.Logic.Monitis.MonitorDescriptors {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MB.
+        /// </summary>
+        internal static string MegaBytes {
+            get {
+                return ResourceManager.GetString("MegaBytes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Available Memory.
         /// </summary>
         internal static string MemoryCounterName {
@@ -111,6 +129,42 @@ namespace Monitis.Prototype.Logic.Monitis.MonitorDescriptors {
         internal static string PercentSign {
             get {
                 return ResourceManager.GetString("PercentSign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Availability.
+        /// </summary>
+        internal static string TableServiceAvailability {
+            get {
+                return ResourceManager.GetString("TableServiceAvailability", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Billable Requests.
+        /// </summary>
+        internal static string TableServiceTotalBillableRequests {
+            get {
+                return ResourceManager.GetString("TableServiceTotalBillableRequests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Requests.
+        /// </summary>
+        internal static string TableServiceTotalRequests {
+            get {
+                return ResourceManager.GetString("TableServiceTotalRequests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value.
+        /// </summary>
+        internal static string Value {
+            get {
+                return ResourceManager.GetString("Value", resourceCulture);
             }
         }
     }

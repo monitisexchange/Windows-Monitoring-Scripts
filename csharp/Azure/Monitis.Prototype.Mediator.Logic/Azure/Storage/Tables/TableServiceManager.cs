@@ -48,6 +48,7 @@ namespace Monitis.Prototype.Logic.Azure.TableService
             Boolean isCanConnect = false;
             try
             {
+                //try list tables for test connection
                 cloudTableClient.Timeout = new TimeSpan(0, 0, 0, 30);
                 string listTables = cloudTableClient.ListTables().FirstOrDefault();
                 isCanConnect = true;

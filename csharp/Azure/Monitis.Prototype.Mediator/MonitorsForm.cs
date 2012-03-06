@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Monitis.API.Domain.Monitors;
-using Monitis.API.REST.CustomMonitors;
 using Monitis.Prototype.Logic.Common;
 
 namespace Monitis.Prototype.UI
@@ -17,47 +16,54 @@ namespace Monitis.Prototype.UI
             {
                 throw new ArgumentNullException("userSession");
             }
+
             MdiParent = mdiParent;
             _userSession = userSession;
             InitializeComponent();
-            LoadMonitorList();
+            CheckMonitorList();
         }
 
         /// <summary>
         /// Load monitor list into drop down list
         /// </summary>
-        private void LoadMonitorList()
+        private void CheckMonitorList()
         {
-            Util.ShowWaitWindow("Loading monitors...");
-            ddlMonitorList.Items.Clear();
-            ddlMonitorList.ValueMember = "ID";
-            ddlMonitorList.DisplayMember = "Name";
-            foreach (var customMonitor in _userSession.GetCustomMonitors())
+            btnCreateMonitors.Enabled = btnNext.Enabled = false;
+
+            Util.ShowWaitWindow("Check monitors...");
+            if (_userSession.CheckCustomMonitors())
             {
-                ddlMonitorList.Items.Add(customMonitor);
+                lblInfo.Text = "All required monitors exists in monitis API. Hit Next to proceed";
+                btnNext.Enabled = true;
             }
+            else
+            {
+                lblInfo.Text = "Not all required monitors exists in monitis API. Hit Create Monitors to proceed";
+                btnCreateMonitors.Enabled = true;
+            }
+
             Util.CloseWaitWindow();
         }
 
         private void OnAddAzureMonitorClick(object sender, EventArgs e)
         {
-            Util.ShowWaitWindow("Try create monitor...");
-            _userSession.CreateAzureMonitors();
-            LoadMonitorList();
+            Util.ShowWaitWindow("Try create monitors...");
+            List<String> failedMonitors = _userSession.CreateAzureMonitors();
+            if (failedMonitors.Count > 0)
+            {
+                String message = failedMonitors.Aggregate(String.Empty, (current, failedMonitor) => current + String.Format("{0}\r\n", failedMonitor));
+                MessageBox.Show(message, @"Failed to add monitors");
+            }
+
+            CheckMonitorList();
             Util.CloseWaitWindow();
         }
 
         private void OnApplyMonitorClick(object sender, EventArgs e)
         {
-            if (ddlMonitorList.SelectedItem != null)
-            {
-                Monitor monitor = ddlMonitorList.SelectedItem as Monitor;
-                _userSession.CustomActiveMonitor = monitor;
-
-                AzureTableServiceLogin azureTableServiceLogin = new AzureTableServiceLogin(_userSession, MdiParent);
-                Close();
-                azureTableServiceLogin.Show();
-            }
+            AzureTableServiceLogin azureTableServiceLogin = new AzureTableServiceLogin(_userSession, MdiParent);
+            Close();
+            azureTableServiceLogin.Show();
         }
     }
 }

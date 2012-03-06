@@ -6,7 +6,7 @@ namespace Monitis.API.REST.User.Contract
     /// <summary>
     /// Response for get secretkey request
     /// </summary>
-    public class SecretKeyResponce
+    public class SecretKeyResponce : APIResponce
     {
         /// <summary>
         /// Value of secrect key

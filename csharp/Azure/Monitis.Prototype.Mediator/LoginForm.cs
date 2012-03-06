@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Windows.Forms;
+using Monitis.API.Common;
 using Monitis.Prototype.Logic.Common;
 
 namespace Monitis.Prototype.UI
@@ -15,7 +16,7 @@ namespace Monitis.Prototype.UI
         public LoginForm()
         {
             InitializeComponent();
-            if(tbxMonitisAPIKey.Text.Length > 0)
+            if (tbxMonitisAPIKey.Text.Length > 0)
             {
                 btnLogin.Enabled = true;
             }
@@ -48,7 +49,7 @@ namespace Monitis.Prototype.UI
             Util.ShowWaitWindow();
 
             //create and start new user session to Monitis
-            var userSession = new UserSession(tbxMonitisAPIKey.Text.Trim());
+            var userSession = new UserSession(tbxMonitisAPIKey.Text.Trim(), APIType.Live);
             ActionResult actionResult = userSession.Start();
 
             Util.CloseWaitWindow();

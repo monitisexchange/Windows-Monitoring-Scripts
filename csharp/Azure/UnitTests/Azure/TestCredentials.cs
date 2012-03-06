@@ -15,9 +15,9 @@ namespace UnitTests.Azure
         /// </summary>
         public TestCredentials()
         {
-            StorageAccountName = "azdem";
+            StorageAccountName = "azdemtest";
             StorageAccountKey =
-                "q4W4vqQATcVq+EqCDbuG5TwExkMTD5YmRQ4IRW8R0Wk0H2GOF2leRHFy2I2EqF/C22Oya4TeqwYawfOVTgbz2A==";
+                "cnI2Z4XY59CGePp5fA/0NFUzG8bt1u9Yq1xlwOjmzPTIc15WbCRMuAcr0DPIL7ATr/A3OEPiix5DXmEH+lJ8AQ==";
         }
 
         #endregion constrcutors

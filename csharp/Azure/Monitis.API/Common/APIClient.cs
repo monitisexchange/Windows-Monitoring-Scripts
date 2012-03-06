@@ -17,24 +17,24 @@ namespace Monitis.API.Common
     /// </summary>
     public class APIClient
     {
-        #region const
+        #region static members
 
         /// <summary>
         /// URL to Monitis Sandbox API
         /// </summary>
-        public const String SandboxURL = "http://www.sandbox.monitis.com";
+        public static String SandboxURL = APIResources.SandboxAPIHostUrl;
 
         /// <summary>
         /// URL to Monitis Live API
         /// </summary>
-        public const String LiveURL = "http://www.monitis.com";
+        public static String LiveURL = APIResources.LiveAPIHostUrl;
 
         /// <summary>
         /// Format for timestamp <see cref="ParamNames.Timestamp"/> parameter value
         /// </summary>
-        public const String TimestampFormat = "yyyy-MM-dd HH:mm:ss";
+        public static String TimestampFormat = APIResources.TimestampFormatAPI;
 
-        #endregion const
+        #endregion static members
 
         #region constructors
 
@@ -93,12 +93,16 @@ namespace Monitis.API.Common
             String joinParameters = JoinParameters();
             String queryString = String.Format("{0}?{1}", _requestUrl, joinParameters);
             String result;
-            HttpClient httpClient = new HttpClient(_apiHost);
+
             try
             {
-                HttpResponseMessage responseMessage = httpClient.Get(queryString);
-                Byte[] data = responseMessage.Content.ReadAsByteArray();
-                result = Encoding.UTF8.GetString(data);
+                using (HttpClient httpClient = new HttpClient(_apiHost))
+                {
+                    HttpResponseMessage responseMessage = httpClient.Get(queryString);
+
+                    Byte[] data = responseMessage.Content.ReadAsByteArray();
+                    result = Encoding.UTF8.GetString(data);
+                }
             }
             catch (Exception)
             {
@@ -120,13 +124,16 @@ namespace Monitis.API.Common
             //create http content for POST request
             HttpContent httpContent = HttpContent.Create(parameters, "application/x-www-form-urlencoded");
             String result;
-            HttpClient httpClient = new HttpClient(_apiHost);
+
             try
             {
-                HttpResponseMessage httpResponseMessage = httpClient.Post(_requestUrl, httpContent);
+                using (HttpClient httpClient = new HttpClient(_apiHost))
+                {
+                    HttpResponseMessage httpResponseMessage = httpClient.Post(_requestUrl, httpContent);
 
-                Byte[] data = httpResponseMessage.Content.ReadAsByteArray();
-                result = Encoding.UTF8.GetString(data);
+                    Byte[] data = httpResponseMessage.Content.ReadAsByteArray();
+                    result = Encoding.UTF8.GetString(data);
+                }
             }
             catch (Exception)
             {
@@ -144,7 +151,9 @@ namespace Monitis.API.Common
         /// <returns>Typed response object</returns>
         public TResponse InvokePost<TResponse>()
         {
+            //get response as JSON string
             String jsonString = InvokePost();
+
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             TResponse deserializedObject = serializer.Deserialize<TResponse>(jsonString);
             return deserializedObject;
@@ -160,7 +169,6 @@ namespace Monitis.API.Common
             //get response as JSON string
             String jsonString = InvokeGet();
 
-            //convert to typed response object
             return new JavaScriptSerializer().Deserialize<TResponse>(jsonString);
         }
 

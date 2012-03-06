@@ -49,6 +49,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="APIResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>APIResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Common\ActionNames.cs" />
     <Compile Include="Common\APIClient.cs" />
     <Compile Include="Common\APIResponce.cs" />
@@ -63,12 +68,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="REST\CustomMonitors\Contract\AddMonitorResponse.cs" />
     <Compile Include="REST\CustomMonitors\CustomMonitorAPI.cs" />
+    <Compile Include="REST\MonitisAPIBase.cs" />
     <Compile Include="REST\User\Contract\AuthTokenResponse.cs" />
     <Compile Include="REST\User\Contract\SecretKeyResponce.cs" />
     <Compile Include="REST\User\UserAPI.cs" />
     <Compile Include="Util\Utils.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="APIResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>APIResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

@@ -37,6 +37,8 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -66,6 +68,7 @@
     <Compile Include="Mediation\CounterDataEventArgs.cs" />
     <Compile Include="Mediation\Mediator.cs" />
     <Compile Include="Mediation\StatusEventArgs.cs" />
+    <Compile Include="Monitis\CustomMonitorConfig.cs" />
     <Compile Include="Monitis\MonitorDescriptors\AvailableMemory.cs" />
     <Compile Include="Monitis\MonitorDescriptors\CPU.cs" />
     <Compile Include="Monitis\MonitorDescriptors\MonitorDesriptorsResource.Designer.cs">
@@ -73,6 +76,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MonitorDesriptorsResource.resx</DependentUpon>
     </Compile>
+    <Compile Include="Monitis\MonitorDescriptors\TableAvailability.cs" />
+    <Compile Include="Monitis\MonitorDescriptors\TableTotalRequests.cs" />
+    <Compile Include="Monitis\MonitorDescriptors\TableTotalBillableRequests.cs" />
+    <Compile Include="Monitis\CustomMonitorList.cs" />
     <Compile Include="PerfomanceCounter\CounterNames.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">

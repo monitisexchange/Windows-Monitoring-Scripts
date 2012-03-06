@@ -117,16 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DefaultDeploymentID" xml:space="preserve">
-    <value>413b1bd0a00e46f6bf893aae80416bde</value>
-    <comment>ID of deployment to Windows Azure</comment>
-  </data>
   <data name="DefaultStorageAccountKey" xml:space="preserve">
-    <value>q4W4vqQATcVq+EqCDbuG5TwExkMTD5YmRQ4IRW8R0Wk0H2GOF2leRHFy2I2EqF/C22Oya4TeqwYawfOVTgbz2A==</value>
+    <value>cnI2Z4XY59CGePp5fA/0NFUzG8bt1u9Yq1xlwOjmzPTIc15WbCRMuAcr0DPIL7ATr/A3OEPiix5DXmEH+lJ8AQ==</value>
     <comment>Private key for storage account</comment>
   </data>
   <data name="DefaultStorageAccountName" xml:space="preserve">
-    <value>azdem</value>
+    <value>azdemtest</value>
     <comment>Name of storage account in Windows Azure services</comment>
   </data>
   <data name="MemoryAvailableBytes" xml:space="preserve">

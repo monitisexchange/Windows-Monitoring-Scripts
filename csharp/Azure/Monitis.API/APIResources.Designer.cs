@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Monitis.Prototype.Logic {
+namespace Monitis.API {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace Monitis.Prototype.Logic {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    internal class APIResources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources() {
+        internal APIResources() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Monitis.Prototype.Logic {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Monitis.Prototype.Logic.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Monitis.API.APIResources", typeof(APIResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,65 +61,38 @@ namespace Monitis.Prototype.Logic {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to cnI2Z4XY59CGePp5fA/0NFUzG8bt1u9Yq1xlwOjmzPTIc15WbCRMuAcr0DPIL7ATr/A3OEPiix5DXmEH+lJ8AQ==.
+        ///   Looks up a localized string similar to /customMonitorApi.
         /// </summary>
-        internal static string DefaultStorageAccountKey {
+        internal static string CustomMonitorsAPIPath {
             get {
-                return ResourceManager.GetString("DefaultStorageAccountKey", resourceCulture);
+                return ResourceManager.GetString("CustomMonitorsAPIPath", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to azdemtest.
+        ///   Looks up a localized string similar to http://www.monitis.com.
         /// </summary>
-        internal static string DefaultStorageAccountName {
+        internal static string LiveAPIHostUrl {
             get {
-                return ResourceManager.GetString("DefaultStorageAccountName", resourceCulture);
+                return ResourceManager.GetString("LiveAPIHostUrl", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to \Memory\Available Bytes.
+        ///   Looks up a localized string similar to http://www.sandbox.monitis.com.
         /// </summary>
-        internal static string MemoryAvailableBytes {
+        internal static string SandboxAPIHostUrl {
             get {
-                return ResourceManager.GetString("MemoryAvailableBytes", resourceCulture);
+                return ResourceManager.GetString("SandboxAPIHostUrl", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CPU.
+        ///   Looks up a localized string similar to yyyy-MM-dd HH:mm:ss.
         /// </summary>
-        internal static string MonitisCPUParameter {
+        internal static string TimestampFormatAPI {
             get {
-                return ResourceManager.GetString("MonitisCPUParameter", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to FreeMemory.
-        /// </summary>
-        internal static string MonitisFreeMemoryParameter {
-            get {
-                return ResourceManager.GetString("MonitisFreeMemoryParameter", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to \Processor(_Total)\% Processor Time.
-        /// </summary>
-        internal static string ProcessorTimeCounter {
-            get {
-                return ResourceManager.GetString("ProcessorTimeCounter", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to HostWorkerRole_IN_0.
-        /// </summary>
-        internal static string RoleInstanceName {
-            get {
-                return ResourceManager.GetString("RoleInstanceName", resourceCulture);
+                return ResourceManager.GetString("TimestampFormatAPI", resourceCulture);
             }
         }
     }

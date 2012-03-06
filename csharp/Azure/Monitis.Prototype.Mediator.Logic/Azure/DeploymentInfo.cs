@@ -10,11 +10,6 @@ namespace Monitis.Prototype.Logic.Azure
         /// <summary>
         /// Get default deployment ID
         /// </summary>
-        public static readonly string DefaultDeploymentID = Resources.DefaultDeploymentID;
-
-        /// <summary>
-        /// Get default deployment ID
-        /// </summary>
         public static readonly string DefaultRoleInstanceName = Resources.RoleInstanceName;
 
 

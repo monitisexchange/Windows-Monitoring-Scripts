@@ -117,4 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CustomMonitorsAPIPath" xml:space="preserve">
+    <value>/customMonitorApi</value>
+    <comment>Relative path to custom monitors</comment>
+  </data>
+  <data name="LiveAPIHostUrl" xml:space="preserve">
+    <value>http://www.monitis.com</value>
+    <comment>Url to live api host</comment>
+  </data>
+  <data name="SandboxAPIHostUrl" xml:space="preserve">
+    <value>http://www.sandbox.monitis.com</value>
+    <comment>Url to sandbox api host</comment>
+  </data>
+  <data name="TimestampFormatAPI" xml:space="preserve">
+    <value>yyyy-MM-dd HH:mm:ss</value>
+    <comment>Time stamp format which understand API</comment>
+  </data>
 </root>

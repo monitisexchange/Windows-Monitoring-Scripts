@@ -26,8 +26,10 @@ namespace Monitis.API.Util
             String joinedParameters = parametersDescriptors
                 .Aggregate(String.Empty, 
                            (current, parameter) => current + String.Format("{0}:{1}:{2}:{3};", 
-                               parameter.Name, parameter.DisplayName,
-                               HttpUtility.UrlEncode(parameter.UOM), (Int32) parameter.DataType));
+                               HttpUtility.UrlEncode(parameter.Name),
+                               HttpUtility.UrlEncode(parameter.DisplayName),
+                               HttpUtility.UrlEncode(parameter.UOM), 
+                               (Int32) parameter.DataType));
             return HttpUtility.UrlEncode(joinedParameters);
         }
 

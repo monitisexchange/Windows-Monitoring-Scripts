@@ -1,3 +1,5 @@
+using System;
+using System.Globalization;
 using Monitis.API.Domain.Monitors;
 
 namespace Monitis.Prototype.Logic.Monitis.MonitorDescriptors
@@ -17,14 +19,15 @@ namespace Monitis.Prototype.Logic.Monitis.MonitorDescriptors
             Tag = MonitorDesriptorsResource.DefaultMonitorTag;
             ResultParams = new[]
                                {
-                                new ResultParameterDescriptor
-                                {
-                                    Name = Resources.MonitisCPUParameter,
-                                    DataType = MeasureDataType.Float,
-                                    DisplayName = MonitorDesriptorsResource.PercentSign,
-                                    UOM = MonitorDesriptorsResource.PercentSign,
-                                }
+                                   new ResultParameterDescriptor
+                                       {
+                                           Name = Resources.MonitisCPUParameter,
+                                           DataType = MeasureDataType.Float,
+                                           DisplayName = MonitorDesriptorsResource.Value,
+                                           UOM = MonitorDesriptorsResource.PercentSign,
+                                       }
                                };
+            Convert = input => input.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

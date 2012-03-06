@@ -21,7 +21,7 @@ namespace UnitTests.Azure
             QueryExecuter queryExecuter = new QueryExecuter(_testCredentials.StorageAccountName, _testCredentials.StorageAccountKey);
             MetricsTransactionsEntity[] metricsTransactionsEntities = queryExecuter.GetMetricData(DateTime.UtcNow.AddDays(-1), DateTime.UtcNow);
 
-            Assert.Greater(metricsTransactionsEntities.Length, 0);
+            Assert.Greater(metricsTransactionsEntities.Length, 0,"Or no any data or you not configured analytics settings(Look at TableStorageAnalyticsTests)");
             Assert.IsNotNull(metricsTransactionsEntities);
         }
 

@@ -7,27 +7,16 @@ namespace Monitis.API.Common
     /// </summary>
     public static class Validation
     {
-        public static void ValidateAPIKey(String apiKey)
+        /// <summary>
+        /// Validate string value for empty or null. If detected throws exception <see cref="ArgumentNullException"/>
+        /// </summary>
+        /// <param name="value">Value for validate</param>
+        /// <param name="argName">Argument name</param>
+        public static void EmptyOrNull(String value, String argName)
         {
-            if (String.IsNullOrEmpty(apiKey))
+            if (String.IsNullOrEmpty(value))
             {
-                throw new ArgumentNullException("apiKey");
-            }
-        }
-
-        public static void ValidateAuthToken(String authToken)
-        {
-            if (String.IsNullOrEmpty(authToken))
-            {
-                throw new ArgumentNullException("authToken");
-            }
-        }
-
-        public static void ValidateSecretKey(String secretKey)
-        {
-            if (String.IsNullOrEmpty(secretKey))
-            {
-                throw new ArgumentNullException("secretKey");
+                throw new ArgumentNullException(argName);
             }
         }
     }

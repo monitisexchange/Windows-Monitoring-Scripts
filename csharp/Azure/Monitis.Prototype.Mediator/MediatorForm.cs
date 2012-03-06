@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-using Monitis.Prototype.Logic.Azure;
 using Monitis.Prototype.Logic.Azure.TableService;
 using Monitis.Prototype.Logic.Common;
 using Monitis.Prototype.Logic.Mediation;
@@ -50,11 +49,19 @@ namespace Monitis.Prototype.UI
             btnStop.Enabled = true;
 
             //create new mediator object and schedule mediation with timer
-            _mediator = new Mediator(new TimeSpan(0, 0, 0, (int)nupField.Value), _userSession);
+            CreateMediatorIfNotExists();
             _mediator.CPUDataUpdated += OnCPUDataUpdated;
             _mediator.MemoryUpdated += OnMemoryUpdated;
             _mediator.StatusChanged += OnMediatorStatusChanged;
             _mediator.Start();
+        }
+
+        private void CreateMediatorIfNotExists()
+        {
+            if (_mediator == null)
+            {
+                _mediator = new Mediator(new TimeSpan(0, 0, 0, (int)nupField.Value), _userSession);
+            }
         }
 
         /// <summary>
@@ -68,7 +75,6 @@ namespace Monitis.Prototype.UI
                               {
                                   lblStatus.Text = @"What it is going on:  " + e.Status;
                               });
-
         }
 
         /// <summary>
@@ -109,11 +115,9 @@ namespace Monitis.Prototype.UI
                                         //series.Points.Clear();
                                         foreach (PerformanceData point in e.PerformanceDatas)
                                         {
-
                                             series.Points.AddXY(new DateTime(point.EventTickCount), point.CounterValue);
                                         }
                                     });
-
             }
         }
 
@@ -130,6 +134,12 @@ namespace Monitis.Prototype.UI
             {
                 _mediator.Stop();
             }
+        }
+
+        private void OnSyncStorageMetricsClick(object sender, EventArgs e)
+        {
+            CreateMediatorIfNotExists();
+            _mediator.UpdateTableServiceMetrics(dtpFrom.Value, dtpTo.Value);
         }
 
         private Mediator _mediator;

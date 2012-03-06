@@ -7,21 +7,27 @@ namespace Monitis.API.REST.User
     /// <summary>
     /// Contains API methods for work with user
     /// </summary>
-    public class UserAPI
+    public class UserAPI : MonitisAPIBase
     {
-        public const String RequestUrl = "/api";
+        //TODO: to resources
+
+        public const String Url = "/api";
+
+        public UserAPI(String apiKey, APIType apiType)
+            : base(apiKey, apiType, Url)
+        {
+        }
 
         /// <summary>
         /// Return secretkey for apikey
         /// </summary>
         /// <param name="apiKey"></param>
         /// <returns>Secret key value</returns>
-        public String GetSecretKey(String apiKey)
+        public String GetSecretKey()
         {
-            Validation.ValidateAPIKey(apiKey);
-
-            APIClient apiClient = new APIClient(APIType.Live, apiKey, RequestUrl, ActionNames.SecretKey);
+            APIClient apiClient = GetApiClient(ActionNames.SecretKey);
             SecretKeyResponce result = apiClient.InvokeGet<SecretKeyResponce>();
+
             return result.SecretKey;
         }
 
@@ -31,14 +37,13 @@ namespace Monitis.API.REST.User
         /// <param name="apiKey"></param>
         /// <param name="secretKey"></param>
         /// <returns></returns>
-        public String GetAuthToken(String apiKey, String secretKey)
+        public String GetAuthToken(String secretKey)
         {
-            Validation.ValidateAPIKey(apiKey);
+            Validation.EmptyOrNull(secretKey, "secretKey");
 
-            Validation.ValidateSecretKey(secretKey);
-
-            var apiClient = new APIClient(APIType.Live, apiKey, RequestUrl, ActionNames.AuthToken);
+            APIClient apiClient = GetApiClient(ActionNames.AuthToken);
             apiClient.AddParam(ParamNames.SecretKey, secretKey);
+
             var response = apiClient.InvokeGet<AuthTokenResponse>();
             return response.AuthToken;
         }

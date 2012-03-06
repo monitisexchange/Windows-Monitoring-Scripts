@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Monitis.API.Domain.Monitors;
+using Monitis.API.Common;
 using Monitis.API.REST.CustomMonitors;
 using Monitis.API.REST.CustomMonitors.Contract;
 using Monitis.API.REST.User;
-using Monitis.Prototype.Logic.PerfomanceCounter;
+using Monitis.Prototype.Logic.Monitis;
 using Monitor = Monitis.API.Domain.Monitors.Monitor;
 
 namespace Monitis.Prototype.Logic.Common
@@ -29,33 +29,35 @@ namespace Monitis.Prototype.Logic.Common
             throw new NotSupportedException("Unknow parameter name");
         }
 
-        public UserSession(String apiKey)
+        public UserSession(String apiKey, APIType apiType)
         {
             if (String.IsNullOrEmpty(apiKey))
             {
                 throw new ArgumentNullException("apiKey");
             }
             APIKey = apiKey;
+            APIType = apiType;
         }
 
         #region public methods
 
         /// <summary>
         /// Start new session by retrieving new Secret Key and AuthToken from Monitis API.
-        /// If
         /// </summary>
         public ActionResult Start()
         {
             ActionResult actionResult = new ActionResult();
-            UserAPI userAPI = new UserAPI();
-            _secretKey = userAPI.GetSecretKey(APIKey);
+
+            UserAPI userAPI = new UserAPI(APIKey, APIType);
+
+            _secretKey = userAPI.GetSecretKey();
             if (String.IsNullOrEmpty(_secretKey))
             {
                 actionResult.AddError("Can't get secretkey");
             }
             else
             {
-                _authToken = userAPI.GetAuthToken(APIKey, _secretKey);
+                _authToken = userAPI.GetAuthToken(_secretKey);
                 if (String.IsNullOrEmpty(_authToken))
                 {
                     actionResult.AddError("Can't get authToken");
@@ -73,25 +75,11 @@ namespace Monitis.Prototype.Logic.Common
         #region public properties
 
         /// <summary>
-        /// Gets or sets custom active monitor for mediation process
-        /// </summary>
-        public Monitor CustomActiveMonitor
-        {
-            get { return _customActiveMonitor; }
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException("value");
-                }
-                _customActiveMonitor = value;
-            }
-        }
-
-        /// <summary>
         /// Monitis API key
         /// </summary>
         public String APIKey { get; private set; }
+
+        public APIType APIType { get; set; }
 
         public String CurrentAuthToken
         {
@@ -109,22 +97,47 @@ namespace Monitis.Prototype.Logic.Common
         #region public methods
 
         /// <summary>
-        /// Return list of all custom monitors
+        /// Check if all required monitors exists in monitis API
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Monitor> GetCustomMonitors()
+        public Boolean CheckCustomMonitors()
         {
-            CustomMonitorAPI customMonitorAPI = new CustomMonitorAPI();
-            IEnumerable<Monitor> monitorList = customMonitorAPI.GetMonitorList(APIKey);
-            return monitorList;
+            CustomMonitorAPI customMonitorAPI = new CustomMonitorAPI(this.APIKey, this.APIType);
+            IEnumerable<Monitor> monitorList = customMonitorAPI.GetMonitorList();
+
+            foreach (String monitorName in CustomMonitorList.Singleton.MonitorNames)
+            {
+                String name = monitorName;
+                Monitor monitor = monitorList.FirstOrDefault(f => f.Name.Equals(name));
+                if (monitor == null)
+                {
+                    return false;
+                }
+
+                CustomMonitorList.Singleton.GetConfigByMonitorName(monitor.Name).MonitorID = monitor.ID;
+            }
+            return true;
         }
 
         /// <summary>
         /// Create monitors for Azure metrics and counters in Monitis service
         /// </summary>
-        public void CreateAzureMonitors()
+        public List<string> CreateAzureMonitors()
         {
-            CustomMonitorAPI customMonitorAPI = new CustomMonitorAPI();
+            CustomMonitorAPI customMonitorAPI = new CustomMonitorAPI(this.APIKey, this.APIType);
+
+            List<String> notAddedMonitors = new List<String>();
+            IEnumerable<Monitor> monitorList = customMonitorAPI.GetMonitorList();
+            foreach (var monitorName in CustomMonitorList.Singleton.MonitorNames.Except(monitorList.Select(f => f.Name)))
+            {
+
+                AddMonitorResponse addMonitorResponse = customMonitorAPI.AddMonitor(_authToken, CustomMonitorList.Singleton.GetConfigByMonitorName(monitorName).Descriptor);
+                if (!addMonitorResponse.IsOk)
+                {
+                    notAddedMonitors.Add(monitorName);
+                }
+            }
+            return notAddedMonitors;
             //Monitor monitor = GetCustomMonitors().FirstOrDefault(f => f.Name.Equals(AzureMonitor.Name));
             //if (monitor == null)
             //{
@@ -137,10 +150,8 @@ namespace Monitis.Prototype.Logic.Common
 
         #region private fields
 
-        private MonitorDescriptor _azureMonitor;
         private String _secretKey;
         private String _authToken;
-        private Monitor _customActiveMonitor;
 
         #endregion private fields
     }

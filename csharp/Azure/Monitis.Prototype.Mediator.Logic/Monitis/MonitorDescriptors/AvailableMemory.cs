@@ -1,3 +1,5 @@
+using System;
+using System.Globalization;
 using Monitis.API.Domain.Monitors;
 
 namespace Monitis.Prototype.Logic.Monitis.MonitorDescriptors
@@ -20,11 +22,12 @@ namespace Monitis.Prototype.Logic.Monitis.MonitorDescriptors
                                    new ResultParameterDescriptor
                                        {
                                            DataType = MeasureDataType.Integer,
-                                           DisplayName = MonitorDesriptorsResource.Bytes,
-                                           Name = MonitorDesriptorsResource.Bytes,
-                                           UOM = MonitorDesriptorsResource.Bytes
+                                           DisplayName = MonitorDesriptorsResource.Value,
+                                           Name = Resources.MonitisFreeMemoryParameter,
+                                           UOM = MonitorDesriptorsResource.MegaBytes
                                        }
-        };
+                               };
+            Convert = input => (input / 1048576).ToString(CultureInfo.InvariantCulture);
         }
     }
 }
