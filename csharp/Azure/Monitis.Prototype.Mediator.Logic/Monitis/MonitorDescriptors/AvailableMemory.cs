@@ -27,7 +27,7 @@ namespace Monitis.Prototype.Logic.Monitis.MonitorDescriptors
                                            UOM = MonitorDesriptorsResource.MegaBytes
                                        }
                                };
-            Convert = input => (input / 1048576).ToString(CultureInfo.InvariantCulture);
+            Converter = input => (input / 1048576).ToString(CultureInfo.InvariantCulture);
         }
     }
 }

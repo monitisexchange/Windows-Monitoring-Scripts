@@ -8,7 +8,7 @@ namespace Monitis.Prototype.Logic.Monitis.MonitorDescriptors
         public TableAvailability(String storageAccountName)
         {
             Name = String.Format(@"[Account - {0}; {1}]", storageAccountName,
-                           MonitorDesriptorsResource.TableServiceAvailability);
+                                 MonitorDesriptorsResource.TableServiceAvailability);
             Type = MonitorDesriptorsResource.DefaultMonitorType;
             Tag = MonitorDesriptorsResource.DefaultMonitorTag;
             ResultParams = new[]
@@ -16,7 +16,9 @@ namespace Monitis.Prototype.Logic.Monitis.MonitorDescriptors
                                    new ResultParameterDescriptor
                                        {
                                            DataType = MeasureDataType.Integer,
-                                           Name = MonitorDesriptorsResource.Count
+                                           Name = MonitorDesriptorsResource.TableServiceAvailability,
+                                           DisplayName = MonitorDesriptorsResource.Value,
+                                           UOM = MonitorDesriptorsResource.PercentSign
                                        }
                                };
         }

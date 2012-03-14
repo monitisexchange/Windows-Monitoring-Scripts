@@ -57,8 +57,8 @@ namespace Monitis.Prototype.Logic.Common
             }
             else
             {
-                _authToken = userAPI.GetAuthToken(_secretKey);
-                if (String.IsNullOrEmpty(_authToken))
+                CurrentAuthToken = userAPI.GetAuthToken(_secretKey);
+                if (String.IsNullOrEmpty(CurrentAuthToken))
                 {
                     actionResult.AddError("Can't get authToken");
                 }
@@ -79,13 +79,15 @@ namespace Monitis.Prototype.Logic.Common
         /// </summary>
         public String APIKey { get; private set; }
 
+        /// <summary>
+        /// Currently support onli www.monitis.com API host
+        /// </summary>
         public APIType APIType { get; set; }
 
-        public String CurrentAuthToken
-        {
-            get { return _authToken; }
-            set { _authToken = value; }
-        }
+        /// <summary>
+        /// Session depend auth token
+        /// </summary>
+        public String CurrentAuthToken { get; private set; }
 
         /// <summary>
         /// Hold information about connecting to Azure
@@ -130,20 +132,15 @@ namespace Monitis.Prototype.Logic.Common
             IEnumerable<Monitor> monitorList = customMonitorAPI.GetMonitorList();
             foreach (var monitorName in CustomMonitorList.Singleton.MonitorNames.Except(monitorList.Select(f => f.Name)))
             {
+                AddMonitorResponse addMonitorResponse = customMonitorAPI.AddMonitor(CurrentAuthToken,
+                    CustomMonitorList.Singleton.GetConfigByMonitorName(monitorName).Descriptor);
 
-                AddMonitorResponse addMonitorResponse = customMonitorAPI.AddMonitor(_authToken, CustomMonitorList.Singleton.GetConfigByMonitorName(monitorName).Descriptor);
                 if (!addMonitorResponse.IsOk)
                 {
                     notAddedMonitors.Add(monitorName);
                 }
             }
             return notAddedMonitors;
-            //Monitor monitor = GetCustomMonitors().FirstOrDefault(f => f.Name.Equals(AzureMonitor.Name));
-            //if (monitor == null)
-            //{
-            //    AddMonitorResponse addMonitorResponse = customMonitorAPI.AddMonitor(APIKey, _authToken, AzureMonitor);
-            //}
-            //TODO: need case if monitor exists
         }
 
         #endregion public methods
@@ -151,7 +148,6 @@ namespace Monitis.Prototype.Logic.Common
         #region private fields
 
         private String _secretKey;
-        private String _authToken;
 
         #endregion private fields
     }

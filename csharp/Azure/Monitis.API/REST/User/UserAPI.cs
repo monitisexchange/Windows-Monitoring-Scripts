@@ -9,12 +9,8 @@ namespace Monitis.API.REST.User
     /// </summary>
     public class UserAPI : MonitisAPIBase
     {
-        //TODO: to resources
-
-        public const String Url = "/api";
-
         public UserAPI(String apiKey, APIType apiType)
-            : base(apiKey, apiType, Url)
+            : base(apiKey, apiType, APIResources.UserAPIPath)
         {
         }
 

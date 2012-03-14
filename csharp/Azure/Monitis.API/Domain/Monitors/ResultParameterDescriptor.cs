@@ -22,6 +22,9 @@ namespace Monitis.API.Domain.Monitors
         /// </summary>
         public String UOM { get; set; }
 
+        /// <summary>
+        /// Type of data
+        /// </summary>
         public MeasureDataType DataType { get; set; }
     }
 }

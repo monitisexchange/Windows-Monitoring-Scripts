@@ -139,7 +139,26 @@ namespace Monitis.Prototype.UI
         private void OnSyncStorageMetricsClick(object sender, EventArgs e)
         {
             CreateMediatorIfNotExists();
+            _mediator.StatusStorageMetricsChanged += OnMediatorStatusStorageMetricsChanged;
+            _mediator.StorageMetricsPublishCompleted += OnMediatorStorageMetricsPublishCompleted;
             _mediator.UpdateTableServiceMetrics(dtpFrom.Value, dtpTo.Value);
+            btnSyncStorageMetrics.Enabled = false;
+        }
+
+        private void OnMediatorStorageMetricsPublishCompleted(object sender, EventArgs e)
+        {
+            lblStorageAccountStatus.UIThread(() =>
+                                                 {
+                                                     btnSyncStorageMetrics.Enabled = true;
+                                                 });
+        }
+
+        private void OnMediatorStatusStorageMetricsChanged(object sender, StatusEventArgs e)
+        {
+            lblStorageAccountStatus.UIThread(() =>
+                                                 {
+                                                     lblStorageAccountStatus.Text = e.Status;
+                                                 });
         }
 
         private Mediator _mediator;

@@ -6,7 +6,6 @@ using System.Timers;
 using System.Web;
 using Monitis.API.Domain.Monitors;
 using Monitis.API.REST.CustomMonitors;
-using Monitis.Prototype.Logic.Azure;
 using Monitis.Prototype.Logic.Azure.Storage.Tables.MetricsTransactions;
 using Monitis.Prototype.Logic.Azure.TableService;
 using Monitis.Prototype.Logic.Common;
@@ -22,39 +21,6 @@ namespace Monitis.Prototype.Logic.Mediation
     /// </summary>
     public class Mediator
     {
-        /// <summary>
-        /// Convert Windows Azure perfomance counter data to Monitis monitor <see cref="ResultParameter"/>
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="convert"></param>
-        /// <returns></returns>
-        private static List<ResultParameter> ConvertToMonitorResults(IEnumerable<PerformanceData> data, Func<Double, String> convert)
-        {
-            List<ResultParameter> monitorData = new List<ResultParameter>();
-            foreach (var performanceData in data)
-            {
-                String monitisParameterName = UserSession.GetMonitisParameterName(performanceData.CounterName);
-                ResultParameter parameter = ConvertToMonitorResult(performanceData.CounterValue, convert, monitisParameterName, performanceData.Timestamp);
-                monitorData.Add(parameter);
-            }
-            return monitorData;
-        }
-
-
-        public static ResultParameter ConvertToMonitorResult(Double value, Func<Double, String> convert, String monitisParameterName, DateTime timeStamp)
-        {
-            String convertedValue = convert == null
-                             ? value.ToString()
-                             : convert(value);
-            return new ResultParameter
-            {
-                Name = HttpUtility.UrlEncode(monitisParameterName),
-                Value = HttpUtility.UrlEncode(convertedValue),
-                Timestamp = timeStamp
-            };
-        }
-
-
         #region events
 
         /// <summary>
@@ -71,6 +37,18 @@ namespace Monitis.Prototype.Logic.Mediation
         /// Occurs when mediator change status
         /// </summary>
         public event EventHandler<StatusEventArgs> StatusChanged;
+
+        /// <summary>
+        /// Occurs when mediator change status for storage service metrics
+        /// </summary>
+        public event EventHandler<StatusEventArgs> StatusStorageMetricsChanged;
+
+        /// <summary>
+        /// Occurs when mediator complete publish storage service metrics data to monitis
+        /// </summary>
+        public event EventHandler StorageMetricsPublishCompleted;
+
+       
 
         #endregion events
 
@@ -101,39 +79,11 @@ namespace Monitis.Prototype.Logic.Mediation
 
         public void UpdateTableServiceMetrics(DateTime start, DateTime end)
         {
-            //create query executer for access to data in Windows Azure Table Service
-            QueryExecuter queryExecuter = new QueryExecuter(_userSession.AzureInfo.AccountName, _userSession.AzureInfo.AccountKey);
-            MetricsTransactionsEntity[] metricsTransactionsEntities = queryExecuter.GetMetricData(start, end);
-            CustomMonitorAPI customMonitorAPI = new CustomMonitorAPI(_userSession.APIKey, _userSession.APIType);
-
-            foreach (var metricsTransactionsEntity in metricsTransactionsEntities)
-            {
-                CustomMonitorConfig availabilityConfig =
-                    CustomMonitorList.Singleton.GetConfigByMetricName(MetricNames.Availability);
-                ResultParameter convertToMonitorResult = ConvertToMonitorResult(metricsTransactionsEntity.Availability,
-                                                                                availabilityConfig.Descriptor.Convert,
-                                                                                "Count",
-                                                                                metricsTransactionsEntity.Timestamp);
-                customMonitorAPI.AddResults(_userSession.CurrentAuthToken, availabilityConfig.MonitorID,
-                                            new List<ResultParameter> {convertToMonitorResult});
-
-                CustomMonitorConfig totalRequestsConfig =
-                    CustomMonitorList.Singleton.GetConfigByMetricName(MetricNames.TotalRequests);
-                convertToMonitorResult = ConvertToMonitorResult(metricsTransactionsEntity.TotalRequests,
-                                                                totalRequestsConfig.Descriptor.Convert, "Count",
-                                                                metricsTransactionsEntity.Timestamp);
-                customMonitorAPI.AddResults(_userSession.CurrentAuthToken, totalRequestsConfig.MonitorID,
-                                            new List<ResultParameter> {convertToMonitorResult});
-
-                CustomMonitorConfig totalBillableRequestsConfig =
-                    CustomMonitorList.Singleton.GetConfigByMetricName(MetricNames.TotalBillableRequests);
-                convertToMonitorResult = ConvertToMonitorResult(metricsTransactionsEntity.TotalBillableRequests,
-                                                                availabilityConfig.Descriptor.Convert, "Count",
-                                                                metricsTransactionsEntity.Timestamp);
-                customMonitorAPI.AddResults(_userSession.CurrentAuthToken, totalBillableRequestsConfig.MonitorID,
-                                            new List<ResultParameter> {convertToMonitorResult});
-            }
+            Thread thread = new Thread(() => MediateTableMetrics(start, end));
+            thread.Start();
         }
+
+        
 
         /// <summary>
         /// Start mediation process for live metrics and counters
@@ -160,6 +110,53 @@ namespace Monitis.Prototype.Logic.Mediation
 
         #region private methods
 
+        private void MediateTableMetrics(DateTime start, DateTime end)
+        {
+            var queryExecuter = new QueryExecuter(_userSession.AzureInfo.AccountName, _userSession.AzureInfo.AccountKey);
+
+            InvokeStatusStorageMetricsChanged("Get metrics data from Azure");
+            MetricsTransactionsEntity[] metricsTransactionsEntities = queryExecuter.GetMetricData(start, end);
+
+            String statusFormat = "Captured records count: {0}\r\nPushed to monitis service:{1}";
+
+            Int32 totalProcessedRecords = 0;
+            InvokeStatusStorageMetricsChanged(String.Format(statusFormat, metricsTransactionsEntities.Length, totalProcessedRecords));
+            var customMonitorAPI = new CustomMonitorAPI(_userSession.APIKey, _userSession.APIType);
+
+            foreach (MetricsTransactionsEntity metricsTransactionsEntity in metricsTransactionsEntities)
+            {
+                CustomMonitorConfig availabilityConfig =
+                    CustomMonitorList.Singleton.GetConfigByMetricName(MetricNames.Availability);
+                ResultParameter convertToMonitorResult = DataConverter.ConvertToMonitorResult(metricsTransactionsEntity.Availability,
+                                                                                metricsTransactionsEntity.Timestamp,
+                                                                                availabilityConfig);
+
+                customMonitorAPI.AddResults(_userSession.CurrentAuthToken, availabilityConfig.MonitorID,
+                                            new List<ResultParameter> { convertToMonitorResult });
+
+                CustomMonitorConfig totalRequestsConfig =
+                    CustomMonitorList.Singleton.GetConfigByMetricName(MetricNames.TotalRequests);
+                convertToMonitorResult = DataConverter.ConvertToMonitorResult(metricsTransactionsEntity.TotalRequests,
+                                                                metricsTransactionsEntity.Timestamp,
+                                                                totalRequestsConfig);
+                customMonitorAPI.AddResults(_userSession.CurrentAuthToken, totalRequestsConfig.MonitorID,
+                                            new List<ResultParameter> { convertToMonitorResult });
+
+                CustomMonitorConfig totalBillableRequestsConfig =
+                    CustomMonitorList.Singleton.GetConfigByMetricName(MetricNames.TotalBillableRequests);
+                convertToMonitorResult = DataConverter.ConvertToMonitorResult(metricsTransactionsEntity.TotalBillableRequests,
+                                                                metricsTransactionsEntity.Timestamp,
+                                                                totalBillableRequestsConfig);
+                customMonitorAPI.AddResults(_userSession.CurrentAuthToken, totalBillableRequestsConfig.MonitorID,
+                                            new List<ResultParameter> { convertToMonitorResult });
+
+                totalProcessedRecords++;
+                InvokeStatusStorageMetricsChanged(String.Format(statusFormat, metricsTransactionsEntities.Length, totalProcessedRecords));
+            }
+            InvokeStatusStorageMetricsChanged("Completed");
+            InvokeStorageMetricsPublishCompleted(EventArgs.Empty);
+        }
+
         /// <summary>
         /// Update monitis custom monitor with new perfomance counters data.
         /// Trigger by timer instance
@@ -171,18 +168,21 @@ namespace Monitis.Prototype.Logic.Mediation
             //TODO: look like template pattern
 
             //create query executer for access to data in Windows Azure Table Service
-            QueryExecuter queryExecuter = new QueryExecuter(_userSession.AzureInfo.AccountName, _userSession.AzureInfo.AccountKey);
+            var queryExecuter = new QueryExecuter(_userSession.AzureInfo.AccountName, _userSession.AzureInfo.AccountKey);
 
-            CustomMonitorAPI customMonitorAPI = new CustomMonitorAPI(_userSession.APIKey, _userSession.APIType);
+            var customMonitorAPI = new CustomMonitorAPI(_userSession.APIKey, _userSession.APIType);
             foreach (var kvp in _counterNameEventUpdateMap)
             {
                 InvokeStatusChanged(kvp.Key + "> start update");
 
                 //get perfomance counter data
                 IEnumerable<PerformanceData> data = queryExecuter.GetPerformanceCounters(kvp.Key,
-                                                                                   _userSession.AzureInfo.DeploymentInfo.RoleInstanceName,
-                                                                                   DateTime.UtcNow.AddSeconds(-_syncPeriod.TotalSeconds),
-                                                                                   DateTime.UtcNow);
+                                                                                         _userSession.AzureInfo.
+                                                                                             DeploymentInfo.
+                                                                                             RoleInstanceName,
+                                                                                         DateTime.UtcNow.AddSeconds(
+                                                                                             -_syncPeriod.TotalSeconds),
+                                                                                         DateTime.UtcNow);
 
                 InvokeStatusChanged(kvp.Key + "> retrieved records count from Azure:" + data.Count());
 
@@ -190,19 +190,23 @@ namespace Monitis.Prototype.Logic.Mediation
                 CustomMonitorConfig configByMetricName = CustomMonitorList.Singleton.GetConfigByMetricName(kvp.Key);
 
                 //convert Windows Azure perfomance counters data to monitis monitor parameters data
-                List<ResultParameter> convertToMonitorResults = ConvertToMonitorResults(data, configByMetricName.Descriptor.Convert);
+                List<ResultParameter> convertToMonitorResults = DataConverter.ConvertToMonitorResults(data,
+                                                                                        configByMetricName.Descriptor.
+                                                                                            Converter);
 
                 InvokeStatusChanged(kvp.Key + "> push data to Monitis");
 
 
                 //add result to monitor
-                customMonitorAPI.AddResults(_userSession.CurrentAuthToken, configByMetricName.MonitorID, convertToMonitorResults);
+                customMonitorAPI.AddResults(_userSession.CurrentAuthToken, configByMetricName.MonitorID,
+                                            convertToMonitorResults);
 
                 //fire event to update all handlers
                 kvp.Value(this, new CounterDataEventArgs { PerformanceDatas = data });
             }
 
-            InvokeStatusChanged(String.Format("Next update after {0} second", TimeSpan.FromMilliseconds(_updateTimer.Interval).TotalSeconds));
+            InvokeStatusChanged(String.Format("Next update after {0} second",
+                                              TimeSpan.FromMilliseconds(_updateTimer.Interval).TotalSeconds));
         }
 
         private void InvokeStatusChanged(String status)
@@ -223,14 +227,31 @@ namespace Monitis.Prototype.Logic.Mediation
             if (handler != null) handler(sender, counterDataEventArgs);
         }
 
+        private void InvokeStorageMetricsPublishCompleted(EventArgs e)
+        {
+            EventHandler handler = StorageMetricsPublishCompleted;
+            if (handler != null) handler(this, e);
+        }
+
+        private void InvokeStatusStorageMetricsChanged(String status)
+        {
+            EventHandler<StatusEventArgs> handler = StatusStorageMetricsChanged;
+            if (handler != null)
+            {
+                handler(this, new StatusEventArgs { Status = status });
+            }
+        }
+
         #endregion private methods
 
         #region private fields
 
-        private Timer _updateTimer;
+        private readonly Dictionary<String, EventHandler<CounterDataEventArgs>> _counterNameEventUpdateMap =
+            new Dictionary<String, EventHandler<CounterDataEventArgs>>();
+
         private readonly TimeSpan _syncPeriod;
         private readonly UserSession _userSession;
-        private readonly Dictionary<String, EventHandler<CounterDataEventArgs>> _counterNameEventUpdateMap = new Dictionary<String, EventHandler<CounterDataEventArgs>>();
+        private Timer _updateTimer;
 
         #endregion private fields
     }

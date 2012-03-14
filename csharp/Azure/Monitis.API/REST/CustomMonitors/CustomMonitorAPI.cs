@@ -88,7 +88,5 @@ namespace Monitis.API.REST.CustomMonitors
         }
 
         #endregion
-
-        
     }
 }

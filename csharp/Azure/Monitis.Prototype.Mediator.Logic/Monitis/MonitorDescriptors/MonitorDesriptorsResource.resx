@@ -157,4 +157,7 @@
   <data name="TableServiceAvailability" xml:space="preserve">
     <value>Availability</value>
   </data>
+  <data name="PerHour" xml:space="preserve">
+    <value>per hour</value>
+  </data>
 </root>

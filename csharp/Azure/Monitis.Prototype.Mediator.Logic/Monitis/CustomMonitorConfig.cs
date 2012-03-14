@@ -22,8 +22,6 @@ namespace Monitis.Prototype.Logic.Monitis
 
         public MonitorDescriptor Descriptor { get; private set; }
 
-        public object DataConverter { get; set; }
-
         public Int32 MonitorID { get; set; }
     }
 }

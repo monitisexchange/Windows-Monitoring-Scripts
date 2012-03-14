@@ -133,6 +133,15 @@ namespace Monitis.Prototype.Logic.Monitis.MonitorDescriptors {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to per hour.
+        /// </summary>
+        internal static string PerHour {
+            get {
+                return ResourceManager.GetString("PerHour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Availability.
         /// </summary>
         internal static string TableServiceAvailability {

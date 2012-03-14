@@ -64,6 +64,7 @@
     <Compile Include="Azure\Storage\Tables\WADPerfomance\WADPerformanceTable.cs" />
     <Compile Include="Common\ActionResult.cs" />
     <Compile Include="Common\AzureInfo.cs" />
+    <Compile Include="Common\DataConverter.cs" />
     <Compile Include="Common\UserSession.cs" />
     <Compile Include="Mediation\CounterDataEventArgs.cs" />
     <Compile Include="Mediation\Mediator.cs" />

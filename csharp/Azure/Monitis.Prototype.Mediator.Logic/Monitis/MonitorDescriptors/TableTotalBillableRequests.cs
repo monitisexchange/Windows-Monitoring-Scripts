@@ -16,7 +16,9 @@ namespace Monitis.Prototype.Logic.Monitis.MonitorDescriptors
                                    new ResultParameterDescriptor
                                        {
                                            DataType = MeasureDataType.Integer,
-                                           Name = MonitorDesriptorsResource.Count
+                                           Name = MonitorDesriptorsResource.TableServiceTotalBillableRequests,
+                                           DisplayName = MonitorDesriptorsResource.Value,
+                                           UOM = MonitorDesriptorsResource.PerHour
                                        }
                                };
         }

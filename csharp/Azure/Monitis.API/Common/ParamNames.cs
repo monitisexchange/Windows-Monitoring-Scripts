@@ -71,7 +71,7 @@ namespace Monitis.API.Common
             get { return "validation"; }
         }
 
-         /// <summary>
+        /// <summary>
         /// AuthToken
         /// </summary>
         public static String AuthToken
@@ -79,7 +79,7 @@ namespace Monitis.API.Common
             get { return "authToken"; }
         }
 
-           /// <summary>
+        /// <summary>
         /// MonitorId
         /// </summary>
         public static String MonitorID
@@ -87,7 +87,7 @@ namespace Monitis.API.Common
             get { return "monitorId"; }
         }
 
-         /// <summary>
+        /// <summary>
         /// Checktime
         /// </summary>
         public static String Checktime
@@ -95,8 +95,16 @@ namespace Monitis.API.Common
             get { return "checktime"; }
         }
 
-      
+        /// <summary>
+        /// Token
+        /// </summary>
+        public static String Token
+        {
+            get { return "token"; }
+        }
 
-        
+
+
+
     }
 }

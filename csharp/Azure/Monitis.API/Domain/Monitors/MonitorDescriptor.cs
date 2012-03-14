@@ -7,6 +7,8 @@ namespace Monitis.API.Domain.Monitors
     /// </summary>
     public class MonitorDescriptor
     {
+        #region public properties
+
         /// <summary>
         /// Monitor name
         /// </summary>
@@ -27,6 +29,11 @@ namespace Monitis.API.Domain.Monitors
         /// </summary>
         public ResultParameterDescriptor[] ResultParams { get; set; }
 
-        public Func<Double,String> Convert { get; set; }
+        /// <summary>
+        /// Function for converting monitor parameters value.
+        /// </summary>
+        public Func<Double, String> Converter { get; set; }
+
+        #endregion
     }
 }

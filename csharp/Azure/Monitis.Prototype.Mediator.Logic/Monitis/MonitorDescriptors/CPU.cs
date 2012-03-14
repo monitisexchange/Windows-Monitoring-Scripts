@@ -27,7 +27,7 @@ namespace Monitis.Prototype.Logic.Monitis.MonitorDescriptors
                                            UOM = MonitorDesriptorsResource.PercentSign,
                                        }
                                };
-            Convert = input => input.ToString(CultureInfo.InvariantCulture);
+            Converter = input => input.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

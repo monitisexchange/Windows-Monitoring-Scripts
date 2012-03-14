@@ -133,4 +133,8 @@
     <value>yyyy-MM-dd HH:mm:ss</value>
     <comment>Time stamp format which understand API</comment>
   </data>
+  <data name="UserAPIPath" xml:space="preserve">
+    <value>/api</value>
+    <comment>Relative path to custom monitors</comment>
+  </data>
 </root>

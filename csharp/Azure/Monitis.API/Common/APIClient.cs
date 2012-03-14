@@ -61,11 +61,8 @@ namespace Monitis.API.Common
         /// <param name="action">Action of API which need to call</param>
         public APIClient(APIType apiType, String apiKey, String requestUrl, String action)
         {
-            _apiKey = apiKey;
             _requestUrl = requestUrl;
-            _action = action;
-            _apiHost = apiType == APIType.Live ? LiveURL : SandboxURL;
-            _apiType = apiType;
+            _apiHost = (apiType == APIType.Live ? LiveURL : SandboxURL);
             _paramMap.Add(ParamNames.Action, action);
             _paramMap.Add(ParamNames.Apikey, apiKey);
         }
@@ -77,8 +74,8 @@ namespace Monitis.API.Common
         /// <summary>
         /// Add parameter value to future request
         /// </summary>
-        /// <param name="keyName"></param>
-        /// <param name="value"></param>
+        /// <param name="keyName">Key name</param>
+        /// <param name="value">Key value</param>
         public void AddParam(String keyName, String value)
         {
             _paramMap[keyName] = value;
@@ -197,10 +194,7 @@ namespace Monitis.API.Common
         private void AddPostRequiredParams()
         {
             AddParam(ParamNames.Timestamp, DateTime.Now.ToString(TimestampFormat));
-
-            //TODO: it can be not token, it can be hash
-            AddParam(ParamNames.Validation, "token");
-
+            AddParam(ParamNames.Validation, ParamNames.Token);
             AddParam(ParamNames.AuthToken, _authToken);
         }
 
@@ -210,10 +204,7 @@ namespace Monitis.API.Common
 
         private readonly Dictionary<String, String> _paramMap = new Dictionary<String, String>();
         private readonly String _authToken;
-        private readonly APIType _apiType;
-        private readonly String _apiKey;
         private readonly String _requestUrl;
-        private readonly String _action;
         private readonly String _apiHost;
 
         #endregion private fields
