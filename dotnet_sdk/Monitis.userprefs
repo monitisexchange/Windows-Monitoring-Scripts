@@ -1,0 +1,14 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="c:\Adoriasoft\Projects\Monitis\monitis_sdk\Monitis\Contact.cs">
+    <Files>
+      <File FileName="c:\Adoriasoft\Projects\Monitis\monitis_sdk\Monitis.Tests\HelperTests.cs" Line="24" Column="13" />
+      <File FileName="c:\Adoriasoft\Projects\Monitis\monitis_sdk\Monitis\APIObject.cs" Line="132" Column="71" />
+      <File FileName="c:\Adoriasoft\Projects\Monitis\monitis_sdk\Monitis\Contact.cs" Line="258" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

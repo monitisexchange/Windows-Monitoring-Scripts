@@ -1,0 +1,12 @@
+_ReSharper.Monitis/
+Monitis/obj/Debug/
+Monitis/bin/
+MonitisTestApp/bin/
+MonitisTestApp/obj/
+Monitis.Tests/obj/
+packages/
+Monitis.sln.DotSettings.user
+Monitis.Tests/bin/
+Monitis/obj/
+MoMA/momareport.htm
+MoMA/Reports/submit.xml
