@@ -110,7 +110,8 @@ namespace Monitis
             {
                 str = str.Substring(0, str.Length - DataSeparator.Length);
             }
-            return str;
+            //return "[" + str + "]";
+            return  str ;
         }
 
         public static T DeserializeObject<T>(string content, OutputType outputType, string xmlRoot=null)

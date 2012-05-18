@@ -1,0 +1,26 @@
+HKCR
+{
+	MonitisProfiler.MnProfiler.1 = s 'Monitis Profiler Class'
+	{
+		CLSID = s '{71EDB19D-4F69-4A2C-A2F5-BE783F543A7E}'
+	}
+	MonitisProfiler.MnProfiler = s 'Monitis Profiler Class'
+	{
+		CLSID = s '{71EDB19D-4F69-4A2C-A2F5-BE783F543A7E}'
+		CurVer = s 'MonitisProfiler.MnProfiler.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {71EDB19D-4F69-4A2C-A2F5-BE783F543A7E} = s 'Profiler Class'
+		{
+			ProgID = s 'MonitisProfiler.MnProfiler.1'
+			VersionIndependentProgID = s 'MonitisProfiler.MnProfiler'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			val AppID = s '%APPID%'
+			'TypeLib' = s '{7478DFA0-5E14-4E48-9030-DE17CC5CD508}'
+		}
+	}
+}

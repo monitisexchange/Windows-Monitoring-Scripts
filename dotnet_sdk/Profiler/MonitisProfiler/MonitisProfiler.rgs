@@ -1,0 +1,11 @@
+HKCR
+{
+	NoRemove AppID
+	{
+		'%APPID%' = s 'MonitisProfiler'
+		'MonitisProfiler.DLL'
+		{
+			val AppID = s '%APPID%'
+		}
+	}
+}

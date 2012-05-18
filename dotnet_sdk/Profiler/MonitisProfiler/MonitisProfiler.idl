@@ -1,0 +1,38 @@
+// MonitisProfiler.idl : IDL source for MonitisProfiler
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (MonitisProfiler.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+//import "cordebug.idl";
+import "CorProf.idl";
+
+[
+	object,
+	uuid(73ADAB0B-8F1F-498A-8FFF-A186628BA530),
+	pointer_default(unique)
+]
+interface IMnProfiler : IUnknown
+{
+};
+
+[
+	uuid(7478DFA0-5E14-4E48-9030-DE17CC5CD508),
+	version(1.0),
+	helpstring("Monitis .Net Profiler 1.0 Type Library")
+]
+library MonitisProfilerLib
+{
+	importlib("stdole2.tlb");
+	[		
+		uuid(71EDB19D-4F69-4A2C-A2F5-BE783F543A7E),
+		helpstring("Monitis Profiler Class")
+	]
+	coclass MnProfiler
+	{
+		[default] interface IUnknown;
+	};
+};
+

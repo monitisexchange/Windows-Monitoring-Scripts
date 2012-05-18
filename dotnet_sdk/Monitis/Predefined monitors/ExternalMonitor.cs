@@ -444,9 +444,9 @@ namespace Monitis
             Structures.ExternalMonitorInformation monitorsInfo = Helper
                 .DeserializeObject<Structures.ExternalMonitorInformation>(response, outputType, Params.result);
             //TODO: fix @params - incrorrect value
-            //var temp = monitorsInfo.@params;
-            //int t = temp.Count;
-            //t++;
+            var temp = monitorsInfo.@params;
+            int t = temp.Count;
+            t++;
             return monitorsInfo;
         }
 

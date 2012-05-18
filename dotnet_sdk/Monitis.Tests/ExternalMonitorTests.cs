@@ -80,7 +80,7 @@ namespace Monitis.Tests
 
         public static int AddMonitor(ExternalMonitor externalMonitor, OutputType output,bool dnsWithParams=false)
         {
-            string testName = "test ping:" + Common.GenerateRandomString(5);
+            string testName = "test ping ololo: ololo;" + Common.GenerateRandomString(5);
              string tag = tagNew;
             int[] locationsIds = new int[] { 4, 11 };
             ExternalMonitor.TestType testType = ExternalMonitor.TestType.ping;
@@ -90,11 +90,15 @@ namespace Monitis.Tests
             var testparams = new Dictionary<string, string>();
             if (dnsWithParams)
             {
-                testparams.Add("test1", "fffgfygfhgf");
-                testparams.Add("test2", "bbb");
-                testparams.Add("test3", "dddd");
-                testparams.Add("test4", "ffff");
-                testparams.Add("test5", "ffff");
+                //testparams.Add("test1", "fffgfygfhgf");
+                //testparams.Add("test2", "bbb");
+                //testparams.Add("test3", "dddd");
+                //testparams.Add("test4", "ffff");
+                //testparams.Add("test5", "ffff");
+
+                testparams.Add("server", "google.com");
+                testparams.Add("expip", "209.85.148.113");
+                testparams.Add("expauth", "A");
             }
 
             var result = externalMonitor.AddMonitor(
@@ -112,13 +116,13 @@ namespace Monitis.Tests
         [Test]
         public void AddMonitor_AddMonitorDnsWithParamsAndDelete_Xml()
         {
-            AddMonitorAndDelete(output: OutputType.XML);
+            AddMonitorDnsWithParamsAndDelete(output: OutputType.XML);
         }
 
         [Test]
         public void AddMonitor_AddMonitorDnsWithParamsAndDelete_Json()
         {
-            AddMonitorAndDelete(output: OutputType.JSON);
+            AddMonitorDnsWithParamsAndDelete(output: OutputType.JSON);
         }
 
         public void AddMonitorDnsWithParamsAndDelete(OutputType output)

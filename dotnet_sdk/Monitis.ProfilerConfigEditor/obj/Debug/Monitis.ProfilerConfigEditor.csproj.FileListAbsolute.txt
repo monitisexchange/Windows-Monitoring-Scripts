@@ -1,0 +1,11 @@
+C:\Adoriasoft\Projects\Monitis\monitis_sdk\Monitis.ProfilerConfigEditor\bin\Debug\Monitis.ProfilerConfigEditor.exe
+C:\Adoriasoft\Projects\Monitis\monitis_sdk\Monitis.ProfilerConfigEditor\bin\Debug\Monitis.ProfilerConfigEditor.pdb
+C:\Adoriasoft\Projects\Monitis\monitis_sdk\Monitis.ProfilerConfigEditor\obj\Debug\ResolveAssemblyReference.cache
+C:\Adoriasoft\Projects\Monitis\monitis_sdk\Monitis.ProfilerConfigEditor\obj\Debug\Monitis.ProfilerConfigEditor.FormMain.resources
+C:\Adoriasoft\Projects\Monitis\monitis_sdk\Monitis.ProfilerConfigEditor\obj\Debug\Monitis.ProfilerConfigEditor.Properties.Resources.resources
+C:\Adoriasoft\Projects\Monitis\monitis_sdk\Monitis.ProfilerConfigEditor\obj\Debug\GenerateResource.read.1.tlog
+C:\Adoriasoft\Projects\Monitis\monitis_sdk\Monitis.ProfilerConfigEditor\obj\Debug\GenerateResource.write.1.tlog
+C:\Adoriasoft\Projects\Monitis\monitis_sdk\Monitis.ProfilerConfigEditor\obj\Debug\Monitis.ProfilerConfigEditor.exe
+C:\Adoriasoft\Projects\Monitis\monitis_sdk\Monitis.ProfilerConfigEditor\obj\Debug\Monitis.ProfilerConfigEditor.pdb
+C:\Adoriasoft\Projects\Monitis\monitis_sdk\Monitis.ProfilerConfigEditor\obj\Debug\Monitis.ProfilerConfigEditor.ConfigXmlControl.resources
+C:\Adoriasoft\Projects\Monitis\monitis_sdk\Monitis.ProfilerConfigEditor\obj\Debug\Monitis.ProfilerConfigEditor.FormNewConfig.resources
