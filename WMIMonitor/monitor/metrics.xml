@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<Monitor>
+  <MSSQL>
+    <properties>
+      <HostName></HostName>
+      <Tag></Tag>
+      <Name></Name>
+      <Type></Type>
+    </properties>
+    <metrics>
+      <metric name="Percent Processor time" resultParams="total1:Total Processor time:perc:4;" WMIclass="Win32_PerfRawData_PerfOS_Processor where Name='_Total'" methodName="PercentProcessorTime">false</metric>
+      <metric name="Percent Privileged time" resultParams="privileged:Privileged_time:perc:4;" WMIclass="Win32_PerfRawData_PerfOS_Processor where Name='_Total'" methodName="PercentPrivilegedTime">false</metric>
+      <metric name="Percent User time" resultParams="user_time:User_time:perc:4;" WMIclass="Win32_PerfRawData_PerfOS_Processor where Name='_Total'" methodName="PercentUserTime">false</metric>
+      <metric name="Percent Disk write time" resultParams="dkWrite:Disk write time:perc:4;" WMIclass="Win32_PerfRawData_PerfDisk_PhysicalDisk where Name = '_Total'" methodName="PercentDiskWriteTime">false</metric>
+      <metric name="Percent Disk Read time" resultParams="dkRead:Disk read time:perc:4;" WMIclass="Win32_PerfRawData_PerfDisk_PhysicalDisk where Name = '_Total'" methodName="PercentDiskReadTime">false</metric>
+      <metric name="Percent Disk time" resultParams="dkTime:Percent Disk time:perc:4;" WMIclass="Win32_PerfRawData_PerfDisk_PhysicalDisk where Name = '_Total'" methodName="PercentDiskTime">false</metric>
+      <metric name="Batch requests per second" resultParams="bchreq:Requests:sec:2;" WMIclass="Win32_PerfRawData_MSSQLSQLEXPRESS_MSSQLSQLEXPRESSSQLStatistics" methodName="BatchRequestsPersec">false</metric>
+      <metric name="User connections" resultParams="users:Users::2;" WMIclass="Win32_PerfRawData_MSSQLSQLEXPRESS_MSSQLSQLEXPRESSGeneralStatistics" methodName="UserConnections">false</metric>
+      <metric name="Buffer cache hit ratio" resultParams="hitratio:Buffer chach hit ratio::2;" WMIclass="Win32_PerfRawData_MSSQLSQLEXPRESS_MSSQLSQLEXPRESSBufferManager" methodName="Buffercachehitratio">false</metric>
+      <metric name="Page lookups" resultParams="lookups:Page lookups::2;" WMIclass="Win32_PerfRawData_MSSQLSQLEXPRESS_MSSQLSQLEXPRESSBufferManager" methodName="PagelookupsPersec">false</metric>
+      <metric name="Database pages" resultParams="DBpage:DB pages::2;" WMIclass="Win32_PerfRawData_MSSQLSQLEXPRESS_MSSQLSQLEXPRESSBufferManager" methodName="Databasepages">false</metric>
+      <metric name="Page read" resultParams="read:Page Read::2;" WMIclass="Win32_PerfRawData_MSSQLSQLEXPRESS_MSSQLSQLEXPRESSBufferManager" methodName="PagereadsPersec">false</metric>
+      <metric name="Page write" resultParams="write:Page Write::2;" WMIclass="Win32_PerfRawData_MSSQLSQLEXPRESS_MSSQLSQLEXPRESSBufferManager" methodName="PagewritesPersec">false</metric>
+      <metric name="Transactions/sec" resultParams="trans:Transactions:sec:2;" WMIclass="Win32_PerfRawData_MSSQLSQLEXPRESS_MSSQLSQLEXPRESSBufferManager" methodName="TransactionsPersec">false</metric>
+      <metric name="SQL Cache Memory" resultParams="cacheMem:Cache Memory::2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerMemoryManager" methodName="SQLCacheMemoryKB">false</metric>
+      <metric name="Connection memory" resultParams="conMem:Connection Memory::2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerMemoryManager" methodName="ConnectionMemoryKB">false</metric>
+      <metric name="Log File(s) Size" resultParams="LgFlSize:Log File size:KB:2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerDatabases where Name='_Total'" methodName="LogFilesSizeKB">false</metric>
+      <metric name="Log File(s) Used Size" resultParams="LgFlUsSize:Log file used size:KB:2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerDatabases where Name='_Total'" methodName="LogFilesUsedSizeKB">false</metric>
+      <metric name="Log Cache Hit Ratio" resultParams="Lghitratio:Log cache hitratio::2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerDatabases where Name='_Total'" methodName="LogCacheHitRatio">false</metric>
+      <metric name="Log Cache Reads" resultParams="LgRead:Log cache reads:perc:2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerDatabases where Name='_Total'" methodName="LogCacheReadsPersec">false</metric>
+    </metrics>
+    <IsSelect>false</IsSelect>
+  </MSSQL>
+  <IIS>
+    <properties>
+      <HostName>
+      </HostName>
+      <Tag>
+      </Tag>
+      <Name>
+      </Name>
+      <Type>
+      </Type>
+    </properties>
+    <metrics>
+      <metric name="Anonymous Users" resultParams="users2:Anonymous Users:sec:2;" WMIclass="Win32_PerfRawData_W3SVC_WebService where Name='_Total'" methodName="AnonymousUsersPersec">false</metric>
+      <metric name="Bytes Received" resultParams="received4:Bytes Received:sec:2;" WMIclass="Win32_PerfRawData_W3SVC_WebService where Name='_Total'" methodName="BytesReceivedPersec">false</metric>
+      <metric name="Bytes Sent" resultParams="sent4:Bytes Sent:sec:2;" WMIclass="Win32_PerfRawData_W3SVC_WebService where Name='_Total'" methodName="BytesSentPersec">false</metric>
+      <metric name="Connection Attempts" resultParams="attempts:Con attempts:sec:2;" WMIclass="Win32_PerfRawData_W3SVC_WebService where Name='_Total'" methodName="ConnectionAttemptsPersec">false</metric>
+      <metric name="Current connections" resultParams="connections:Connections::2;" WMIclass="Win32_PerfRawData_W3SVC_WebService where Name='_Total'" methodName="CurrentConnections">false</metric>
+      <metric name="GET requests" resultParams="requests:Get Requests:sec:2;" WMIclass="Win32_PerfRawData_W3SVC_WebService where Name='_Total'" methodName="GetRequestsPersec">false</metric>
+      <metric name="Logon Attempts" resultParams="attempts1:Logon Attempts:sec:2;" WMIclass="Win32_PerfRawData_W3SVC_WebService where Name='_Total'" methodName="LogonAttemptsPersec">false</metric>
+      <metric name="Service Uptime" resultParams="uptime:Service Uptime::2;" WMIclass="Win32_PerfRawData_W3SVC_WebService where Name='_Total'" methodName="ServiceUptime">false</metric>
+      <metric name="Current Anonymous Users" resultParams="users:Anonymous Users::2;" WMIclass="Win32_PerfRawData_W3SVC_WebService where Name='_Total'" methodName="CurrentAnonymousUsers">false</metric>
+      <metric name="Locked Errors" resultParams="locked:locked errors:sec:2;" WMIclass="Win32_PerfRawData_W3SVC_WebService where Name='_Total'" methodName="LockedErrorsPersec">false</metric>
+      <metric name="Request Bytes In Total" resultParams="requests1:Bytes in total::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" methodName="RequestBytesInTotal">false</metric>
+      <metric name="Request Bytes Out Total" resultParams="requests2:Bytes Out total::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" methodName="RequestBytesOutTotal">false</metric>
+      <metric name="Request Execution Time" resultParams="requests3:Execution Time::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" methodName="RequestExecutionTime">false</metric>
+      <metric name="Requests Disconnected" resultParams="requests4:Execution Time::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" methodName="RequestsDisconnected">false</metric>
+      <metric name="Requests Executing" resultParams="requests5:Requests Executing::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" methodName="RequestsExecuting">false</metric>
+      <metric name="Requests Failed Total" resultParams="requests6:Requests Failed::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" methodName="RequestsFailedTotal">false</metric>
+      <metric name="Requests Not Found" resultParams="requests7:Not Found::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" methodName="RequestsNotFound">false</metric>
+      <metric name="Requests Per Second" resultParams="requests8:Request:sec:2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" methodName="RequestsPerSec">false</metric>
+      <metric name="Requests Queued" resultParams="requests9:Request Queued::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" methodName="RequestsQueued">false</metric>
+      <metric name="Requests Succeeded" resultParams="requests11:Requests Succeeded::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" methodName="RequestsSucceeded">false</metric>
+      <metric name="Requests Timed Out" resultParams="requests12:Requests timeout::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" methodName="RequestsTimedOut">false</metric>
+      <metric name="Request Wait Time" resultParams="requests13:Requests wait time::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" methodName="RequestWaitTime">false</metric>
+      <metric name="BLOB Cache Hits" resultParams="hits:Cache Hits::2;" WMIclass="Win32_PerfRawData_InetInfo_InternetInformationServicesGlobal" methodName="BLOBCacheHits">false</metric>
+      <metric name="BLOB Cache Hits Percent" resultParams="hits1:Cache Hits percent::2;" WMIclass="Win32_PerfRawData_InetInfo_InternetInformationServicesGlobal" methodName="BLOBCacheHitsPercent">false</metric>
+      <metric name="BLOB Cache Misses" resultParams="cashe:Cache misses::2;" WMIclass="Win32_PerfRawData_InetInfo_InternetInformationServicesGlobal" methodName="BLOBCacheMisses">false</metric>
+      <metric name="URI Cache Hits" resultParams="cashe1:Cache hits::2;" WMIclass="Win32_PerfRawData_InetInfo_InternetInformationServicesGlobal" methodName="URICacheHits">false</metric>
+      <metric name="URI Cache Hits Percent" resultParams="cashe2:Cache hits percent::2;" WMIclass="Win32_PerfRawData_InetInfo_InternetInformationServicesGlobal" methodName="URICacheHitsPercent">false</metric>
+    </metrics>
+    <IsSelect>false</IsSelect>
+  </IIS>
+</Monitor>
