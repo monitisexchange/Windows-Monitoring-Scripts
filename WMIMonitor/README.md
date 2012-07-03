@@ -9,22 +9,22 @@ Although the sample of Monitis WMIMonitor below is built for monitoring only IIS
 
 <pre markdown="1">
 
- monitor
-	start.bat                <- Main executable script
-	monitis_logo-jpg.bmp
-	Monitis_logo.ico
-	login.ps1                <- Wizard - Monitis account credentials checker
-	metrics.ps1              <- Wizard - select metrics for monitoring
-	propwin.ps1              <- Wizard - requests a specific data for monitor and monitored object
-	readme.ps1               <- Wizard - show Monitor info 
-	scheduler.ps1            <- Wizard - schedules monitor by creating the Windows scheduler task 
-	selwin.ps1               <- Wizard - select object(s) to monitor
-	user.ps1                 <- Wizard - requests a user credentials for Windows
-	CreateCustMonitor.vbs    <- adds custom monitor into Monitis and push results
-	TestData.vbs             <- checks for accessibility of the monitoring object and metrics availability
-	metrics.xml              <- the main configuration file
- Readme.md                       <- This Readme file
- setup.exe                       <- WMI Monitor installator
+        monitor
+           start.bat                Main executable script
+           monitis_logo-jpg.bmp
+           Monitis_logo.ico
+           login.ps1                Wizard - Monitis account credentials checker
+           metrics.ps1              Wizard - select metrics for monitoring
+           propwin.ps1              Wizard - requests a specific data for monitor and monitored object
+           readme.ps1               Wizard - show Monitor info 
+           scheduler.ps1            Wizard - schedules monitor by creating the Windows scheduler task 
+           selwin.ps1               Wizard - select object(s) to monitor
+           user.ps1                 Wizard - requests a user credentials for Windows
+           CreateCustMonitor.vbs    adds custom monitor into Monitis and push results
+           TestData.vbs             checks for accessibility of the monitoring object and metrics availability
+           metrics.xml              the main configuration file
+        Readme.md                   This Readme file
+        setup.exe                   WMI Monitor installator
 
 </pre>
 
