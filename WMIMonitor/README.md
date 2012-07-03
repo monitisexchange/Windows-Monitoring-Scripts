@@ -7,24 +7,24 @@ Although the sample of Monitis WMIMonitor below is built for monitoring only IIS
 
 #### The Repository contains the following ####
 
-<pre>
+<pre markdown="1">
 
-     monitor
-        start.bat                <- Main executable script
-        monitis_logo-jpg.bmp
-        Monitis_logo.ico
-        login.ps1                <- Wizard - Monitis account credentials checker
-        metrics.ps1              <- Wizard - select metrics for monitoring
-        propwin.ps1              <- Wizard - requests a specific data for monitor and monitored object
-        readme.ps1               <- Wizard - show Monitor info 
-        scheduler.ps1            <- Wizard - schedules monitor by creating the Windows scheduler task 
-        selwin.ps1               <- Wizard - select object(s) to monitor
-        user.ps1                 <- Wizard - requests a user credentials for Windows
-        CreateCustMonitor.vbs    <- adds custom monitor into Monitis and push results
-        TestData.vbs             <- checks for accessibility of the monitoring object and metrics availability
-        metrics.xml              <- the main configuration file
-    Readme.md                    <- This Readme file
-    setup.exe                    <- WMI Monitor installator
+ monitor
+	start.bat                <- Main executable script
+	monitis_logo-jpg.bmp
+	Monitis_logo.ico
+	login.ps1                <- Wizard - Monitis account credentials checker
+	metrics.ps1              <- Wizard - select metrics for monitoring
+	propwin.ps1              <- Wizard - requests a specific data for monitor and monitored object
+	readme.ps1               <- Wizard - show Monitor info 
+	scheduler.ps1            <- Wizard - schedules monitor by creating the Windows scheduler task 
+	selwin.ps1               <- Wizard - select object(s) to monitor
+	user.ps1                 <- Wizard - requests a user credentials for Windows
+	CreateCustMonitor.vbs    <- adds custom monitor into Monitis and push results
+	TestData.vbs             <- checks for accessibility of the monitoring object and metrics availability
+	metrics.xml              <- the main configuration file
+ Readme.md                       <- This Readme file
+ setup.exe                       <- WMI Monitor installator
 
 </pre>
 
@@ -52,7 +52,7 @@ Naturally, you can select/deselect any metrics from this set during monitor setu
 
 ##### Internet Information Services (IIS) #####
 
-<pre>
+<pre markdown="1">
 
    - AnonymousUsersPerSec       Rate at which users are making anonymous connections using the web service.
    - BytesReceivedPerSec        Rate at which bytes are received by the web service.
@@ -86,7 +86,7 @@ Naturally, you can select/deselect any metrics from this set during monitor setu
 
 ##### MS SQL Server #####
 
-<pre>
+<pre markdown="1">
 
    - Privileged Time [%]           The percentage of time the processor spends on execution of Windows kernel commands, such as processing of MSSQL I/O requests
    - Processor: User Time [%]      This counter value helps to determine the kind of processing that is affecting the system.
@@ -120,7 +120,7 @@ You can simply add new object into the WMI monitor for monitoring.
 To do so, you should simply add a new section into XML configuration which will describe object and parameters for monitoring.
 We are already in the way of preparing of new Windows objects and as an exampe please find below the configuration for __Terminal Services Metrics__.  
 
-   <pre>
+   <pre markdown="1">
 
   &lt;TerminalServices&gt;
     &lt;IsSelect&gt;false&lt;/IsSelect&gt;
