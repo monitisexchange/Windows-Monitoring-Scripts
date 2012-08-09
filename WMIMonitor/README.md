@@ -110,6 +110,29 @@ Naturally, you can select/deselect any metrics from this set during monitor setu
 
 </pre>
 
+##### Terminal Service #####
+
+<pre markdown="1">
+
+  - Available Licenses          Total number of available licenses in the Remote Desktop Services license key pack.
+  - AvailableMBytes [MB]        Amount of physical memory available to processes running on the computer calculated by summing space on the Zeroed, Free, and Standby memory lists. 
+                            Free memory is ready for use; Zeroed memory contains memory pages filled with zeros to prevent later processes from seeing data used by a previous process. 
+                            Standby memory is memory removed from a process' working set (its physical memory), but is still available to be recalled.
+  - TotalSessions               The total number of sessions on the current server including both connected and disconnected sessions.
+  - DisconnectedSessions        The number of disconnected sessions on the current server. 
+                            These sessions may still be actively consuming server resources, however they currently have no network connection with a client.
+  - OutputBytes [bytes]         Output size produced on this session including all protocol overhead.
+  - InputTimeouts               Total number of timeouts on the communication line as seen from the client side of the connection. 
+                            These are typically the result of a noisy line. On some high latency networks, this could be the result of the protocol time out being too short. 
+                            Increasing the protocol time out on these types of lines improves performance by reducing unnecessary repeat transmissions.
+  - InputAsyncOverflow          Number of input async overflow errors. These can be caused by a insufficient buffer size available on the host.
+  - VirtualBytes [bytes]        Current size of the virtual address space the process is using. 
+                            Use of virtual address space does not necessarily imply corresponding use of either disk or main memory pages. 
+                            Virtual space is finite and, by using too much, the process can limit its ability to load libraries.
+  - ThreadCount                 Number of threads currently active in this process. 
+                            An instruction is the basic unit of execution in a processor, and a thread is the object that executes instructions.
+
+</pre>
 
 If you want to test current monitor, you have to have firstly the account in the [Monitis](http://www.monitis.com),   
 next you should start Wizard by click on desktop icon.
@@ -117,41 +140,7 @@ next you should start Wizard by click on desktop icon.
 #### customizing by adding a new Objects for WMI monitoring ####
 
 You can simply add new object into the WMI monitor for monitoring.  
-To do so, you should simply add a new section into XML configuration which will describe object and parameters for monitoring.
-We are already in the way of preparing of new Windows objects and as an exampe please find below the configuration for __Terminal Services Metrics__.  
-
-   <pre markdown="1">
-
-  &lt;TerminalServices&gt;
-    &lt;IsSelect&gt;false&lt;/IsSelect&gt;
-    &lt;properties&gt;
-      &lt;HostName&gt;&lt;/HostName&gt;
-      &lt;Tag&gt;&lt;/Tag&gt;
-      &lt;Name&gt;&lt;/Name&gt;
-      &lt;Type&gt;&lt;/Type&gt;
-    &lt;/properties&gt;
-    &lt;metrics&gt;
-      &lt;metric name="InputFrames" resultParams="InputFr:Input Frames::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="InputFrames"&gt;false&lt;/metric&gt;
-      &lt;metric name="HandleCount" resultParams="hndl_cnt:Handle Count::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="HandleCount"&gt;false&lt;/metric&gt;
-      &lt;metric name="PageFaultsPersec" resultParams="PageFlt:PageFaultsPersec:perc:2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="PageFaultsPersec"&gt;false&lt;/metric&gt;
-      &lt;metric name="PageFileBytes" resultParams="pagefile:PageFileBytes::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="PageFileBytes"&gt;false&lt;/metric&gt;
-      &lt;metric name="PercentPrivilegedTime" resultParams="privtime:Privileged Time:perc:2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="PercentPrivilegedTime"&gt;false&lt;/metric&gt;
-      &lt;metric name="PercentProcessorTime" resultParams="proctime:Proc Time:perc:2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="PercentProcessorTime"&gt;false&lt;/metric&gt;
-      &lt;metric name="PercentUserTime" resultParams="users3:user time:perc:2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="PercentUserTime"&gt;false&lt;/metric&gt;
-      &lt;metric name="PoolNonpagedBytes" resultParams="nonpaged:locked errors:sec:2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="PoolNonpagedBytes"&gt;false&lt;/metric&gt;
-      &lt;metric name="PoolPagedBytes" resultParams="paged:Pool Nonpaged Bytes::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="PoolPagedBytes"&gt;false&lt;/metric&gt;
-      &lt;metric name="PrivateBytes" resultParams="privBytes:Private Bytes::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="PrivateBytes"&gt;false&lt;/metric&gt;
-      &lt;metric name="ThreadCount" resultParams="thread:Thread Count::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="ThreadCount"&gt;false&lt;/metric&gt;
-      &lt;metric name="VirtualBytes" resultParams="VirtBytes:Virtual Bytes::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="VirtualBytes"&gt;false&lt;/metric&gt;
-      &lt;metric name="InputAsyncOverflow" resultParams="asyncover:Input Async Overflow:sec:2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="InputAsyncOverflow"&gt;false&lt;/metric&gt;
-      &lt;metric name="InputBytes" resultParams="inpbytes:Input Bytes::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="InputBytes"&gt;false&lt;/metric&gt;
-      &lt;metric name="InputTimeouts" resultParams="inptmout:Input Timeouts::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="InputTimeouts"&gt;false&lt;/metric&gt;
-      &lt;metric name="InputWaitForOutBuf" resultParams="ForOutBuf:Input Wait for OutBuf::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="InputWaitForOutBuf"&gt;false&lt;/metric&gt;
-      &lt;metric name="OutputBytes" resultParams="OutputBytes:Output Bytes::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="OutputBytes"&gt;false&lt;/metric&gt;
-    &lt;/metrics&gt;
-  &lt;/TerminalServices&gt;
-
-  </pre>
+To monitor a new WMI object, you should simply add a new section into XML configuration which will describe object and parameters for monitoring.  
 
 #### Test and results ####
 
