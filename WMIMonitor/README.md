@@ -114,22 +114,22 @@ Naturally, you can select/deselect any metrics from this set during monitor setu
 
 <pre markdown="1">
 
-  - Available Licenses          Total number of available licenses in the Remote Desktop Services license key pack.
-  - AvailableMBytes [MB]        Amount of physical memory available to processes running on the computer calculated by summing space on the Zeroed, Free, and Standby memory lists. 
-                            Free memory is ready for use; Zeroed memory contains memory pages filled with zeros to prevent later processes from seeing data used by a previous process. 
+  - Available Licenses      Total number of available licenses in the Remote Desktop Services license key pack.
+  - AvailableMBytes [MB]    The physical memory available to processes calculated by summing space on the Zeroed, Free, and Standby memory lists. 
+                            Free memory is ready for use; Zeroed memory is filled with zeros to prevent later processes from seeing data used by a previous process. 
                             Standby memory is memory removed from a process' working set (its physical memory), but is still available to be recalled.
-  - TotalSessions               The total number of sessions on the current server including both connected and disconnected sessions.
-  - DisconnectedSessions        The number of disconnected sessions on the current server. 
+  - TotalSessions           The total number of sessions on the current server including both connected and disconnected sessions.
+  - DisconnectedSessions    The number of disconnected sessions on the current server. 
                             These sessions may still be actively consuming server resources, however they currently have no network connection with a client.
-  - OutputBytes [bytes]         Output size produced on this session including all protocol overhead.
-  - InputTimeouts               Total number of timeouts on the communication line as seen from the client side of the connection. 
+  - OutputBytes [bytes]     Output size produced on this session including all protocol overhead.
+  - InputTimeouts           Total number of timeouts on the communication line as seen from the client side of the connection. 
                             These are typically the result of a noisy line. On some high latency networks, this could be the result of the protocol time out being too short. 
                             Increasing the protocol time out on these types of lines improves performance by reducing unnecessary repeat transmissions.
-  - InputAsyncOverflow          Number of input async overflow errors. These can be caused by a insufficient buffer size available on the host.
-  - VirtualBytes [bytes]        Current size of the virtual address space the process is using. 
+  - InputAsyncOverflow      Number of input async overflow errors. These can be caused by a insufficient buffer size available on the host.
+  - VirtualBytes [bytes]    Current size of the virtual address space the process is using. 
                             Use of virtual address space does not necessarily imply corresponding use of either disk or main memory pages. 
                             Virtual space is finite and, by using too much, the process can limit its ability to load libraries.
-  - ThreadCount                 Number of threads currently active in this process. 
+  - ThreadCount             Number of threads currently active in this process. 
                             An instruction is the basic unit of execution in a processor, and a thread is the object that executes instructions.
 
 </pre>
