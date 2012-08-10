@@ -10,7 +10,7 @@ $d = $OS.ToLower()
 
 
 #read username and password from XML file
-if($d.Contains("windows xp"))
+if(($d.Contains("windows xp")) -or ($d.Contains("server 2003")))
 {	[xml]$xml = (Get-Content $path"\UserInfo.xml")
 	$username = $xml.Key.Login
 	$password = $xml.Key.Password
@@ -48,13 +48,13 @@ Function mouse_leave
 #show the previous window
 function btnBack
 {
-	if ($d.Contains("windows 7"))
+	if (($d.Contains("windows 7")) -or ($d.Contains("server 2008")))
 	{
 		$Form.Visible=$false
 		$Form.Close()
 		& $path"\metrics.ps1"
 	}
-	elseif($d.Contains("windows xp"))
+	elseif(($d.Contains("windows xp")) -or ($d.Contains("server 2003")))
 	{
 		$Form.Visible=$false
 		$Form.Close()
@@ -92,7 +92,7 @@ function rdBtn_Weekly_CheckedChanged
 	$splitContainer1.Panel2.Controls.Remove($DayOfWeek)
 	
 	#add or remove controls depend of OS
-	if ($d.Contains("windows 7"))
+	if (($d.Contains("windows 7")) -or ($d.Contains("server 2008")))
 	{
 		$splitContainer1.Panel2.Controls.Add($lbl_min)
 		$splitContainer1.Panel2.Controls.Add($txtBx_repeat)
@@ -139,7 +139,7 @@ function  rdBtn_Monthly_CheckedChanged
 	$splitContainer1.Panel2.Controls.Remove($lbl_expire);
 	
 	#add or remove controls depend of OS
-	if ($d.Contains("windows 7"))
+	if (($d.Contains("windows 7")) -or ($d.Contains("server 2008")))
 	{
 		$splitContainer1.Panel2.Controls.Add($lbl_min);
 		$splitContainer1.Panel2.Controls.Add($txtBx_repeat);
@@ -185,7 +185,7 @@ function rdBtn_Onetime_CheckedChanged
 	$splitContainer1.Panel2.Controls.Remove($lbl_expire)
 	
 	#add or remove controls depend of OS
-	if ($d.Contains("windows 7"))
+	if (($d.Contains("windows 7")) -or ($d.Contains("server 2008")))
 	{	
 		$splitContainer1.Panel2.Controls.Add($lbl_min)
 		$splitContainer1.Panel2.Controls.Add($txtBx_repeat)
@@ -234,7 +234,7 @@ function  rdBtn_Daily_CheckedChanged
 	$splitContainer1.Panel2.Controls.Remove($DayOfWeek)
 	
 	#add or remove controls depend of OS
-	if ($d.Contains("windows 7"))
+	if (($d.Contains("windows 7")) -or ($d.Contains("server 2008")))
 	{	
 		$splitContainer1.Panel2.Controls.Add($lbl_Duration)
 		$splitContainer1.Panel2.Controls.Add($lbl_repeat);
@@ -356,7 +356,7 @@ function startbtn_click
 		else
 		{
 			#create new task  using required parametrs for current OS
-			if ($d.Contains("windows 7"))
+			if (($d.Contains("windows 7")) -or ($d.Contains("server 2008")))
 			{
 				$Command = "schtasks /create /tn $taskname /tr $taskrun /sc $schedul  /mo $modifier /RI $repeat /du $duration /sd $startdate /st $starttime /ed $enddate >status"
 				cmd.exe /c $Command
@@ -365,7 +365,7 @@ function startbtn_click
 				$a = Get-Content $path"\status"
 				[System.Windows.Forms.MessageBox]::Show($a)
 			}
-			elseif($d.Contains("windows xp"))
+			elseif(($d.Contains("windows xp")) -or ($d.Contains("server 2003")))
 			{
 				if(($password -ne "") -and ($username -ne ""))
 				{
@@ -438,7 +438,7 @@ function startbtn_click
 			{$day = "MON"}
 			
 			#create new task  using required parametrs for current OS
-			if ($d.Contains("windows 7"))
+			if (($d.Contains("windows 7")) -or ($d.Contains("server 2008")))
 			{
 				$Command = "schtasks /create /tn $taskname /tr $taskrun /sc $schedul  /mo $modifier /d $day /RI $repeat /du $duration /sd $startdate /st $starttime /ed $enddate >status"
 				cmd.exe /c $Command
@@ -447,7 +447,7 @@ function startbtn_click
 				$a = Get-Content $path"\status"
 				[System.Windows.Forms.MessageBox]::Show($a)
 			}
-			elseif($d.Contains("windows xp"))
+			elseif(($d.Contains("windows xp")) -or ($d.Contains("server 2003")))
 			{
 				if(($password -ne "") -and ($username -ne ""))
 				{
@@ -493,7 +493,7 @@ function startbtn_click
 		else
 		{
 			#create new task  using required parametrs for current OS
-			if ($d.Contains("windows 7"))
+			if (($d.Contains("windows 7")) -or ($d.Contains("server 2008")))
 			{
 				$Command = "schtasks /create /tn $taskname /tr $taskrun /sc $schedul /RI $repeat /sd $startdate /st $starttime /du $duration >status"			
 				cmd.exe /c $Command
@@ -502,7 +502,7 @@ function startbtn_click
 				$a = Get-Content $path"\status"
 				[System.Windows.Forms.MessageBox]::Show($a)
 			}
-			elseif($d.Contains("windows xp"))
+			elseif(($d.Contains("windows xp")) -or ($d.Contains("server 2003")))
 			{
 				if(($password -ne "") -and ($username -ne ""))
 				{
@@ -582,7 +582,7 @@ function startbtn_click
 		else
 		{
 			#create new task  using required parametrs for current OS
-			if ($d.Contains("windows 7"))
+			if (($d.Contains("windows 7")) -or ($d.Contains("server 2008")))
 			{
 				$Command = "schtasks.exe /create /tn $TaskName /tr $TaskRun /sc $Schedule /mo $Modifier /d $day /m $Months /st $StartTime  /ri $Interval /du $duration >status"
 				cmd.exe /c $Command
@@ -591,7 +591,7 @@ function startbtn_click
 				$a = Get-Content $path"\status"
 				[System.Windows.Forms.MessageBox]::Show($a)
 			}
-			elseif($d.Contains("windows xp"))
+			elseif(($d.Contains("windows xp")) -or ($d.Contains("server 2003")))
 			{
 				if(($password -ne "") -and ($username -ne ""))
 				{
@@ -618,7 +618,7 @@ function startbtn_click
 		$TaskRun = '"\"' +"$path"+"\CreateCustMonitor.vbs" + '\""'
 		
 		#create new task  using required parametrs for current OS
-		if ($d.Contains("windows 7"))
+		if (($d.Contains("windows 7")) -or ($d.Contains("server 2008")))
 		{
 			$myCmd = "schtasks.exe /Create /TN $TaskName /SC $Schedule /tr $TaskRun >status"
 			cmd.exe /c $myCmd 
@@ -627,7 +627,7 @@ function startbtn_click
 			$a = Get-Content $path"\status"
 			[System.Windows.Forms.MessageBox]::Show($a)
 		}
-		elseif($d.Contains("windows xp"))
+		elseif(($d.Contains("windows xp")) -or ($d.Contains("server 2003")))
 		{
 			if(($password -ne "") -and ($username -ne ""))
 			{
@@ -671,7 +671,7 @@ function startbtn_click
 			[System.Windows.Forms.MessageBox]::Show("The date a task begins cannot be later than the date it expires")
 		}
 		#create new task  using required parametrs for current OS
-		elseif($d.Contains("windows xp"))
+		elseif(($d.Contains("windows xp")) -or ($d.Contains("server 2003")))
 		{
 			if(($password -ne "") -and ($username -ne ""))
 			{
@@ -758,7 +758,7 @@ $splitContainer1.Panel1.Controls.Add($rdBtn_Onetime);
 $splitContainer1.Panel1.Controls.Add($rdBtn_Monthly);
 $splitContainer1.Panel1.Controls.Add($rdBtn_Weekly);
 $splitContainer1.Panel1.Controls.Add($rdBtn_Daily);
-if ($d.Contains("windows xp"))
+if(($d.Contains("windows xp")) -or ($d.Contains("server 2003")))
 {
 	$splitContainer1.Panel1.Controls.Add($rdBtn_Minute);
 }

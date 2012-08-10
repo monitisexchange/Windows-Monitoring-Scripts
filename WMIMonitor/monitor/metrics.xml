@@ -81,23 +81,15 @@
       <Type></Type>
     </properties>
     <metrics>
-      <metric name="Input Frames" resultParams="InputFr:Input Frames::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Console'" methodName="InputFrames">false</metric>
-      <metric name="Handle Count" resultParams="hndl_cnt:Handle Count::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Console'" methodName="HandleCount">false</metric>
-      <metric name="Page Faults Per sec" resultParams="PageFlt:PageFaultsPersec:perc:2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Console'" methodName="PageFaultsPersec">false</metric>
-      <metric name="Page File Bytes" resultParams="pagefile:PageFileBytes::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Console'" methodName="PageFileBytes">false</metric>
-      <metric name="Percent Privileged Time" resultParams="privtime:Privileged Time:perc:2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Console'" methodName="PercentPrivilegedTime">false</metric>
-      <metric name="Percent Processor Time" resultParams="proctime:Proc Time:perc:2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Console'" methodName="PercentProcessorTime">false</metric>
-      <metric name="Percent User Time" resultParams="users3:user time:perc:2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Console'" methodName="PercentUserTime">false</metric>
-      <metric name="Pool Nonpaged Bytes" resultParams="nonpaged:locked errors:sec:2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Console'" methodName="PoolNonpagedBytes">false</metric>
-      <metric name="Pool Paged Bytes" resultParams="paged:Pool Nonpaged Bytes::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Console'" methodName="PoolPagedBytes">false</metric>
-      <metric name="Private Bytes" resultParams="privBytes:Private Bytes::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Console'" methodName="PrivateBytes">false</metric>
-      <metric name="Thread Count" resultParams="thread:Thread Count::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Console'" methodName="ThreadCount">false</metric>
-      <metric name="Virtual Bytes" resultParams="VirtBytes:Virtual Bytes::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Console'" methodName="VirtualBytes">false</metric>
-      <metric name="Input Async Overflow" resultParams="asyncover:Input Async Overflow:sec:2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Console'" methodName="InputAsyncOverflow">false</metric>
-      <metric name="Input Bytes" resultParams="inpbytes:Input Bytes::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Console'" methodName="InputBytes">false</metric>
-      <metric name="Input Timeouts" resultParams="inptmout:Input Timeouts::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Console'" methodName="InputTimeouts">false</metric>
-      <metric name="Input Wait For Out Buf" resultParams="ForOutBuf:Input Wait for OutBuf::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Console'" methodName="InputWaitForOutBuf">false</metric>
-      <metric name="Output Bytes" resultParams="OutputBytes:Output Bytes::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Console'" methodName="OutputBytes">false</metric>
+      <metric name="Thread Count" resultParams="thread:Thread Count::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="ThreadCount">false</metric>
+      <metric name="Virtual Bytes" resultParams="VirtBytes:Virtual Bytes::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="VirtualBytes">false</metric>
+      <metric name="Input Async Overflow" resultParams="asyncover:Input Async Overflow:sec:2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="InputAsyncOverflow">false</metric>
+      <metric name="Input Timeouts" resultParams="inptmout:Input Timeouts::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="InputTimeouts">false</metric>
+      <metric name="Output Bytes" resultParams="OutputBytes:Output Bytes::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" methodName="OutputBytes">false</metric>
+      <metric name="Available Licenses" resultParams="AvailableLicenses:AvailableLicenses::2;" WMIclass="Win32_TSLicenseKeyPack" methodName="AvailableLicenses">false</metric>
+      <metric name="Available MBytes" resultParams="AvailableMBytes:AvailableMBytes::2;" WMIclass="Win32_PerfRawData_PerfOS_Memory" methodName="AvailableMBytes">false</metric>
+      <metric name="Total Sessions" resultParams="TotalSessions:TotalSessions::2;" WMIclass="Win32_TerminalService" methodName="TotalSessions">false</metric>
+      <metric name="Disconnected Sessions" resultParams="DisconnectedSessions:DisconnectedSessions::2;" WMIclass="Win32_TerminalService" methodName="DisconnectedSessions">false</metric>
     </metrics>
     <IsSelect>false</IsSelect>
   </TerminalServices>

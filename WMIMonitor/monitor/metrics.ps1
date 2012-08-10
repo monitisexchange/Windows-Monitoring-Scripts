@@ -138,13 +138,13 @@ function Next_btn
 	
 	else
 	{
-		if ($d.Contains("windows 7"))
+		if (($d.Contains("windows 7")) -or ($d.Contains("server 2008"))) 
 		{
 			$Form.Visible=$false
 			$Form.Close()
 			& $path"\scheduler.ps1"
 		}
-		elseif($d.Contains("windows xp"))
+		elseif(($d.Contains("windows xp")) -or ($d.Contains("server 2003")))
 		{
 			$Form.Visible=$false
 			$Form.Close()
