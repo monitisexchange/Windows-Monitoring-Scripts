@@ -26,5 +26,13 @@ namespace Monitis
         {
             public override string Message { get { return "Params not specified or has null values!"; } }
         }
+
+        public class MonitisException : Exception
+        {
+            public MonitisException(string s, Exception exception) : base(s, exception)
+            {
+                
+            }
+        }
     }
 }

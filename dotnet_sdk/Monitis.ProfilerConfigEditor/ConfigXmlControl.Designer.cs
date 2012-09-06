@@ -31,7 +31,6 @@
             this.dgvConfig = new System.Windows.Forms.DataGridView();
             this.labelFileName = new System.Windows.Forms.Label();
             this.btnDeleteConfig = new System.Windows.Forms.Button();
-            this.btnAddConfig = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvConfig)).BeginInit();
             this.SuspendLayout();
@@ -58,33 +57,23 @@
             // 
             // btnDeleteConfig
             // 
-            this.btnDeleteConfig.Location = new System.Drawing.Point(117, 232);
+            this.btnDeleteConfig.Location = new System.Drawing.Point(93, 232);
             this.btnDeleteConfig.Name = "btnDeleteConfig";
-            this.btnDeleteConfig.Size = new System.Drawing.Size(139, 23);
+            this.btnDeleteConfig.Size = new System.Drawing.Size(70, 23);
             this.btnDeleteConfig.TabIndex = 2;
-            this.btnDeleteConfig.Text = "Delete selected configs";
+            this.btnDeleteConfig.Text = "Delete File";
             this.btnDeleteConfig.UseVisualStyleBackColor = true;
-            this.btnDeleteConfig.Click += new System.EventHandler(this.btnDeleteConfig_Click);
-            // 
-            // btnAddConfig
-            // 
-            this.btnAddConfig.Location = new System.Drawing.Point(3, 232);
-            this.btnAddConfig.Name = "btnAddConfig";
-            this.btnAddConfig.Size = new System.Drawing.Size(108, 23);
-            this.btnAddConfig.TabIndex = 3;
-            this.btnAddConfig.Text = "Add new config";
-            this.btnAddConfig.UseVisualStyleBackColor = true;
-            this.btnAddConfig.Click += new System.EventHandler(this.btnAddConfig_Click);
+            this.btnDeleteConfig.Click += new System.EventHandler(this.BtnDeleteConfigClick);
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(262, 232);
+            this.btnSave.Location = new System.Drawing.Point(2, 232);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(85, 23);
             this.btnSave.TabIndex = 4;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            this.btnSave.Click += new System.EventHandler(this.BtnSaveClick);
             // 
             // ConfigXmlControl
             // 
@@ -92,7 +81,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.btnSave);
-            this.Controls.Add(this.btnAddConfig);
             this.Controls.Add(this.btnDeleteConfig);
             this.Controls.Add(this.labelFileName);
             this.Controls.Add(this.dgvConfig);
@@ -110,7 +98,6 @@
         public System.Windows.Forms.DataGridView dgvConfig;
         public System.Windows.Forms.Label labelFileName;
         public System.Windows.Forms.Button btnDeleteConfig;
-        public System.Windows.Forms.Button btnAddConfig;
         private System.Windows.Forms.Button btnSave;
     }
 }

@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Win32;
@@ -17,73 +16,79 @@ namespace Monitis.ProfilerConfigEditor
         /// For correct location next ConfigXmlControl
         /// </summary>
         private int lastLocationY = 3;
+        private OperationsController _controller;
 
         public FormMain()
         {
             InitializeComponent();
+
+            try
+            {
+                _controller = new OperationsController();
+                _controller.FilesChanged += _controller_FilesChanged;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Error :" + ex.Message);
+                throw;
+            }
+            _controller.ReloadConfigs();
+        }
+
+        void _controller_FilesChanged(object sender, EventArgs e)
+        {
+            CreateConfigControls();
         }
 
         private void CreateConfigControls()
         {
             panelConfigs.Controls.Clear();
-            Config.Documents.Clear();
             lastLocationY = 3;
 
-            string[] configsPaths = Config.GetConfigsPaths();
-
-            if (null != configsPaths)
+            panelConfigs.Hide();
+            foreach (var file in _controller.Files)
             {
-                panelConfigs.Hide();
-                foreach (string configPath in configsPaths)
-                {
-                    AddConfigXmlControl(configPath);
-                }
-                panelConfigs.Show();
+                AddConfigXmlControl(file);
             }
-            else
-            {
-                MessageBox.Show(@"Cannot find path to config folder. Check [HKLM\SOFTWARE\Monitis] 'InstalledPath' key.");
-            }
+            panelConfigs.Show();
         }
 
-        /// <summary>
-        /// Adds ConfigXmlControl to form
-        /// </summary>
-        private void AddConfigXmlControl(string configPath)
+        private void AddConfigXmlControl(ConfigFile configFile)
         {
-            var configXmlControl = new ConfigXmlControl(configPath);
-            //If xml file is correct and config list exist
-            if (null != configXmlControl.ConfigList)
-            {
-                panelConfigs.Controls.Add(configXmlControl);
-                configXmlControl.Location = new Point(3, lastLocationY);
-                configXmlControl.Width = this.Width - 20;
-                configXmlControl.Anchor = (AnchorStyles.Top | AnchorStyles.Left) | AnchorStyles.Right;
-                lastLocationY += configXmlControl.Height + 25;
-            }
-            else
-            {
-                configXmlControl = null;
-            }
+            var configXmlControl = new ConfigXmlControl(configFile, _controller);
+            panelConfigs.Controls.Add(configXmlControl);
+            OrderControls(configXmlControl);
         }
 
-        private void loadConfigsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OrderControls(ConfigXmlControl configXmlControl)
         {
+            configXmlControl.Anchor = AnchorStyles.None;
+            configXmlControl.Location = new Point(3, lastLocationY);
+            configXmlControl.Width = this.Width - 20;
+            configXmlControl.Anchor = (AnchorStyles.Top | AnchorStyles.Left) | AnchorStyles.Right;
+            lastLocationY += configXmlControl.Height + 25;
+        }
+
+        private void LoadConfigsToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            _controller.ReloadConfigs();
+        }
+
+        private void SaveConfigsToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            panelConfigs.Focus();
+            _controller.SaveConfigs();
             CreateConfigControls();
         }
 
-        private void saveConfigsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AddNewConfigFileToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Config.SaveAll();
+            _controller.AddNewConfigFile();
         }
 
-        private void addNewConfigFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void FormMainLoad(object sender, EventArgs e)
         {
-            FormNewConfig formNew=new FormNewConfig();
-            if  (formNew.ShowDialog()==DialogResult.OK)
-            {
-                AddConfigXmlControl(Config.NewConfigXmlFilePath);
-            }
+            CreateConfigControls();
         }
     }
 }

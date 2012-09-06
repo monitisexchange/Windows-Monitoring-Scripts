@@ -6,6 +6,7 @@
 #include <string>
 #include <memory>
 #include "MnConfigXml.h"
+#include "MnPipe.h"
 
 using namespace ATL;
 
@@ -141,15 +142,18 @@ private:
 	CComQIPtr<ICorProfilerInfo> m_pICorProfilerInfo;
 	CComQIPtr<ICorProfilerInfo2> m_pICorProfilerInfo2;
 	MnFunctionMap m_functionMap;
-	//std::map<std::wstring, std::list<std::wstring> > m_methodsAccept;
 	std::tr1::shared_ptr<Monitis::MnConfigXml> m_configXml;
+    tr1::shared_ptr<Monitis::MnPipe> m_pipe;
+    std::map<ThreadID, DWORD> m_ThreadMap;
 
 private:
 	HRESULT SetEventMask();
-	bool CheckAcceptProfileFunction(MnFunctionInfo *methodInfo);
+    //void SelectMethods(MnFunctionInfo *methodInfo, MnMethods& methods);
 	bool MapFunction(FunctionID functionID);
-	HRESULT GetMethodInfo(FunctionID functionID, wstring& assemblyName, wstring& className, wstring& methodName);
+	HRESULT GetMethodInfo(FunctionID functionID, wstring& assemblyName, wstring& className, wstring& methodName, wstring& methodParameters);
 	bool LoadXmlConfig(std::wstring fileName);
+    ThreadID GetCurrentThread();
+    DWORD GetOSThreadId(ThreadID managedThreadID);
 
 public:
 DECLARE_REGISTRY_RESOURCEID(IDR_MNPROFILER)

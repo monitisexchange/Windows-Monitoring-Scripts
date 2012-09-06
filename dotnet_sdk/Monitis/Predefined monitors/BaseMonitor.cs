@@ -4,7 +4,7 @@ using RestSharp;
 
 namespace Monitis
 {
-    public class BaseMonitor : APIObject
+    public abstract class BaseMonitor : APIObject
     {
         public enum MonitorAction
         {
@@ -39,6 +39,11 @@ namespace Monitis
 
         }
 
+        protected BaseMonitor(String apiUrl)
+            : base(apiUrl)
+        {
+        }
+
         protected BaseMonitor(Authentication authentication)
             : base(authentication)
         {
@@ -47,7 +52,7 @@ namespace Monitis
 
         #endregion
 
-        protected virtual RestResponse GetMonitorInfo(int monitorId, OutputType? output = null)
+        public virtual RestResponse GetMonitorInfo(int monitorId, OutputType? output = null)
         {
             var parameters = new Dictionary<string, object>();
             parameters.Add(Params.monitorId, monitorId);
@@ -55,14 +60,13 @@ namespace Monitis
             return resp;
         }
 
-
-        protected virtual RestResponse GetMonitors(OutputType? output = null)
+        public virtual RestResponse GetMonitors(OutputType? output = null)
         {
             RestResponse resp = MakeGetRequest(GetAction(MonitorAction.getMonitors), output: output);
             return resp;
         }
 
-        protected virtual RestResponse GetMonitorResults(int monitorId, int year, int month, int day, int? timezone = null,
+        public virtual RestResponse GetMonitorResults(int monitorId, int year, int month, int day, int? timezone = null,
                                               OutputType? output = null, params int[] locationIds)
         {
             var parameters = new Dictionary<string, object>();
@@ -80,7 +84,7 @@ namespace Monitis
             return resp;
         }
 
-        protected virtual void DeleteMonitors(int[] monitorIds,OutputType? output = null, Validation? validation = null)
+        public virtual void DeleteMonitors(int[] monitorIds, OutputType? output = null, Validation? validation = null)
         {
             var parameters = new Dictionary<string, object>();
             if (monitorIds != null)
@@ -91,7 +95,7 @@ namespace Monitis
                                                 output: output, validation: validation);
         }
 
-        protected virtual RestResponse SuspendMonitors(int[] monitorIds, string tag, OutputType? output = null, Validation? validation = null)
+        public virtual RestResponse SuspendMonitors(int[] monitorIds, string tag, OutputType? output = null, Validation? validation = null)
         {
             var parameters = new Dictionary<string, object>();
             if (monitorIds != null && monitorIds.Length > 0)
@@ -103,7 +107,7 @@ namespace Monitis
             return resp;
         }
 
-        protected virtual RestResponse ActivateMonitors(int[] monitorIds, string tag, OutputType? output = null, Validation? validation = null)
+        public virtual RestResponse ActivateMonitors(int[] monitorIds, string tag, OutputType? output = null, Validation? validation = null)
         {
             var parameters = new Dictionary<string, object>();
             AddIfNotNull(parameters, Params.monitorIds, string.Join(",", monitorIds));
@@ -112,7 +116,7 @@ namespace Monitis
             return resp;
         }
 
-        protected virtual RestResponse GetTops(Enum action, string tag, int? limit, bool detailedResults, OutputType? output=null)
+        public virtual RestResponse GetTops(Enum action, string tag, int? limit, bool detailedResults, OutputType? output = null)
         {
             var parameters = new Dictionary<string, object>();
             AddIfNotNull(parameters, Params.limit, limit);
@@ -122,7 +126,7 @@ namespace Monitis
             return resp;
         }
 
-        protected virtual Enum GetAction(MonitorAction action)
+        public virtual Enum GetAction(MonitorAction action)
         {
             return action;
         }

@@ -96,6 +96,19 @@ namespace Monitis
         }
 
         /// <summary>
+        /// Constructor with specified apiUrl.
+        /// </summary>
+        /// <param name="apiUrl"> </param>
+        public APIObject(string apiUrl)
+        {
+            /*apiKey: MonitisAccountInformation.ApiKey,
+                                                secretKey: MonitisAccountInformation.SekretKey
+            this.apiKey = Helper.;
+            this.secretKey = Constants.SECRET_KEY;*/
+            this.apiUrl = apiUrl;
+        }
+
+        /// <summary>
         /// Constructor with specified apiKey and secretKey.  Default apiUrl is http://monitis.com/api
         /// </summary>
         /// <param name="apiKey"></param>

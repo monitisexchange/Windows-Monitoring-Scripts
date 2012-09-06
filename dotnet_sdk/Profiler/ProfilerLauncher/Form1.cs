@@ -1,90 +1,185 @@
-/*****************************************************************************
- * ProfilerTest
- * 
- * Copyright (c) 2006 Scott Hackett
- * 
- * This software is provided 'as-is', without any express or implied warranty. 
- * In no event will the author be held liable for any damages arising from the
- * use of this software.
- * 
- * Permission to use, copy, modify, distribute and sell this software for any 
- * purpose is hereby granted without fee, provided that the above copyright 
- * notice appear in all copies and that both that copyright notice and this 
- * permission notice appear in supporting documentation.
- * 
- * Scott Hackett (code@scotthackett.com)
- *****************************************************************************/
-
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
+using System.Windows.Forms;
+using AgentCore;
+using Monitis;
+
+//using System.Windows.Threading;
 
 namespace ProfilerLauncher
 {
-    public partial class Form1 : Form
+//     public class MnPipeServer
+//     {
+//         #region Involve WinAPI function
+//         [DllImport("kernel32", EntryPoint = "CreateFile", SetLastError = true)]
+//         private static extern SafeFileHandle CreateFile(string inFileName,
+//             FileAccess inAccess, FileShare inShare, IntPtr inSecurityAttributes,
+//             FileMode inCreationDisposition, FileOptions inFlagsAndAttributes, IntPtr hTemplateFile);
+// 
+//         [DllImport("kernel32.dll", EntryPoint = "ReadFile", SetLastError = true)]
+//         private static extern bool ReadFile(SafeFileHandle hFile, [Out] byte[] lpBuffer,
+//             uint nNumberOfBytesToRead, out uint lpNumberOfBytesRead, [In] ref NativeOverlapped inOverlapped);
+// 
+//         [DllImport("kernel32.dll", EntryPoint = "GetOverlappedResult", SetLastError = true)]
+//         private static extern bool GetOverlappedResult(SafeFileHandle hFile, [In] ref System.Threading.NativeOverlapped lpOverlapped,
+//            out uint lpNumberOfBytesTransferred, bool bWait);
+// 
+//     //    [DllImport("kernel32.dll", EntryPoint = "CreateNamedPipe", SetLastError = true)]
+//     //    private static extern SafeFileHandle CreateNamedPipe(string PipeName, 
+//     //__in     DWORD dwOpenMode,
+//     //__in     DWORD dwPipeMode,
+//     //__in     DWORD nMaxInstances,
+//     //__in     DWORD nOutBufferSize,
+//     //__in     DWORD nInBufferSize,
+//     //__in     DWORD nDefaultTimeOut,
+//     //__in_opt LPSECURITY_ATTRIBUTES lpSecurityAttributes
+//     );
+//         #endregion
+// 
+//         
+// 
+//         private SafeFileHandle pipeHandle;
+//         public MnPipeServer()
+//         {
+// 
+//             //pipeHandle = CreateFile(kPipeName, FileAccess.ReadWrite, FileShare.ReadWrite, IntPtr.Zero, FileMode.Open, FileOptions.Asynchronous, IntPtr.Zero);
+//             //if (pipeHandle.IsInvalid)
+//             //{
+//             //    throw new Win32Exception(Marshal.GetLastWin32Error());
+//             //}
+//         }
+//     }
+
+    public partial class Form1 : Form, IMnLogs
     {
         private const string PROFILER_GUID = "{71EDB19D-4F69-4A2C-A2F5-BE783F543A7E}";
-        private const string EXECUTABLE_TO_RUN = "TestProfilerApplication.exe";
-
-        //private const string PROFILER_GUID = "{9E2B38F2-7355-4C61-A54F-434B7AC266C0}";
-        //// executable to run
-        //private const string EXECUTABLE_TO_RUN = "HelloWorld.exe";
-
+        public static string Login;
+        public static string Password;
+        private Agent _agent;
 
         public Form1()
         {
             InitializeComponent();
+
+            this.Closed += Form1Closed;
+            this.Load += new EventHandler(Form1_Load);
         }
+
+        private void InitMonitisProfiler()
+        {
+            var a = new Authentication(Login, Password, null);
+            var mon = new MonitisClrMethodInfoAnalizer(a);
+            var processor = new ClrActionsProcessor();
+            processor.MessageRecievedEvent += processor_MessageRecievedEvent;
+            _agent = new Agent(mon, processor);
+        }
+
+        void Form1_Load(object sender, EventArgs e)
+        {
+            var s = new LoginForm();
+            if (s.ShowDialog() != DialogResult.Yes)
+            {
+                Application.Exit();
+                return;
+            }
+            Login = s.Login;
+            Password = s.Password;
+            InitMonitisProfiler();
+
+            textBox1.Text =Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                                         "TestProfilerApplication.exe"));
+        }
+
+        void processor_MessageRecievedEvent(object sender, MessageRecievedEventArgs e)
+        {
+            BeginInvoke(new AddListItem(AddLog), e.Message);
+        }
+
+        void Form1Closed(object sender, EventArgs e)
+        {
+            _agent.Dispose();
+        }
+
+        #region IMnLogs Members
+
+        public void PutMessage(string inMessage)
+        {
+            Invoke(new AddListItem(AddLog), inMessage);
+        }
+
+        #endregion
 
         private void button1_Click(object sender, EventArgs e)
         {
             ProcessStartInfo psi;
 
             // make sure the executable exists
-            if (File.Exists(EXECUTABLE_TO_RUN) == false)
+            var path = textBox1.Text.Trim(' ', '\t','\"');
+            if (File.Exists(path) == false)
             {
-                MessageBox.Show("The executable '" + EXECUTABLE_TO_RUN + "' does not exist.\nCheck the EXECUTABLE_TO_RUN constant in the program.");
+                MessageBox.Show("The executable '" + path +
+                                "' does not exist.");
                 return;
             }
 
             // create a process executor
-            psi = new ProcessStartInfo(EXECUTABLE_TO_RUN);
+            psi = new ProcessStartInfo(path, textBox2.Text);
 
-            // ----- SET THE CLR ENVIRONMENT VARIABLES -------------------
-            
-            // set the Cor_Enable_Profiling env var. This indicates to the CLR whether or
-            // not we are using the profiler at all.  1 = yes, 0 = no.
-            if (psi.EnvironmentVariables.ContainsKey("COR_ENABLE_PROFILING") == true)
+            if (psi.EnvironmentVariables.ContainsKey("COR_ENABLE_PROFILING"))
                 psi.EnvironmentVariables["COR_ENABLE_PROFILING"] = "1";
             else
                 psi.EnvironmentVariables.Add("COR_ENABLE_PROFILING", "1");
 
             // set the COR_PROFILER env var. This indicates to the CLR which COM object to
             // instantiate for profiling.
-            if (psi.EnvironmentVariables.ContainsKey("COR_PROFILER") == true)
+            if (psi.EnvironmentVariables.ContainsKey("COR_PROFILER"))
                 psi.EnvironmentVariables["COR_PROFILER"] = PROFILER_GUID;
             else
                 psi.EnvironmentVariables.Add("COR_PROFILER", PROFILER_GUID);
 
-            //if (psi.EnvironmentVariables.ContainsKey("MONITIS_ASSEMBLY") == true)
-            //    psi.EnvironmentVariables["MONITIS_ASSEMBLY"] = "TestProfilerApplication";
-            //else
-            //    psi.EnvironmentVariables.Add("MONITIS_ASSEMBLY", "TestProfilerApplication");
-
-            //if (psi.EnvironmentVariables.ContainsKey("MONITIS_CONFIG") == true)
-            //    psi.EnvironmentVariables["MONITIS_CONFIG"] = "MonitisConfig.xml";
-            //else
-            //    psi.EnvironmentVariables.Add("MONITIS_CONFIG", "MonitisConfig.xml");
-
             psi.UseShellExecute = false;
-            Process p = Process.Start(psi);
+            psi.WorkingDirectory = Path.GetDirectoryName(path);
+            try
+            {
+                Process p = Process.Start(psi);
+            }
+            catch (Exception)
+            {
+            }
         }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+        }
+
+        private void AddLog(string inMessage)
+        {
+            logView.Items.Add(inMessage);
+        }
+
+        private void tmiClear_Click(object sender, EventArgs e)
+        {
+            logView.Items.Clear();
+        }
+
+        #region Nested type: AddListItem
+
+        private delegate void AddListItem(string inMessage);
+
+        #endregion
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            var a = new OpenFileDialog();
+            a.Multiselect = false;
+            a.Filter = "Executable (*.exe)|*.exe";
+            if (a.ShowDialog() == DialogResult.OK)
+            {
+                textBox1.Text = a.FileName;
+            }
+        }
     }
 }

@@ -77,6 +77,11 @@ namespace Monitis
             return result;
         }
 
+        public static long GetCurrentTime()
+        {
+            return (long) ((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds);
+        }
+
         /// <summary>
         /// Gets value of key from json or xml string
         /// If contains "error", throws exception

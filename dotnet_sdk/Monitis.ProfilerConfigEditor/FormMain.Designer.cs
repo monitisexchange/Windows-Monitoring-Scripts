@@ -31,8 +31,8 @@
             this.menuStripMain = new System.Windows.Forms.MenuStrip();
             this.loadConfigsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveConfigsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.panelConfigs = new System.Windows.Forms.Panel();
             this.addNewConfigFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.panelConfigs = new System.Windows.Forms.Panel();
             this.menuStripMain.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,16 +51,23 @@
             // loadConfigsToolStripMenuItem
             // 
             this.loadConfigsToolStripMenuItem.Name = "loadConfigsToolStripMenuItem";
-            this.loadConfigsToolStripMenuItem.Size = new System.Drawing.Size(87, 20);
-            this.loadConfigsToolStripMenuItem.Text = "Load configs";
-            this.loadConfigsToolStripMenuItem.Click += new System.EventHandler(this.loadConfigsToolStripMenuItem_Click);
+            this.loadConfigsToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
+            this.loadConfigsToolStripMenuItem.Text = "Reload configs";
+            this.loadConfigsToolStripMenuItem.Click += new System.EventHandler(this.LoadConfigsToolStripMenuItemClick);
             // 
             // saveConfigsToolStripMenuItem
             // 
             this.saveConfigsToolStripMenuItem.Name = "saveConfigsToolStripMenuItem";
             this.saveConfigsToolStripMenuItem.Size = new System.Drawing.Size(85, 20);
             this.saveConfigsToolStripMenuItem.Text = "Save configs";
-            this.saveConfigsToolStripMenuItem.Click += new System.EventHandler(this.saveConfigsToolStripMenuItem_Click);
+            this.saveConfigsToolStripMenuItem.Click += new System.EventHandler(this.SaveConfigsToolStripMenuItemClick);
+            // 
+            // addNewConfigFileToolStripMenuItem
+            // 
+            this.addNewConfigFileToolStripMenuItem.Name = "addNewConfigFileToolStripMenuItem";
+            this.addNewConfigFileToolStripMenuItem.Size = new System.Drawing.Size(122, 20);
+            this.addNewConfigFileToolStripMenuItem.Text = "Add new config file";
+            this.addNewConfigFileToolStripMenuItem.Click += new System.EventHandler(this.AddNewConfigFileToolStripMenuItemClick);
             // 
             // panelConfigs
             // 
@@ -70,13 +77,7 @@
             this.panelConfigs.Name = "panelConfigs";
             this.panelConfigs.Size = new System.Drawing.Size(708, 363);
             this.panelConfigs.TabIndex = 2;
-            // 
-            // addNewConfigFileToolStripMenuItem
-            // 
-            this.addNewConfigFileToolStripMenuItem.Name = "addNewConfigFileToolStripMenuItem";
-            this.addNewConfigFileToolStripMenuItem.Size = new System.Drawing.Size(122, 20);
-            this.addNewConfigFileToolStripMenuItem.Text = "Add new config file";
-            this.addNewConfigFileToolStripMenuItem.Click += new System.EventHandler(this.addNewConfigFileToolStripMenuItem_Click);
+            this.panelConfigs.TabStop = true;
             // 
             // FormMain
             // 
@@ -88,6 +89,7 @@
             this.MainMenuStrip = this.menuStripMain;
             this.Name = "FormMain";
             this.Text = "Profiler Config Editor";
+            this.Load += new System.EventHandler(this.FormMainLoad);
             this.menuStripMain.ResumeLayout(false);
             this.menuStripMain.PerformLayout();
             this.ResumeLayout(false);

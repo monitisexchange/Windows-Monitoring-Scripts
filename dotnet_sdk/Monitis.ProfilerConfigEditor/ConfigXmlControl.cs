@@ -12,40 +12,32 @@ namespace Monitis.ProfilerConfigEditor
 {
     public partial class ConfigXmlControl : UserControl
     {
-        public Config.ConfigList ConfigList { get; set; } 
+        private ConfigFile _dataContext;
+        private readonly OperationsController _controller;
 
-        public ConfigXmlControl(string configPath)
+        public ConfigXmlControl(ConfigFile file, OperationsController controller)
         {
             InitializeComponent();
 
-            ConfigList = Config.GetConfigElementsForFile(configPath); 
-            labelFileName.Text = configPath;
-            dgvConfig.DataSource = ConfigList;
+            _dataContext = file;
+            _controller = controller;
+            labelFileName.Text = file.Path;
+            dgvConfig.DataSource = file.ConfigElements;
         }
 
-        private void btnAddConfig_Click(object sender, EventArgs e)
+        private void BtnAddConfigClick(object sender, EventArgs e)
         {
-            ConfigList.Add(new ConfigElement(ConfigList.Instrumentation,newElement:true));
+            _controller.AddNewConfigRec(_dataContext);
         }
 
-        private void btnDeleteConfig_Click(object sender, EventArgs e)
+        private void BtnDeleteConfigClick(object sender, EventArgs e)
         {
-            if (dgvConfig.SelectedRows.Count > 0)
-            {
-                foreach (DataGridViewRow row in dgvConfig.SelectedRows)
-                {
-                   if (!row.IsNewRow)
-                   {
-                       dgvConfig.Rows.Remove(row);
-                   }
-                    
-                }
-            }
+            _controller.DeleteConfig(_dataContext);
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void BtnSaveClick(object sender, EventArgs e)
         {
-            ConfigList.Save();
+            _controller.SaveConfig(_dataContext);
         }
     }
 }

@@ -244,6 +244,7 @@
     <ClCompile Include="LoggerHelper.cpp" />
     <ClCompile Include="MnConfigXml.cpp" />
     <ClCompile Include="MnFunctionInfo.cpp" />
+    <ClCompile Include="MnPipe.cpp" />
     <ClCompile Include="MnProfiler.cpp" />
     <ClCompile Include="MonitisProfiler.cpp" />
     <ClCompile Include="MonitisProfiler_i.c">
@@ -271,6 +272,7 @@
     <ClInclude Include="dllmain.h" />
     <ClInclude Include="MnConfigXml.h" />
     <ClInclude Include="MnFunctionInfo.h" />
+    <ClInclude Include="MnPipe.h" />
     <ClInclude Include="Naked.h" />
     <ClInclude Include="LoggerHelper.h" />
     <ClInclude Include="MnProfiler.h" />

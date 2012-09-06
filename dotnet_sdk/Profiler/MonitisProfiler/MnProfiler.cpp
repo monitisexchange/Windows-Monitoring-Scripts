@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "MnProfiler.h"
 #include <algorithm>
+#include "MnPipe.h"
 
 CMnProfiler* g_pICorProfilerCallback = NULL;
 
@@ -39,6 +40,7 @@ CMnProfiler::CMnProfiler()
 		(new OutputFile(OutputFile::GetLogFileName(wstring(_T("mn")))));
 	Logger::CreateLogger(s_LogFile);
 	m_configXml = std::tr1::shared_ptr<Monitis::MnConfigXml>(new MnConfigXml());
+    m_pipe = std::tr1::shared_ptr<Monitis::MnPipe>(Monitis::MnPipe::CreateMonitisPipe());
 }
 
 HRESULT CMnProfiler::FinalConstruct()
@@ -95,21 +97,21 @@ STDMETHODIMP CMnProfiler::Initialize(IUnknown *pICorProfilerInfoUnk)
 
 STDMETHODIMP CMnProfiler::Shutdown()
 {
-	std::map<FunctionID, MnFunctionInfo*>::iterator iter;
-	for (iter = m_functionMap.begin(); iter != m_functionMap.end(); iter++)
-	{
-		// log the function's info
-		MnFunctionInfo* functionInfo = iter->second;
-		//LogString("%s : call count = %d\r\n", functionInfo->GetName(), functionInfo->GetCallCount());
-		// free the memory for the object
-		delete iter->second;
-	}
+// 	std::map<FunctionID, MnFunctionInfo*>::iterator iter;
+// 	for (iter = m_functionMap.begin(); iter != m_functionMap.end(); iter++)
+// 	{
+// 		// log the function's info
+// 		MnFunctionInfo* functionInfo = iter->second;
+// 		//LogString("%s : call count = %d\r\n", functionInfo->GetName(), functionInfo->GetCallCount());
+// 		// free the memory for the object
+// 		delete iter->second;
+// 	}
 	// clear the map
 	m_functionMap.clear();
 
 	// tear down our global access pointers
 	g_pICorProfilerCallback = NULL;
-
+    m_pipe.get()->Shutdown();
     return S_OK;
 }
 
@@ -245,16 +247,36 @@ STDMETHODIMP CMnProfiler::ManagedToUnmanagedTransition(FunctionID functionID, CO
 
 STDMETHODIMP CMnProfiler::ThreadCreated(ThreadID threadID)
 {
+    logs::Logger::OutputInfo(_T("%s ThreadID %X"), _T(__FUNCTION__), threadID);
+    if (m_ThreadMap.find(threadID) == m_ThreadMap.end())
+    {
+        m_ThreadMap[threadID] = 0;
+    }
+    else
+    {
+        logs::Logger::OutputError(_T("Duplicate ThreadID %X"), threadID);
+    }
     return S_OK;
 }
 
 STDMETHODIMP CMnProfiler::ThreadDestroyed(ThreadID threadID)
 {
+    logs::Logger::OutputInfo(_T("%s ThreadID %X"), _T(__FUNCTION__), threadID);
+    m_ThreadMap.erase(threadID);
     return S_OK;
 }
 
 STDMETHODIMP CMnProfiler::ThreadAssignedToOSThread(ThreadID managedThreadID, DWORD osThreadID) 
 {
+    logs::Logger::OutputInfo(_T("%s managedThreadID %X osThreadID %X"), _T(__FUNCTION__), managedThreadID, osThreadID);
+    if (m_ThreadMap.find(managedThreadID) != m_ThreadMap.end())
+    {
+        m_ThreadMap[managedThreadID] = osThreadID;
+    }
+    else
+    {
+        logs::Logger::OutputError(_T("Duplicate ThreadID %X"), managedThreadID);
+    }
     return S_OK;
 }
 
@@ -325,11 +347,13 @@ STDMETHODIMP CMnProfiler::RuntimeResumeFinished()
 
 STDMETHODIMP CMnProfiler::RuntimeThreadSuspended(ThreadID threadID)
 {
+    logs::Logger::OutputError(_T("%s ThreadID %X"), _T(__FUNCTION__), threadID);
     return S_OK;
 }
 
 STDMETHODIMP CMnProfiler::RuntimeThreadResumed(ThreadID threadID)
 {
+    logs::Logger::OutputError(_T("%s ThreadID %X"), _T(__FUNCTION__), threadID);
     return S_OK;
 }
 
@@ -506,7 +530,7 @@ STDMETHODIMP CMnProfiler::ProfilerDetachSucceeded()
 
 HRESULT CMnProfiler::SetEventMask()
 {
-	DWORD eventMask = (DWORD)(COR_PRF_MONITOR_ENTERLEAVE);
+	DWORD eventMask = (DWORD)(COR_PRF_MONITOR_ENTERLEAVE | COR_PRF_MONITOR_THREADS);
 	return m_pICorProfilerInfo->SetEventMask(eventMask);
 }
 
@@ -519,19 +543,31 @@ UINT_PTR CMnProfiler::FunctionMapper(FunctionID functionID, BOOL *pbHookFunction
 	return (UINT_PTR)functionID;
 }
 
-bool CMnProfiler::CheckAcceptProfileFunction(MnFunctionInfo *methodInfo)
+//void CMnProfiler::SelectMethods(MnFunctionInfo *methodInfo, MnMethods& methods)
+//{
+//    if (m_configXml.get() == NULL || methodInfo == NULL)
+//    {
+//        return;
+//    }
+//    
+//}
+
+wstring GetUnitProfileString(const list<MnUnitProfile*>& methodList)
 {
-	if (m_configXml.get() == NULL || methodInfo == NULL)
-	{
-		return false;
-	}
-	
-	return m_configXml->FindMethod(methodInfo->GetAssemblyName(), methodInfo->GetClassName(), methodInfo->GetFunctionName());
+    wstring str(L"");
+    for (list<MnUnitProfile*>::const_iterator itemUnit = methodList.begin(); itemUnit != methodList.end(); itemUnit++)
+    {
+        if (itemUnit != methodList.begin())
+        {
+            str += L",";
+        }
+        str += (*itemUnit)->GetNameUnitProfile().c_str();
+    }
+    return str;
 }
 
 bool CMnProfiler::MapFunction(FunctionID functionID)
 {
-	MnFunctionInfo* functionInfo = NULL;
 	MnFunctionMap::iterator iter = m_functionMap.find(functionID);
 	if (iter == m_functionMap.end())
 	{
@@ -541,18 +577,22 @@ bool CMnProfiler::MapFunction(FunctionID functionID)
 		wstring assemblyName(L"");
 		wstring className(L"");
 		wstring methodName(L"");
+        wstring methodParameters(L"");
 		
-		HRESULT hr = GetMethodInfo(functionID, assemblyName, className, methodName); 
+		HRESULT hr = GetMethodInfo(functionID, assemblyName, className, methodName, methodParameters); 
 		if (FAILED(hr))
 		{
 			return false;
 		}
-		functionInfo = new MnFunctionInfo(functionID, assemblyName, className, methodName);
-		/*logs::Logger::OutputWarning(_T("Assembly %s Class %s Method %s"), 
-			functionInfo->GetAssemblyName().c_str(), functionInfo->GetClassName().c_str(), functionInfo->GetFunctionName().c_str());*/
-		if (CheckAcceptProfileFunction(functionInfo))
+		
+		//logs::Logger::OutputWarning(_T("Assembly %s Class %s Method %s(%s)"), assemblyName.c_str(), className.c_str(), methodName.c_str(), methodParameters.c_str());
+
+        list<MnUnitProfile*> unitProfiles;
+        m_configXml->SelectMethods(assemblyName, className, methodName, methodParameters, unitProfiles);
+		if (unitProfiles.size() > 0)
 		{
-			m_functionMap.insert(std::pair<FunctionID, MnFunctionInfo*>(functionID, functionInfo));
+            tr1::shared_ptr<MnFunctionInfo> functionInfo(new MnFunctionInfo(functionID, assemblyName, className, methodName, methodParameters, GetUnitProfileString(unitProfiles)));
+			m_functionMap.insert(std::pair<FunctionID, tr1::shared_ptr<MnFunctionInfo> >(functionID, functionInfo));
 			return true;
 		}
 		return false;
@@ -560,7 +600,7 @@ bool CMnProfiler::MapFunction(FunctionID functionID)
 	return true;
 }
 
-HRESULT CMnProfiler::GetMethodInfo(FunctionID functionID, wstring& assemblyName, wstring& className, wstring& methodName)
+HRESULT CMnProfiler::GetMethodInfo(FunctionID functionID, wstring& assemblyName, wstring& className, wstring& methodName, wstring& methodParameters)
 {
 	IMetaDataImport* pIMetaDataImport = 0;
 	HRESULT hr = S_OK;
@@ -589,18 +629,35 @@ HRESULT CMnProfiler::GetMethodInfo(FunctionID functionID, wstring& assemblyName,
 					mdTypeDef classTypeDef;
 					ULONG cchFunction;
 					ULONG cchClass;
-
-					// retrieve the function properties based on the token
-					hr = pIMetaDataImport->GetMethodProps(funcToken, &classTypeDef, szName, NAME_BUFFER_SIZE, &cchFunction, 0, 0, 0, 0, 0);
+					PCCOR_SIGNATURE methodSignatureBlob;
+					ULONG methodSignatureBlobSize;
+					hr = pIMetaDataImport->GetMethodProps(funcToken, &classTypeDef, szName, NAME_BUFFER_SIZE, &cchFunction, 0,
+								&methodSignatureBlob, &methodSignatureBlobSize, 0, 0);
 					if (SUCCEEDED(hr))
 					{
 						methodName = wstring(szName, cchFunction);
-						// get the function name
-						hr = pIMetaDataImport->GetTypeDefProps(classTypeDef, szName, NAME_BUFFER_SIZE, &cchClass, 0, 0);
-						if (SUCCEEDED(hr))
-						{
-							className = wstring(szName, cchClass);
-						}
+                        if (CheckMethodName(methodName))
+                        {
+						    hr = pIMetaDataImport->GetTypeDefProps(classTypeDef, szName, NAME_BUFFER_SIZE, &cchClass, 0, 0);
+						    if (SUCCEEDED(hr))
+						    {
+							    className = wstring(szName, cchClass);
+                                if (CheckMethodName(className))
+                                {
+                                    hr = MnFunctionInfo::ParseFunctionParameters(pIMetaDataImport, funcToken, methodParameters);
+                                }
+                                else
+                                {
+                                    hr = E_FAIL;
+                                }
+                                /*logs::Logger::OutputInfo(_T("%s: Method \"%s\" Class %s Signature %s"), _T(__FUNCTION__), methodName.c_str(), 
+                                className.c_str(), methodParameters.c_str());*/
+                            }
+                        }
+                        else
+                        {
+                            hr = E_FAIL;
+                        }
 					}
 					pIMetaDataImport->Release();
 				}
@@ -612,36 +669,79 @@ HRESULT CMnProfiler::GetMethodInfo(FunctionID functionID, wstring& assemblyName,
 
 void CMnProfiler::EnterHandle(FunctionID functionID, UINT_PTR clientData, COR_PRF_FRAME_INFO frameInfo, COR_PRF_FUNCTION_ARGUMENT_INFO *argumentInfo)
 {
-	std::map<FunctionID, MnFunctionInfo*>::iterator iter = m_functionMap.find(functionID);
+	MnFunctionMap::iterator iter = m_functionMap.find(functionID);
 	if (iter == m_functionMap.end())
 	{
 		logs::Logger::OutputError(_T("%s FunctionID %u is not found"), _T(__FUNCTION__), functionID);
 		return;
 	}
-	logs::Logger::OutputError(_T("Start: %s.%s  Assembly \"%s\""), iter->second->GetClassName().c_str(), iter->second->GetFunctionName().c_str(), iter->second->GetAssemblyName().c_str());
+    //DebugBreak();
+    ThreadID threadId = GetCurrentThread();
+    MnPipe::PutIntoPipe(_T("command=start;MethodName=%s.%s;Assembly=%s;UnitProfiles=%s;ManagedThreadId=%u;OSThreadId=%u"), 
+        iter->second->GetClassName().c_str(), iter->second->GetFunctionName().c_str(), iter->second->GetAssemblyName().c_str(), 
+        iter->second->GetUnitProfiles().c_str(), threadId, GetOSThreadId(threadId));
+
+	//logs::Logger::OutputError(_T("Start: %s.%s  Assembly \"%s\""), iter->second->GetClassName().c_str(), iter->second->GetFunctionName().c_str(), iter->second->GetAssemblyName().c_str());
 	iter->second->Enter();
 }
 
 void CMnProfiler::LeaveHandle(FunctionID functionID, UINT_PTR clientData, COR_PRF_FRAME_INFO frameInfo, COR_PRF_FUNCTION_ARGUMENT_RANGE *argumentRange)
 {
-	std::map<FunctionID, MnFunctionInfo*>::iterator iter = m_functionMap.find(functionID);
+	MnFunctionMap::iterator iter = m_functionMap.find(functionID);
 	if (iter == m_functionMap.end())
 	{
 		logs::Logger::OutputError(_T("%s FunctionID %u is not found"), _T(__FUNCTION__), functionID);
 		return;
 	}
 	ULONGLONG spend = iter->second->Leave();
-	logs::Logger::OutputError(_T("End: %s.%s Assembly \"%s\""), iter->second->GetClassName().c_str(), iter->second->GetFunctionName().c_str(), iter->second->GetAssemblyName().c_str());
+    ThreadID threadId = GetCurrentThread();
+    MnPipe::PutIntoPipe(_T("command=end;MethodName=%s.%s;Assembly=%s;UnitProfiles=%s;ManagedThreadId=%u;OSThreadId=%u"), 
+        iter->second->GetClassName().c_str(), iter->second->GetFunctionName().c_str(), iter->second->GetAssemblyName().c_str(), 
+        iter->second->GetUnitProfiles().c_str(), threadId, GetOSThreadId(threadId));
 }
 
 void CMnProfiler::TailcallHandle(FunctionID functionID, UINT_PTR clientData, COR_PRF_FRAME_INFO frameInfo)
 {
-	std::map<FunctionID, MnFunctionInfo*>::iterator iter = m_functionMap.find(functionID);
+	MnFunctionMap::iterator iter = m_functionMap.find(functionID);
 	if (iter == m_functionMap.end())
 	{
 		logs::Logger::OutputError(_T("%s FunctionID %u is not found"), _T(__FUNCTION__), functionID);
 		return;
 	}
 	iter->second->Tailcall();
-	logs::Logger::OutputError(_T("End: %s.%s Assembly \"%s\""), iter->second->GetClassName().c_str(), iter->second->GetFunctionName().c_str(), iter->second->GetAssemblyName().c_str());
+    ThreadID threadId = GetCurrentThread();
+    MnPipe::PutIntoPipe(_T("command=end;MethodName=%s.%s;Assembly=%s;UnitProfiles=%s;ManagedThreadId=%u;OSThreadId=%u"), 
+        iter->second->GetClassName().c_str(), iter->second->GetFunctionName().c_str(), iter->second->GetAssemblyName().c_str(), 
+        iter->second->GetUnitProfiles().c_str(), threadId, GetOSThreadId(threadId));
+	/*logs::Logger::OutputError(_T("End: %s.%s Assembly \"%s\" signature %s"), iter->second->GetClassName().c_str(), iter->second->GetFunctionName().c_str(), 
+        iter->second->GetAssemblyName().c_str(), iter->second->GetParametrs().c_str());*/
+}
+
+ThreadID CMnProfiler::GetCurrentThread()
+{
+    ThreadID threadId;
+    if (m_pICorProfilerInfo2.p == NULL)
+    {        
+        if (SUCCEEDED(m_pICorProfilerInfo->GetCurrentThreadID(&threadId)))
+        {
+            return threadId;
+        }
+    }
+    else
+    {
+        if (SUCCEEDED(m_pICorProfilerInfo2->GetCurrentThreadID(&threadId)))
+        {
+            return threadId;
+        }
+    }
+    return 0;
+}
+
+DWORD CMnProfiler::GetOSThreadId(ThreadID managedThreadID)
+{
+    if (m_ThreadMap.find(managedThreadID) != m_ThreadMap.end())
+    {
+        return m_ThreadMap[managedThreadID];
+    }
+    return 0;
 }

@@ -43,6 +43,9 @@
     <ClCompile Include="MnConfigXml.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MnPipe.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -73,6 +76,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MnConfigXml.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MnPipe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

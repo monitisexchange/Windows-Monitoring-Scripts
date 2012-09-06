@@ -6,9 +6,159 @@
 namespace Monitis
 {
 	const WCHAR kRegistryMonitis[] = L"SOFTWARE\\Monitis";
-	const WCHAR kInstalledPath[] = L"InstalledPath";
-	const WCHAR kExtensionSubDir[] = L"Extensions";
+	const WCHAR kInstalledPath[] = L"ExtensionsPath";
 	const WCHAR kXmlFileMask[] = L"*.xml";
+	//const for XML 
+	const WCHAR kUnitProfilerSelect[] = L"extensionMonitisProfiler/configuration/unitProfile";
+	const WCHAR kAttributeAssemblyName[] = L"assemblyName";
+	const WCHAR kAttributeClassName[] = L"className";
+	const WCHAR kAttributeMethodName[] = L"methodName";
+	const WCHAR kAttributeParametersName[] = L"parameters";
+
+    MnUnitProfile::MnUnitProfile(const wstring& unitProfileName)
+    {
+        m_unitProfileName = unitProfileName;
+    }
+
+    /*MnSignature::MnSignature(const wstring& signature)
+    {
+        m_text = signature;
+    }
+
+    void MnSignature::AddUnitProfile(MnUnitProfileShrPtr& unitProfile)
+    {
+        if (unitProfile != NULL)
+        {
+            m_UnitProfiles.push_back(unitProfile);
+        }
+    }
+
+    
+
+    bool MnSignature::operator ==(const MnSignature& b) const
+    {
+        return (strcmp(GetText().c_str(), b.GetText().c_str()) == 0);
+    }
+*/
+
+	MnMethod::MnMethod(const wstring& methodName)
+	{
+		m_methodName = methodName;
+	}
+
+    void MnMethod::AddSignature(const wstring& parameters, MnUnitProfile* unitProfile)
+    {
+        MnSignatureMap::iterator item = m_signatureMap.find(parameters);
+        if (item != m_signatureMap.end())
+        {
+            if (find(item->second.begin(), item->second.end(), unitProfile) == item->second.end())
+            {
+                item->second.push_back(unitProfile);
+            }
+        }
+        else
+        {
+            list<MnUnitProfile *> listUnitProfile;
+            listUnitProfile.push_back(unitProfile);
+            m_signatureMap[parameters] = listUnitProfile;
+        }
+    }
+
+    wstring MnMethod::GetUnitProfileString(const wstring& parameters)
+    {
+        wstring str(L"");
+        MnSignatureMap::const_iterator signatureItem = m_signatureMap.find(parameters);
+        if (signatureItem != m_signatureMap.end())
+        {
+            for (list<MnUnitProfile*>::const_iterator itemUnit = signatureItem->second.begin(); itemUnit != signatureItem->second.end(); itemUnit++)
+            {
+                if (itemUnit != signatureItem->second.begin())
+                {
+                    str += L",";
+                }
+                str += (*itemUnit)->GetNameUnitProfile().c_str();
+            }
+        }
+        return str;
+    }
+
+    void MergeUnitProfiles(const list<MnUnitProfile*>& sourceUnitProfileList, list<MnUnitProfile*>& destUnitProfileList)
+    {
+        for (list<MnUnitProfile*>::const_iterator itemUnit = sourceUnitProfileList.begin(); itemUnit != sourceUnitProfileList.end(); itemUnit++)
+        {
+            if (find(destUnitProfileList.begin(), destUnitProfileList.end(), *itemUnit) == destUnitProfileList.end())
+            {
+                destUnitProfileList.push_back(*itemUnit);
+            }
+        }
+
+    }
+
+    void MnMethod::SelectUnitProfiles(const wstring& parameters, list<MnUnitProfile*>& unitProfileList)
+    {
+
+        MnSignatureMap::const_iterator signatureItem = m_signatureMap.find(parameters);
+        if (signatureItem != m_signatureMap.end())
+        {
+            MergeUnitProfiles(signatureItem->second, unitProfileList);
+        }
+        if (parameters.length() > 0)
+        {
+            signatureItem = m_signatureMap.find(L"");
+            if (signatureItem != m_signatureMap.end())
+            {
+                MergeUnitProfiles(signatureItem->second, unitProfileList);
+            }
+        }
+    }
+
+    MnClass::MnClass(const wstring& className, const wstring& assemblyName)
+    {
+        m_className = className;
+        wstringstream wss;
+        wss << assemblyName << L":" << assemblyName;
+        m_FullName = wss.str();
+    }
+
+	MnMethod* MnClass::GetMnMethod(const wstring& methodName)
+	{
+		MnMethodsMap::iterator method = m_methods.find(methodName.c_str());
+		return (method != m_methods.end() ? method->second.get() : NULL);
+	}
+
+    MnMethod* MnClass::CreateMnMethod(const wstring& methodName, const wstring& params, MnUnitProfile* unitProfile)
+    {
+		MnMethod* method = GetMnMethod(methodName);
+		if (method == NULL)
+		{
+			method = new MnMethod(methodName);
+ 			m_methods[methodName] = tr1::shared_ptr<MnMethod>(method);
+		}
+        method->AddSignature(params, unitProfile);
+		return method;
+	}
+
+	MnAssembly::MnAssembly(const wstring& assemblyName)
+	{
+		m_assemblyName = assemblyName;
+	}
+
+	MnClass* MnAssembly::GetMnClass(const wstring& className)
+	{
+		MnClassesMap::iterator classItem = m_classes.find(className.c_str());
+		return (classItem != m_classes.end() ? classItem->second.get() : NULL);
+	}
+
+	MnClass* MnAssembly::CreateMnClass(const wstring& className)
+	{
+		MnClass* classInstance = GetMnClass(className);
+		if (classInstance == NULL)
+		{
+			classInstance = new MnClass(className, m_assemblyName);
+			m_classes[className] = tr1::shared_ptr<MnClass>(classInstance);
+		}
+		return classInstance;
+	}
 
 	wstring MnConfigXml::GetConfigPath()
 	{
@@ -20,9 +170,7 @@ namespace Monitis
 			DWORD sz = _MAX_PATH;
 			if (RegQueryValueEx(key, kInstalledPath, NULL, NULL, (LPBYTE)monitisPath, &sz) == ERROR_SUCCESS)
 			{
-				wstringstream wss;
-				wss << wstring(monitisPath, sz).c_str() << L"\\" << kExtensionSubDir;
-				installPath = wss.str();
+				installPath = wstring(monitisPath);
 			}
 			else
 			{
@@ -84,14 +232,36 @@ namespace Monitis
 
 		for (MnFileList::iterator xmlItem = xmlFiles.begin(); xmlItem != xmlFiles.end(); xmlItem++)
 		{
-			LoadXmlFile(*xmlItem);
+            try 
+            {
+                LoadXmlFile(*xmlItem);
+            }
+			catch (...)
+			{
+				//logs::Logger::OutputInfo(_T("%s Error load xml file % s:\"%s\""), _T(__FUNCTION__), (*xmlItem).c_str(), );
+			}
 		}
 
-		for (std::map<std::wstring, std::list<std::wstring> >::iterator item = m_methodsAccept.begin(); item != m_methodsAccept.end(); item++)
+		for (MnAssembliesMap::iterator assemblyItem = m_assembliesMap.begin(); assemblyItem != m_assembliesMap.end(); assemblyItem++)
 		{
-			logs::Logger::OutputInfo(_T("\t%s"), item->first.c_str());
-			for (std::list<std::wstring>::iterator mitem = item->second.begin(); mitem != item->second.end(); mitem++)
-				logs::Logger::OutputInfo(_T("\t\t%s"), (*mitem).c_str());
+			logs::Logger::OutputInfo(_T("Assembly %s"), assemblyItem->first.c_str());
+			for (MnClassesMap::iterator classItem = assemblyItem->second->GetMnClasses().begin(); classItem != assemblyItem->second->GetMnClasses().end(); classItem++)
+            {
+                logs::Logger::OutputInfo(_T("\tClasses \"%s\""), classItem->first.c_str());
+                for (MnMethodsMap::iterator methodItem = classItem->second->GetMnMethods().begin(); methodItem != classItem->second->GetMnMethods().end(); methodItem++)
+                {
+					logs::Logger::OutputInfo(_T("\t\tMethod %s "), methodItem->first.c_str());
+#ifdef DEBUG
+                    MnSignatureMap signatures = methodItem->second->GetSignatureMap();
+                    for (MnSignatureMap::const_iterator signatureItem = signatures.begin(); signatureItem != signatures.end(); signatureItem++ )
+                    {
+                        logs::Logger::OutputInfo(_T("\t\t\tSignature %s UnitProfiles %s"), signatureItem->first.c_str(),  methodItem->second->GetUnitProfileString(signatureItem->first).c_str());
+                    }
+#endif
+				}
+			}
+			/*for (std::list<std::wstring>::iterator mitem = item->second.begin(); mitem != item->second.end(); mitem++)
+				logs::Logger::OutputInfo(_T("\t\t%s"), (*mitem).c_str());*/
 		}
 	}
 
@@ -109,6 +279,86 @@ namespace Monitis
 		return std::wstring(L"");
 	}
 
+    wstring GetNodeName(IXMLDOMNode *node)
+    {
+        CComPtr<IXMLDOMNamedNodeMap> attributes;
+        if (SUCCEEDED(node->get_attributes(&attributes)))
+        {
+            return GetAttributeText(attributes, L"name");
+        }
+        return wstring(L"");
+    }
+
+	MnAssembly* MnConfigXml::GetMnAssembly(wstring assemblyName)
+	{
+		MnAssembliesMap::iterator assembly = m_assembliesMap.find(assemblyName.c_str());
+		return (assembly != m_assembliesMap.end() ? assembly->second.get() : NULL);
+	}
+
+	MnAssembly* MnConfigXml::CreateMnAssembly(wstring assemblyName)
+	{
+		MnAssembly* assembly = GetMnAssembly(assemblyName);
+		if (assembly == NULL)
+		{
+			assembly = new MnAssembly(assemblyName);
+			m_assembliesMap[assemblyName] = tr1::shared_ptr<MnAssembly>(assembly);
+		}
+		return assembly;
+	}
+
+	void MnConfigXml::ParseUnitProfiler(IXMLDOMNode *upNode)
+	{
+		if (upNode == NULL)
+			return;
+		CComPtr<IXMLDOMNodeList> nodesCoincidence;
+        tr1::shared_ptr<MnUnitProfile> unitProfile(new MnUnitProfile(GetNodeName(upNode)));
+        m_UnitProfiles.push_back(unitProfile);
+		long sizeCoincidences = 0;
+		XmlHelper::GetChildNodes(upNode, &nodesCoincidence, sizeCoincidences);
+		for (long i = 0; i < sizeCoincidences; i++)
+		{
+			CComPtr<IXMLDOMNode> coincidenceNode;
+			HRESULT hr = nodesCoincidence->get_item(i, &coincidenceNode);
+			if (SUCCEEDED(hr))
+			{
+				CComPtr<IXMLDOMNamedNodeMap> attributes;
+				MnClass* classItem;
+				hr = coincidenceNode->get_attributes(&attributes);
+				if (SUCCEEDED(hr))
+				{
+					MnAssembly* assembly = CreateMnAssembly(GetAttributeText(attributes, std::wstring(kAttributeAssemblyName)));
+					if (assembly != NULL)
+					{
+						classItem = assembly->CreateMnClass(GetAttributeText(attributes, std::wstring(kAttributeClassName)));
+					}
+					else
+					{
+						// TODO try exception
+					}
+				}
+
+				CComPtr<IXMLDOMNodeList> methodList;
+				long numberMethods = 0;
+				XmlHelper::GetChildNodes(coincidenceNode, &methodList, numberMethods);
+				for (long j = 0; j < numberMethods; j++)
+				{
+					CComPtr<IXMLDOMNode> methodNode;
+					hr = methodList->get_item(j, &methodNode);
+					if (SUCCEEDED(hr) && methodNode.p != NULL)
+					{
+						CComPtr<IXMLDOMNamedNodeMap> methodAttributes;
+						hr = methodNode->get_attributes(&methodAttributes);
+						if (SUCCEEDED(hr))
+						{
+                            classItem->CreateMnMethod(GetAttributeText(methodAttributes, kAttributeMethodName),
+                                GetAttributeText(methodAttributes, kAttributeParametersName), unitProfile.get());
+						}
+					}
+				}
+			}
+		}
+	}
+
 	void MnConfigXml::LoadXmlFile(wstring fileName)
 	{
 		CComPtr<IXMLDOMDocument> xmlDom;
@@ -121,12 +371,12 @@ namespace Monitis
 		if (FAILED(hr) || !bSuccess)
 		{
 			logs::Logger::OutputInfo(_T("%s Not load xml"), _T(__FUNCTION__));
-			return;
+			return throw std::exception();
 		}
 
 		CComPtr<IXMLDOMNodeList> spXMLNodeList;
 
-		CComBSTR bstrSS(L"extension/instrumentation/tracerFactory");
+		CComBSTR bstrSS(kUnitProfilerSelect);
 		hr = xmlDom->selectNodes(bstrSS,&spXMLNodeList);
 
 		if (FAILED(hr))
@@ -141,68 +391,11 @@ namespace Monitis
 
 		for (long i = 0; i < length; i++)
 		{
-			CComPtr<IXMLDOMNode> xmlNode;
-			hr = spXMLNodeList->get_item(i, &xmlNode);
-			if (SUCCEEDED(hr))
-			{
-				CComPtr<IXMLDOMNode> match;
-				hr = xmlNode->get_firstChild(&match);
-				if (SUCCEEDED(hr))
-				{
-					//logs::Logger::OutputInfo(_T("\t Node %u Text %s\n"), i, std::wstring(nodeText).c_str());
-					CComPtr<IXMLDOMNamedNodeMap> attributes;
-					wstring assemblyName;
-					wstring className;
-					std::list<std::wstring> methodsName;
-					hr = match->get_attributes(&attributes);
-					if (SUCCEEDED(hr))
-					{
-						assemblyName = GetAttributeText(attributes, std::wstring(L"assemblyName"));
-						className = GetAttributeText(attributes, std::wstring(L"className"));
-						//logs::Logger::OutputInfo(_T("%s:%s"), assemblyName.c_str(), className.c_str());
-					}
-					CComPtr<IXMLDOMNodeList> methodList;
-					hr = match->get_childNodes(&methodList);
-					if (SUCCEEDED(hr))
-					{
-						long methodNumber;
-						hr = methodList->get_length(&methodNumber);
-						if (SUCCEEDED(hr))
-						{
-							for (long j = 0; j < methodNumber; j++)
-							{
-								CComPtr<IXMLDOMNode> methodNode;
-								hr = methodList->get_item(j, &methodNode);
-								if (SUCCEEDED(hr) && methodNode.p != NULL)
-								{
-									CComPtr<IXMLDOMNamedNodeMap> methodAttributes;
-									hr = methodNode->get_attributes(&methodAttributes);
-									if (SUCCEEDED(hr))
-									{
-										wstring methodName = GetAttributeText(methodAttributes, L"methodName");
-										methodsName.push_back(methodName);
-									}
-								}
-							}
-						}
-					}
-					wstring first = assemblyName + L":" + className;
-					std::map<std::wstring, std::list<std::wstring> >::iterator classItem = m_methodsAccept.find(first.c_str());
-					if (classItem != m_methodsAccept.end())
-					{
-						for (std::list<std::wstring>::iterator methodItem = methodsName.begin(); methodItem != methodsName.end(); methodItem++)
-						{
-							if (classItem->second.end() == std::find(classItem->second.begin(), classItem->second.end(), *methodItem))
-							{
-								classItem->second.push_back(*methodItem);
-							}
-						}
-					}
-					else
-					{
-						m_methodsAccept.insert(std::pair<std::wstring, std::list<std::wstring> >(first, methodsName));	
-					}
-				}
+			CComPtr<IXMLDOMNode> nodeUnitProfiler;
+			hr = spXMLNodeList->get_item(i, &nodeUnitProfiler);
+            if (SUCCEEDED(hr))
+            {
+				ParseUnitProfiler(nodeUnitProfiler);
 			}
 			else
 			{
@@ -212,22 +405,37 @@ namespace Monitis
 		return;
 	}
 
-	bool MnConfigXml::FindMethod(wstring assemblyName, wstring className, wstring methodName)
-	{
-		//
-		if (m_methodsAccept.size() > 0)
-		{
-			wstringstream wss;
-			wss << assemblyName.c_str() << L":" << className.c_str();
+    void MnConfigXml::SelectClassMethods(MnClass* classItem, const wstring& methodName, const wstring& params, list<MnUnitProfile*>& methodList)
+    {
+        if (classItem != NULL)
+        {
+            MnMethod* methodConfigInfo = classItem->GetMnMethod(methodName);
+            if  (methodConfigInfo != NULL)
+            {
+                methodConfigInfo->SelectUnitProfiles(params, methodList);
+            }
 
-			//logs::Logger::OutputWarning(_T("%s ClassName: %s"), _T(__FUNCTION__), wss.str().c_str());
-			std::map<std::wstring, std::list<std::wstring> >::iterator classItem = m_methodsAccept.find(wss.str().c_str());
-			if (classItem != m_methodsAccept.end())
-			{
-				std::list<std::wstring>::iterator methodItem = std::find(classItem->second.begin(), classItem->second.end(), methodName.c_str());
-				return (methodItem != classItem->second.end());
+            methodConfigInfo = classItem->GetMnMethod(L"");
+            if  (methodConfigInfo != NULL)
+            {
+                methodConfigInfo->SelectUnitProfiles(params, methodList);
+            }
+        }
+    }
+
+	void MnConfigXml::SelectMethods(wstring assemblyName, wstring className, wstring methodName, wstring params, list<MnUnitProfile*>& methodList)
+	{
+		/*logs::Logger::OutputInfo(_T("%s assemblyName \"%s\", className \"%s\", methodName \"%s\", params \"%s\""), 
+			_T(__FUNCTION__), assemblyName.c_str(), className.c_str(), methodName.c_str(), params.c_str() );*/
+		if (m_assembliesMap.size() > 0 && methodName[0] != L'.')
+        {
+            MnAssembly* assembly = GetMnAssembly(assemblyName);
+			if (assembly != NULL)
+            {
+                SelectClassMethods(assembly->GetMnClass(className), methodName, params, methodList);
+                SelectClassMethods(assembly->GetMnClass(L""), methodName, params, methodList);
 			}
 		}
-		return false;
+		return;
 	}
 }

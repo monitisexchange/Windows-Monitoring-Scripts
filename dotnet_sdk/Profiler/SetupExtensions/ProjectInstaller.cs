@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration.Install;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -27,21 +28,13 @@ namespace SetupExtensions
 
             try
             {
-                var fullpath = Context.Parameters["P_TargetDir"].ToString(CultureInfo.InvariantCulture);
-                var path = fullpath.Remove(fullpath.Length - 2);
-
-                Registry.SetValue(_registryInstalledPath, "InstalledPath", path);
-                    /*.LocalMachine.OpenSubKey(_registryInstalledPath, true);
-
-                if (softBase == null)
-                {
-                    softBase = Registry.LocalMachine.CreateSubKey(_registryInstalledPath);
-                }
-                softBase.SetValue("InstalledPath", path);
-                softBase.Flush();*/
+                var path =Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Monitis"),"Extensions");
+               
+                Registry.SetValue(_registryInstalledPath, "ExtensionsPath", path);
+                
                 base.Install(stateSaver);
             }
-            catch (Exception ex)
+            catch
             {
             }
         }

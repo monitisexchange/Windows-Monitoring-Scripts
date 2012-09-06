@@ -50,7 +50,6 @@
             this.tbConfigName.Name = "tbConfigName";
             this.tbConfigName.Size = new System.Drawing.Size(316, 20);
             this.tbConfigName.TabIndex = 1;
-            this.tbConfigName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbConfigName_KeyPress);
             // 
             // label1
             // 

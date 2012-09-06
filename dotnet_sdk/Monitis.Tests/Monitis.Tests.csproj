@@ -70,6 +70,10 @@
   <ItemGroup>
     <Compile Include="AuthenticationTests.cs" />
     <Compile Include="ContactTests.cs" />
+    <Compile Include="CustomMonitorTests.cs" />
+    <Compile Include="CustomUserAgentTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ExternalMonitorTests.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="HelperTests.cs" />
@@ -90,9 +94,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if $(ConfigurationName) == Release (
-call "$(SolutionDir)\NUnit\nunit.exe" "$(ProjectDir)bin\Release\Monitis.Tests.dll" /run
-)</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
