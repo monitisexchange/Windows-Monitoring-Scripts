@@ -31,8 +31,8 @@ Next
 Dim apiKey, secretKey, objHTTP, tag, monitorID, computer, oWMI, oRes, oEntry, unixDate, results, dtGMT, oResp, oNode
 
 'Your API key and Secret Key
-apiKey = "GIGTIUK8G29J7AAKB343FR30"
-secretKey = "60DR2R0U8CGMSDU0CB68V6NK19"
+apiKey = "Your API Key here"
+secretKey = "Your Secret Key here"
 
 'Connecting to WMI, "." is for local computer, specify computer name for another computer
 computer = "."
