@@ -2,8 +2,8 @@ Option Explicit
 dim apiKey, secretKey, objHTTP, url, token, monitorParams, resultParams, name, oWMI, oRes, oEntry, dtGMT, computer, tag
 
 'Your API key and Secret Key
-apiKey = "GIGTIUK8G29J7AAKB343FR30"
-secretKey = "60DR2R0U8CGMSDU0CB68V6NK19"
+apiKey = "Your API key here"
+secretKey = "Your Secret key here"
 
 'Connecting to WMI, "." is for local computer, specify computer name for another computer
 computer = "."
@@ -20,18 +20,18 @@ next
 Set objHTTP = CreateObject("Microsoft.XMLHTTP")
 
 'Request a token to use in following calls
-url = "http://sandbox.monitis.com/api?action=authToken&apikey=" + apiKey + "&secretkey=" + secretKey
+url = "http://www.monitis.com/api?action=authToken&apikey=" + apiKey + "&secretkey=" + secretKey
 objHTTP.open "GET", url, False
 objHTTP.send
 token = DissectStr(objHTTP.responseText, "authToken"":""", """")
 
 'Adds the custom monitor
-url = "http://sandbox.monitis.com/customMonitorApi"
+url = "http://www.monitis.com/customMonitorApi"
 monitorParams = "FaxMaker_Queue_Test:Queue Size:Faxes:3:false;"
 resultParams = "outbound:Outbound:Faxes:2;"
 resultParams = resultParams + "inbound:Inbound:Faxes:2;"
 'resultParams = resultParams + "3rd_Queue:3rd_Queue:Faxes:2;"
-name = "FaxMaker Queue Size"
+name = "FAX01GUSPRA Queue Size"
 tag = "[FaxMaker]"
 objHTTP.open "POST", url, False
 objHTTP.setRequestHeader "Content-Type", "application/x-www-form-urlencoded"

@@ -1,13 +1,15 @@
 ' Declare variables to be used throughout script
 Dim  outBoundNum, inBoundNum, numQueues, fso, folderArray(2,1), objFolder, files, folderCount, faxCount
 
+'Change the total number of queues you would like to moniter
 numQueues = 2
-'folderArray(0,0) = "C:\Program Files (x86)\GFI\Faxmaker\out\"
-'folderArray(0,1) = "C:\Program Files (x86)\GFI\Faxmaker\in\"
-folderArray(0,0) = "C:\Users\aalford\Desktop\API\out\"
-folderArray(0,1) = "C:\Users\aalford\Desktop\API\in\"
+
+'The directories of the queues
+folderArray(0,0) = "C:\Program Files (x86)\GFI\Faxmaker\out\"
+folderArray(0,1) = "C:\Program Files (x86)\GFI\Faxmaker\in\"
 'folderArray(0,2) = "Put a third queue folder here"
 
+'Monitor column names in the same order as corresponding directory above
 folderArray(1,0) = "outbound:"
 folderArray(1,1) = "inbound:"
 'folderArray(1,2) = 3rd_QueueCol
@@ -31,8 +33,8 @@ Next
 Dim apiKey, secretKey, objHTTP, tag, monitorID, computer, oWMI, oRes, oEntry, unixDate, results, dtGMT, oResp, oNode
 
 'Your API key and Secret Key
-apiKey = "Your API Key here"
-secretKey = "Your Secret Key here"
+apiKey = "Your API key here"
+secretKey = "Your Secret key here"
 
 'Connecting to WMI, "." is for local computer, specify computer name for another computer
 computer = "."
@@ -49,13 +51,13 @@ next
 Set objHTTP = CreateObject("Microsoft.XMLHTTP")
 
 'Request a token to use in following calls
-objHTTP.open "GET", "http://sandbox.monitis.com/api?action=authToken&apikey=" + apiKey + "&secretkey=" + secretKey, False
+objHTTP.open "GET", "http://www.monitis.com/api?action=authToken&apikey=" + apiKey + "&secretkey=" + secretKey, False
 objHTTP.send
 token = DissectStr(objHTTP.responseText, "authToken"":""", """")
 
 'Requests the monitor list in order to find the MonitorID
 tag = "[FaxMaker]"
-objHTTP.open "GET", "http://sandbox.monitis.com/customMonitorApi?action=getMonitors&apikey=" + apiKey + "&tag=" + tag + "&output=xml", False
+objHTTP.open "GET", "http://www.monitis.com/customMonitorApi?action=getMonitors&apikey=" + apiKey + "&tag=" + tag + "&output=xml", False
 objHTTP.send
 
 Set oResp = CreateObject("Microsoft.XMLDOM")
@@ -63,7 +65,7 @@ oResp.async = False
 oResp.LoadXML(objHTTP.responseText)
 
 for each oNode in oResp.documentElement.childnodes
-	if oNode.selectSingleNode("name").text = "FaxMaker Queue Size" then 
+	if oNode.selectSingleNode("name").text = "FAX01GUSPRA Queue Size" then 
 		monitorID = oNode.selectSingleNode("id").text
 	exit for
 	end if
@@ -75,7 +77,7 @@ For folderCount = 0 to numQueues - 1
 Next
 
 unixDate = CStr(DateDiff("s", "01/01/1970 00:00:00", DateSerial(Year(dtGMT), Month(dtGMT), Day(dtGMT)) + TimeSerial(Hour(dtGMT), Minute(dtGMT), Second(dtGMT)))) + "000"
-objHTTP.open "POST", "http://sandbox.monitis.com/customMonitorApi", False
+objHTTP.open "POST", "http://www.monitis.com/customMonitorApi", False
 objHTTP.setRequestHeader "Content-Type", "application/x-www-form-urlencoded"
 objHTTP.send "apikey=" + apiKey + "&validation=token&authToken=" + token + "&timestamp=" + FmtDate(dtGMT) + "&action=addResult&monitorId=" + monitorID + "&checktime=" + unixDate + "&results=" + results
 

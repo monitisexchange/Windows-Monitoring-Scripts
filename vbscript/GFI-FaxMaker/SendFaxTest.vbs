@@ -26,7 +26,7 @@ writer.Close
 Set writer = NOTHING
 
 'Copy attachment to FAXmaker API folder
-fso.CopyFile "test1.jpg", apiPath
+fso.CopyFile "test.jpg", apiPath
 
 ' Look for .ok or .err file until timeout expires
 i = 0
@@ -66,8 +66,10 @@ else
 end if
 
 'cleanup
-fso.DeleteFile apiPath & timerName & ".txt"
-fso.DeleteFile apiPath & "test1.jpg"
+if (fso.FileExists(apiPath & timerName & ".txt")) then
+	fso.DeleteFile apiPath & timerName & ".txt"
+	fso.DeleteFile apiPath & "test.jpg"
+end if
 Set fso = NOTHING
 
 'begin Monitis Upload
