@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<Monitor>
+	<ExchangeServices>
+		<properties>
+			<HostName></HostName>
+			<Tag></Tag>
+			<Name></Name>
+			<Type></Type>
+		</properties>
+		<monitorID>0</monitorID>
+		<metrics>
+			<metric name="MSExchangeADTopology" resultParams="State:ADTopology::3;" WMIclass="Win32_Service where Name = 'MSExchangeADTopology'" methodName="State">false</metric>
+			<metric name="ADAM_MSExchange" resultParams="State1:ADAM::3;" WMIclass="Win32_Service where Name = 'ADAM_MSExchange'" methodName="State">false</metric>
+			<metric name="MSExchangeAB" resultParams="State2:AB::3;" WMIclass="Win32_Service where Name = 'MSExchangeAB'" methodName="State">false</metric>
+			<metric name="MSExchangeAntispamUpdate" resultParams="State3:AntispamUpdate::3;" WMIclass="Win32_Service where Name = 'MSExchangeAntispamUpdate'" methodName="State">false</metric>
+			<metric name="MSExchangeEdgeCredential" resultParams="State4:EdgeCredential::3;" WMIclass="Win32_Service where Name = 'MSExchangeEdgeCredential'" methodName="State">false</metric>
+			<metric name="MSExchangeEdgeSync" resultParams="State5:EdgeSync::3;" WMIclass="Win32_Service where Name = 'MSExchangeEdgeSync'" methodName="State">false</metric>
+			<metric name="MSExchangeFDS" resultParams="State6:FDS::3;" WMIclass="Win32_Service where Name = 'MSExchangeFDS'" methodName="State">false</metric>
+			<metric name="MSExchangeFBA" resultParams="State7:FBA::3;" WMIclass="Win32_Service where Name = 'MSExchangeFBA'" methodName="State">false</metric>
+			<metric name="MSExchangeIMAP4" resultParams="State8:IMAP4::3;" WMIclass="Win32_Service where Name = 'MSExchangeIMAP4'" methodName="State">false</metric>
+			<metric name="MSExchangeIS" resultParams="State9:IS::3;" WMIclass="Win32_Service where Name = 'MSExchangeIS'" methodName="State">false</metric>
+			<metric name="MSExchangeMailSubmission" resultParams="State10:MailSubmission::3;" WMIclass="Win32_Service where Name = 'MSExchangeMailSubmission'" methodName="State">false</metric>
+			<metric name="MSExchangeMailboxAssistants" resultParams="State11:MailboxAssistants::3;" WMIclass="Win32_Service where Name = 'MSExchangeMailboxAssistants'" methodName="State">false</metric>
+			<metric name="MSExchangeMailboxReplication" resultParams="State12:MailboxReplication::3;" WMIclass="Win32_Service where Name = 'MSExchangeMailboxReplication'" methodName="State">false</metric>
+			<metric name="MSExchangeMonitoring" resultParams="State13:Monitoring::3;" WMIclass="Win32_Service where Name = 'MSExchangeMonitoring'" methodName="State">false</metric>
+			<metric name="MSExchangePOP3" resultParams="State14:POP3::3;" WMIclass="Win32_Service where Name = 'MSExchangePOP3'" methodName="State">false</metric>
+			<metric name="MSExchangeProtectedServiceHost" resultParams="State15:ProtectedServiceHost::3;" WMIclass="Win32_Service where Name = 'MSExchangeProtectedServiceHost'" methodName="State">false</metric>
+			<metric name="MSExchangeRepl" resultParams="State16:Repl::3;" WMIclass="Win32_Service where Name = 'MSExchangeRepl'" methodName="State">false</metric>
+			<metric name="MSExchangeRPC" resultParams="State17:RPC::3;" WMIclass="Win32_Service where Name = 'MSExchangeRPC'" methodName="State">false</metric>
+			<metric name="MSExchangeSearch" resultParams="State18:Search::3;" WMIclass="Win32_Service where Name = 'MSExchangeSearch'" methodName="State">false</metric>
+			<metric name="WSBExchange" resultParams="State19:WSB::3;" WMIclass="Win32_Service where Name = 'WSBExchange'" methodName="State">false</metric>
+			<metric name="MSExchangeServiceHost" resultParams="State20:ServiceHost::3;" WMIclass="Win32_Service where Name = 'MSExchangeServiceHost'" methodName="State">false</metric>
+			<metric name="MSSpeechService" resultParams="State21:MSSpeechService::3;" WMIclass="Win32_Service where Name = 'MSSpeechService'" methodName="State">false</metric>
+			<metric name="MSExchangeSA" resultParams="State22:SA::3;" WMIclass="Win32_Service where Name = 'MSExchangeSA'" methodName="State">false</metric>
+			<metric name="MSExchangeThrottling" resultParams="State23:Throttling::3;" WMIclass="Win32_Service where Name = 'MSExchangeThrottling'" methodName="State">false</metric>
+			<metric name="MSExchangeTransport" resultParams="State24:Transport::3;" WMIclass="Win32_Service where Name = 'MSExchangeTransport'" methodName="State">false</metric>
+			<metric name="MSExchangeTransportLogSearch" resultParams="State25:TransportLogSearch::3;" WMIclass="Win32_Service where Name = 'MSExchangeTransportLogSearch'" methodName="State">false</metric>
+			<metric name="MSExchangeUM" resultParams="State26:UM::3;" WMIclass="Win32_Service where Name = 'MSExchangeUM'" methodName="State">false</metric>
+		</metrics>
+	</ExchangeServices>
+</Monitor>
