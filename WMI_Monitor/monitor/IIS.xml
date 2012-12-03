@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<Monitor>
+  <IIS>
+    <properties>
+      <HostName></HostName>
+      <Monitor_Group></Monitor_Group>
+      <Name></Name>
+      <Type></Type>
+    </properties>
+    <InstanceName></InstanceName>
+    <monitorID>0</monitorID>
+	<DashboardTag  exists = "" ID = ""></DashboardTag>
+    <task>
+    </task>
+	<filepath></filepath>
+    <metrics>
+      <metric name="Anonymous Users/sec" resultParams="users2:Anonymous Users:sec:2;" WMIclass="Win32_PerfRawData_W3SVC_WebService" instance="true" methodName="AnonymousUsersPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Bytes Received/sec" resultParams="received4:Bytes Received:sec:2;" WMIclass="Win32_PerfRawData_W3SVC_WebService" instance="true" methodName="BytesReceivedPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Bytes Sent/sec" resultParams="sent4:Bytes Sent:sec:2;" WMIclass="Win32_PerfRawData_W3SVC_WebService" instance="true" methodName="BytesSentPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Connection Attempts/sec" resultParams="attempts:Con attempts:sec:2;" WMIclass="Win32_PerfRawData_W3SVC_WebService" instance="true" methodName="ConnectionAttemptsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Current Connections" resultParams="conn:Connections::2;" WMIclass="Win32_PerfRawData_W3SVC_WebService" instance="true" methodName="CurrentConnections" isdinamic="Raw Value">false</metric>
+      <metric name="Get Requests/sec" resultParams="req:Get Requests:sec:2;" WMIclass="Win32_PerfRawData_W3SVC_WebService" instance="true" methodName="GetRequestsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Logon Attempts/sec" resultParams="attempts1:Logon Attempts:sec:2;" WMIclass="Win32_PerfRawData_W3SVC_WebService" instance="true" methodName="LogonAttemptsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Service Uptime" resultParams="uptime:Service Uptime::2;" WMIclass="Win32_PerfRawData_W3SVC_WebService" instance="true" methodName="ServiceUptime" isdinamic="Raw Value">false</metric>
+      <metric name="Current Anonymous Users" resultParams="users:Anonymous Users::2;" WMIclass="Win32_PerfRawData_W3SVC_WebService" instance="true" methodName="CurrentAnonymousUsers" isdinamic="Raw Value">false</metric>
+      <metric name="Locked Errors/sec" resultParams="locked:locked errors:sec:2;" WMIclass="Win32_PerfRawData_W3SVC_WebService" instance="true" methodName="LockedErrorsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Request Bytes In Total" resultParams="req1:Bytes in total::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" instance="true" methodName="RequestBytesInTotal" isdinamic="Raw Value">false</metric>
+      <metric name="Request Bytes Out Total" resultParams="req2:Bytes Out total::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" instance="true" methodName="RequestBytesOutTotal" isdinamic="Raw Value">false</metric>
+      <metric name="Request Execution Time" resultParams="req3:Execution Time::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" instance="true" methodName="RequestExecutionTime" isdinamic="Raw Value">false</metric>
+      <metric name="Requests Disconnected" resultParams="req4:Execution Time::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" instance="true" methodName="RequestsDisconnected" isdinamic="Raw Value">false</metric>
+      <metric name="Requests Executing" resultParams="req5:Requests Executing::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" instance="true" methodName="RequestsExecuting" isdinamic="Raw Value">false</metric>
+      <metric name="Requests Failed Total" resultParams="req6:Requests Failed::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" instance="true" methodName="RequestsFailedTotal" isdinamic="Raw Value">false</metric>
+      <metric name="Requests Not Found" resultParams="req7:Not Found::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" instance="true" methodName="RequestsNotFound" isdinamic="Raw Value">false</metric>
+      <metric name="Requests/sec" resultParams="req8:Request:sec:2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" instance="true" methodName="RequestsPerSec" isdinamic="Per time Unit">false</metric>
+      <metric name="Requests Queued" resultParams="req9:Request Queued::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" instance="true" methodName="RequestsQueued" isdinamic="Raw Value">false</metric>
+      <metric name="Requests Succeeded" resultParams="req11:Requests Succeeded::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" instance="true" methodName="RequestsSucceeded" isdinamic="Raw Value">false</metric>
+      <metric name="Requests Timed Out" resultParams="req12:Requests timeout::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" instance="true" methodName="RequestsTimedOut" isdinamic="Raw Value">false</metric>
+      <metric name="Request Wait Time" resultParams="req13:Requests wait time::2;" WMIclass="Win32_PerfRawData_ASP_ActiveServerPages" instance="true" methodName="RequestWaitTime" isdinamic="Raw Value">false</metric>
+      <metric name="BLOB Cache Hits" resultParams="hits:Cache Hits::2;" WMIclass="Win32_PerfRawData_InetInfo_InternetInformationServicesGlobal" instance="true" methodName="BLOBCacheHits" isdinamic="Raw Value">false</metric>
+      <metric name="BLOB Cache Hits Percent" resultParams="hits1:Cache Hits pertime::2;" WMIclass="Win32_PerfRawData_InetInfo_InternetInformationServicesGlobal" instance="true" methodName="BLOBCacheHitsPercent" isdinamic="Percent">false</metric>
+      <metric name="BLOB Cache Misses" resultParams="cashe:Cache misses::2;" WMIclass="Win32_PerfRawData_InetInfo_InternetInformationServicesGlobal" instance="true" methodName="BLOBCacheMisses" isdinamic="Raw Value">false</metric>
+      <metric name="URI Cache Hits" resultParams="cashe1:Cache hits::2;" WMIclass="Win32_PerfRawData_InetInfo_InternetInformationServicesGlobal" instance="true" methodName="URICacheHits" isdinamic="Raw Value">false</metric>
+      <metric name="URI Cache Hits Percent" resultParams="cashe2:Cache hits pertime::2;" WMIclass="Win32_PerfRawData_InetInfo_InternetInformationServicesGlobal" instance="true" methodName="URICacheHitsPercent" isdinamic="Percent">false</metric>
+    </metrics>
+  </IIS>
+</Monitor>

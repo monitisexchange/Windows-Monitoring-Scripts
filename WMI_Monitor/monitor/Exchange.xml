@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<Monitor>
+  <exchange>
+    <properties>
+      <HostName></HostName>
+      <Monitor_Group></Monitor_Group>
+      <Name></Name>
+      <Type></Type>
+    </properties>
+    <InstanceName>
+    </InstanceName>
+    <monitorID>0</monitorID>
+	<DashboardTag exists = "true" ID = ""></DashboardTag>
+	<task></task>
+	<filepath></filepath>
+    <metrics>
+      <metric name="Requests/sec (Over ALL)" resultParams="request1:request:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeWS_MSExchangeWS" instance="true" methodName="RequestsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Requests/sec (Only Auto Discovery)" resultParams="request2:request:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeAutodiscover_MSExchangeAutodiscover" instance="true" methodName="RequestsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Requests/sec (For OWA only)" resultParams="request3:request:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeOWA_MSExchangeOWA" instance="true" methodName="RequestsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Current Unique Users" resultParams="users:Unique Users::2;" WMIclass="Win32_PerfRawData_MSExchangeOWA_MSExchangeOWA" instance="true" methodName="CurrentUniqueUsers" isdinamic="Raw Value">false</metric>
+      <metric name="Sync Commands/sec" resultParams="sync:sync commands:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeActiveSync_MSExchangeActiveSync" instance="true" methodName="SyncCommandsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Requests/sec (For ActiveSync only)" resultParams="request4:request:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeActiveSync_MSExchangeActiveSync" instance="true" methodName="RequestsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Average Response Time" resultParams="response:Average Response::2;" WMIclass="Win32_PerfRawData_MSExchangeOWA_MSExchangeOWA" instance="true" methodName="AverageResponseTime" isdinamic="Difference">false</metric>
+      <metric name="Average Agent Processing Time sec" resultParams="time:Agent Processing Time:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeExtensibilityAgents_MSExchangeExtensibilityAgents" instance="true" methodName="AverageAgentProcessingTimesec" isdinamic="Difference">false</metric>
+      <metric name="Log Threads Waiting" resultParams="log:log threads waiting::2;" WMIclass="Win32_PerfRawData_ESE_MSExchangeDatabaseInstances" instance="true" methodName="LogThreadsWaiting" isdinamic="Raw Value">false</metric>
+      <metric name="IO Database Writes/sec" resultParams="writes:IO Database Writes:sec:2;" WMIclass="Win32_PerfRawData_ESE_MSExchangeDatabaseInstances" instance="true" methodName="IODatabaseWritesPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="IO Database Reads/sec" resultParams="reads:IO Database Reads:sec:2;" WMIclass="Win32_PerfRawData_ESE_MSExchangeDatabaseInstances" instance="true" methodName="IODatabaseReadsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Dumpster Item Count" resultParams="count:Dumpster Item Count::2;" WMIclass="Win32_PerfRawData_MSExchangeTransportDumpster_MSExchangeTransportDumpster" instance="true" methodName="DumpsterItemCount" isdinamic="Raw Value">false</metric>
+      <metric name="Dumpster Inserts/sec" resultParams="insert:Dumpster Inserts:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeTransportDumpster_MSExchangeTransportDumpster" instance="true" methodName="DumpsterInsertsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Messages Sent/sec (SMTP)" resultParams="sent:Messages Sent:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeTransportSmtpSend_MSExchangeTransportSmtpSend" instance="true" methodName="MessagesSentPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Messages Received/sec (SMTP)" resultParams="received:Messages Received:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeTransportSMTPReceive_MSExchangeTransportSMTPReceive" instance="true" methodName="MessagesReceivedPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Retry Mailbox Delivery Queue Length" resultParams="queue:Retry Mailbox Delivery Queue Length::2;" WMIclass="Win32_PerfRawData_MSExchangeTransportQueues_MSExchangeTransportQueues" instance="true" methodName="RetryMailboxDeliveryQueueLength" isdinamic="Raw Value">false</metric>
+      <metric name="Active Remote Delivery Queue Length" resultParams="queue1:Active Remote Delivery Queue Length::2;" WMIclass="Win32_PerfRawData_MSExchangeTransportQueues_MSExchangeTransportQueues" instance="true" methodName="ActiveRemoteDeliveryQueueLength" isdinamic="Raw Value">false</metric>
+      <metric name="Replay Queue Length" resultParams="Length:Replay Queue Length::2;" WMIclass="Win32_PerfRawData_MSExchangeReplication_MSExchangeReplication" instance="true" methodName="ReplayQueueLength" isdinamic="Raw Value">false</metric>
+      <metric name="Copy Queue Length" resultParams="Length1:Copy Queue Length::2;" WMIclass="Win32_PerfRawData_MSExchangeReplication_MSExchangeReplication" instance="true" methodName="CopyQueueLength" isdinamic="Raw Value">false</metric>
+      <metric name="Successful Submissions/sec" resultParams="submissions:Successful Submissions:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeMailSubmission_MSExchangeMailSubmission" instance="true" methodName="SuccessfulSubmissionsPerSecond" isdinamic="Per time Unit">false</metric>
+      <metric name="RPC Slow Requests latency average msec" resultParams="latency:latency average:msec:2;" WMIclass="Win32_PerfRawData_MSExchangeStoreInterface_MSExchangeStoreInterface" instance="true" methodName="RPCSlowRequestslatencyaveragemsec" isdinamic="Difference">false</metric>
+      <metric name="RPC Requests failed Percent" resultParams="request5:RPC Requests failed:perc:2;" WMIclass="Win32_PerfRawData_MSExchangeStoreInterface_MSExchangeStoreInterface" instance="true" methodName="RPCRequestsfailedPercent" isdinamic="Percent">false</metric>
+      <metric name="ROP Requests outstanding" resultParams="request6:RPC Requests outstanding::2;" WMIclass="Win32_PerfRawData_MSExchangeStoreInterface_MSExchangeStoreInterface" instance="true" methodName="ROPRequestsoutstanding" isdinamic="Raw Value">false</metric>
+      <metric name="User Count" resultParams="count1:User Count::2;" WMIclass="Win32_PerfRawData_MSExchangeIS_MSExchangeIS" instance="true" methodName="UserCount" isdinamic="Raw Value">false</metric>
+      <metric name="Message Recipients Delivered/sec" resultParams="delivered:Message Recipients Delivered:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeIS_MSExchangeISMailbox" instance="true" methodName="MessageRecipientsDeliveredPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Directory Access LDAP Searches/sec" resultParams="searches:Directory Access LDAP Searches:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeIS_MSExchangeISClient" instance="true" methodName="DirectoryAccessLDAPSearchesPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Directory Access LDAP Reads/sec" resultParams="reads1:Directory Access LDAP Reads:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeIS_MSExchangeISClient" instance="true" methodName="DirectoryAccessLDAPReadsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="RPC Operations/sec" resultParams="operations:RPC Operations:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeIS_MSExchangeISClient" instance="true" methodName="RPCOperationsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Database Cache Size MB" resultParams="size:Database Cache Size:MB:2;" WMIclass="Win32_PerfRawData_ESE_MSExchangeDatabase" instance="true" methodName="DatabaseCacheSizeMB" isdinamic="Raw Value">false</metric>
+      <metric name="IO Database Writes Average Latency" resultParams="latency1:IO Database Writes Average Latency::2;" WMIclass="Win32_PerfRawData_ESE_MSExchangeDatabaseInstances" instance="true" methodName="IODatabaseWritesAverageLatency" isdinamic="Difference">false</metric>
+      <metric name="IO Database Reads Average Latency" resultParams="latency2:IO Database Reads Average Latency::2;" WMIclass="Win32_PerfRawData_ESE_MSExchangeDatabaseInstances" instance="true" methodName="IODatabaseReadsAverageLatency" isdinamic="Difference">false</metric>
+      <metric name="Messages Queued For Submission (IS)" resultParams="messages:Messages Queued For Submission::2;" WMIclass="Win32_PerfRawData_MSExchangeIS_MSExchangeISPublic" instance="true" methodName="MessagesQueuedForSubmission" isdinamic="Raw Value">false</metric>
+      <metric name="Messages Queued For Submission (MailBox)" resultParams="messages2:Messages Queued For Submission::2;" WMIclass="Win32_PerfRawData_MSExchangeIS_MSExchangeISMailbox" instance="true" methodName="MessagesQueuedForSubmission" isdinamic="Raw Value">false</metric>
+      <metric name="Client RPCs Failed Server Too Busy" resultParams="client:Client RPCs Failed::2;" WMIclass="Win32_PerfRawData_MSExchangeIS_MSExchangeIS" instance="true" methodName="ClientRPCsFailedServerTooBusy" isdinamic="Raw Value">false</metric>
+      <metric name="Messages Submitted/sec" resultParams="messages1:Messages Submitted:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeIS_MSExchangeISMailbox" instance="true" methodName="MessagesSubmittedPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Messages Sent/sec" resultParams="sent:Messages Sent:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeIS_MSExchangeISMailbox" instance="true" methodName="MessagesSentPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Messages Delivered/sec" resultParams="delivered1:Messages Delivered:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeIS_MSExchangeISMailbox" instance="true" methodName="MessagesDeliveredPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="RPC Average Latency" resultParams="latency3:RPC Average Latency::2;" WMIclass="Win32_PerfRawData_MSExchangeIS_MSExchangeISClient" instance="true" methodName="RPCAverageLatency" isdinamic="Difference">false</metric>
+      <metric name="RPC Num of Slow Packets" resultParams="packets:RPC Slow Packets::2;" WMIclass="Win32_PerfRawData_MSExchangeIS_MSExchangeIS" instance="true" methodName="RPCNumofSlowPackets" isdinamic="Raw Value">false</metric>
+      <metric name="RPC Operations/sec" resultParams="operations:RPC Operations:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeIS_MSExchangeIS" instance="true" methodName="RPCOperationsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="RPC Averaged Latency" resultParams="latency4:RPC Averaged Latency::2;" WMIclass="Win32_PerfRawData_MSExchangeIS_MSExchangeIS" instance="true" methodName="RPCAveragedLatency" isdinamic="Difference">false</metric>
+      <metric name="RPC Requests" resultParams="requests:RPC Requests::2;" WMIclass="Win32_PerfRawData_MSExchangeIS_MSExchangeIS" instance="true" methodName="RPCRequests" isdinamic="Raw Value">false</metric>
+      <metric name="Mailbox Server Access Failures" resultParams="failures:Mailbox Server Access Failures::2;" WMIclass="Win32_PerfRawData_MSExchangeAvailabilityService_MSExchangeAvailabilityService" instance="true" methodName="MailboxServerAccessFailures" isdinamic="Raw Value">false</metric>
+      <metric name="Operations over Six Seconds" resultParams="operations1:Operations over Six Seconds::2;" WMIclass="Win32_PerfRawData_MSExchangeUMPerformance_MSExchangeUMPerformance" instance="true" methodName="OperationsoverSixSeconds" isdinamic="Raw Value">false</metric>
+      <metric name="Queued OCS User Event Notifications" resultParams="user:Queued OCS User Event Notifications::2;" WMIclass="Win32_PerfRawData_MSExchangeAvailabilityService_MSExchangeAvailabilityService" instance="true" methodName="QueuedOCSUserEventNotifications" isdinamic="Raw Value">false</metric>
+      <metric name="Unhandled Exceptions/sec" resultParams="exceptions:Unhandled Exceptions:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeAvailabilityService_MSExchangeAvailabilityService" instance="true" methodName="UnhandledExceptionsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Hub Transport Access Failures" resultParams="failures1:Hub Transport Access Failures::2;" WMIclass="Win32_PerfRawData_MSExchangeAvailabilityService_MSExchangeAvailabilityService" instance="true" methodName="HubTransportAccessFailures" isdinamic="Raw Value">false</metric>
+      <metric name="Direct Access Failures" resultParams="failures2:Direct Access Failures::2;" WMIclass="Win32_PerfRawData_MSExchangeAvailabilityService_MSExchangeAvailabilityService" instance="true" methodName="DirectAccessFailures" isdinamic="Raw Value">false</metric>
+      <metric name="Call Answer Queued Messages" resultParams="messages3:Call Answer Queued Messages::2;" WMIclass="Win32_PerfRawData_MSExchangeAvailabilityService_MSExchangeAvailabilityService" instance="true" methodName="CallAnswerQueuedMessages" isdinamic="Raw Value">false</metric>
+      <metric name="Database Cache Size MB" resultParams="cache:Database Cache Size:MB:2;" WMIclass="Win32_PerfRawData_ESE_MSExchangeDatabase" instance="true" methodName="DatabaseCacheSizeMB" isdinamic="Raw Value">false</metric>
+      <metric name="Average bytes Per message" resultParams="bytes:Average bytes Per message::2;" WMIclass="Win32_PerfRawData_MSExchangeTransportSMTPReceive_MSExchangeTransportSMTPReceive" instance="true" methodName="AveragebytesPermessage" isdinamic="Difference">false</metric>
+      <metric name="Messages Completed Delivery/sec" resultParams="Delivery:Messages Completed Delivery:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeTransportQueues_MSExchangeTransportQueues" instance="true" methodName="MessagesCompletedDeliveryPerSecond" isdinamic="Per time Unit">false</metric>
+      <metric name="Messages Submitted/sec" resultParams="Delivery:Messages Submitted:sec:2;" WMIclass="Win32_PerfRawData_MSExchangeTransportQueues_MSExchangeTransportQueues" instance="true" methodName="MessagesSubmittedPerSecond" isdinamic="Per time Unit">false</metric>
+      <metric name="Unreachable Queue Length" resultParams="queue2:Unreachable Queue Length::2;" WMIclass="Win32_PerfRawData_MSExchangeTransportQueues_MSExchangeTransportQueues" instance="true" methodName="UnreachableQueueLength" isdinamic="Raw Value">false</metric>
+      <metric name="Retry Remote Delivery Queue Length" resultParams="queue3:Retry Remote Delivery Queue Length::2;" WMIclass="Win32_PerfRawData_MSExchangeTransportQueues_MSExchangeTransportQueues" instance="true" methodName="RetryRemoteDeliveryQueueLength" isdinamic="Raw Value">false</metric>
+      <metric name="Aggregate Delivery Queue Length All Queues" resultParams="queue4:Aggregate Delivery Queue Length::2;" WMIclass="Win32_PerfRawData_MSExchangeTransportQueues_MSExchangeTransportQueues" instance="true" methodName="AggregateDeliveryQueueLengthAllQueues" isdinamic="Raw Value">false</metric>
+    </metrics>
+  </exchange>
+</Monitor>

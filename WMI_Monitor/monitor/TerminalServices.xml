@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<Monitor>
+  <TerminalServices>
+    <properties>
+      <HostName></HostName>
+      <Monitor_Group></Monitor_Group>
+      <Name></Name>
+      <Type></Type>
+    </properties>
+    <InstanceName></InstanceName>
+    <monitorID>0</monitorID>
+	<DashboardTag exists = "" ID = ""></DashboardTag>
+    <task>
+    </task>
+	<filepath></filepath>
+    <metrics>
+      <metric name="Thread Count" resultParams="thread:Thread Count::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" instance="false" methodName="ThreadCount" isdinamic="Raw Value">false</metric>
+      <metric name="Virtual Bytes" resultParams="VirtBytes:Virtual Bytes::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" instance="false" methodName="VirtualBytes" isdinamic="Raw Value">false</metric>
+      <metric name="Input Async Overflow" resultParams="asyncover:Input Async Overflow:sec:2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" instance="false" methodName="InputAsyncOverflow" isdinamic="Raw Value">false</metric>
+      <metric name="Input Timeouts" resultParams="inptmout:Input Timeouts::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" instance="false" methodName="InputTimeouts" isdinamic="Raw Value">false</metric>
+      <metric name="Output Bytes" resultParams="OutputBytes:Output Bytes::2;" WMIclass="Win32_PerfRawData_TermService_TerminalServicesSession where Name = 'Services'" instance="false" methodName="OutputBytes" isdinamic="Raw Value">false</metric>
+      <metric name="Available Licenses" resultParams="AvailableLicenses:AvailableLicenses::2;" WMIclass="Win32_TSLicenseKeyPack" instance="true" methodName="AvailableLicenses" isdinamic="Raw Value">false</metric>
+      <metric name="Available MBytes" resultParams="AvailableMBytes:AvailableMBytes::2;" WMIclass="Win32_PerfRawData_PerfOS_Memory" instance="true" methodName="AvailableMBytes" isdinamic="Raw Value">false</metric>
+      <metric name="Total Sessions" resultParams="TotalSessions:TotalSessions::2;" WMIclass="Win32_TerminalService" instance="true" methodName="TotalSessions" isdinamic="Raw Value">false</metric>
+      <metric name="Disconnected Sessions" resultParams="DisconnectedSessions:DisconnectedSessions::2;" WMIclass="Win32_TerminalService" instance="true" methodName="DisconnectedSessions" isdinamic="Raw Value">false</metric>
+    </metrics>
+  </TerminalServices>
+</Monitor>

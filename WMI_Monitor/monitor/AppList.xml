@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<Application>
+  <MSSQL config="MSSQL.xml">false</MSSQL>
+  <IIS config="IIS.xml">false</IIS>
+  <TerminalServices config="TerminalServices.xml">false</TerminalServices>
+  <Bandwidth config="Bandwidth.xml">false</Bandwidth>
+  <Exchange config="Exchange.xml">false</Exchange>
+  <SharePoint config="SharePoint.xml">false</SharePoint>
+</Application>

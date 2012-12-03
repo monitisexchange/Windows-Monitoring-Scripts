@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<Monitor>
+  <SharePoint>
+    <properties>
+      <HostName></HostName>
+      <Monitor_Group></Monitor_Group>
+      <Name></Name>
+      <Type></Type>
+    </properties>
+    <InstanceName></InstanceName>
+    <monitorID>0</monitorID>
+	<DashboardTag exists = "" ID = ""></DashboardTag>
+	<task></task>
+	<filepath></filepath>
+    <metrics>
+      <metric name="Web Service Bytes Sent/sec" resultParams="param1:Bytes Sent:sec:2;" WMIclass="Win32_PerfRawData_W3SVC_WebService" instance="true" methodName="BytesSentPersec" isdinamic="Raw Value">false</metric>
+      <metric name="Web Service Current Connections" resultParams="param2:Current Connections::2;" WMIclass="Win32_PerfRawData_W3SVC_WebService" instance="true" methodName="CurrentConnections" isdinamic="Raw Value">false</metric>
+      <metric name="Web Service Bytes Received/sec" resultParams="param3:Bytes Received:sec:2;" WMIclass="Win32_PerfRawData_W3SVC_WebService" instance="true" methodName="BytesReceivedPersec" isdinamic="Raw Value">false</metric>
+      <metric name="Web Service Connection Attempts" resultParams="param4:Connection Attempts::2;" WMIclass="Win32_PerfRawData_W3SVC_WebService" instance="true" methodName="ConnectionAttemptsPersec" isdinamic="Raw Value">false</metric>
+      <metric name="Cache Total Entries" resultParams="param5:Cache Total Entries::2;" WMIclass="Win32_PerfRawData_ASPNET_ASPNETApplications" instance="true" methodName="CacheTotalEntries" isdinamic="Raw Value">false</metric>
+      <metric name="Cache Total Hits" resultParams="param6:Cache Total Hits::2;" WMIclass="Win32_PerfRawData_ASPNET_ASPNETApplications" instance="true" methodName="CacheTotalHits" isdinamic="Raw Value">false</metric>
+      <metric name="Cache Total Misses" resultParams="param7:Cache Total Misses::2;" WMIclass="Win32_PerfRawData_ASPNET_ASPNETApplications " instance="true" methodName="CacheTotalMisses" isdinamic="Raw Value">false</metric>
+      <metric name="Output Cache Entries" resultParams="param8:Output Cache Entries::2;" WMIclass="Win32_PerfRawData_ASPNET_ASPNETApplications" instance="true" methodName="OutputCacheEntries" isdinamic="Raw Value">false</metric>
+      <metric name="Output Cache Hits" resultParams="param9:Output Cache Hits::2;" WMIclass="Win32_PerfRawData_ASPNET_ASPNETApplications" instance="true" methodName="OutputCacheHits" isdinamic="Raw Value">false</metric>
+      <metric name="Output Cache Misses" resultParams="param10:Output Cache Misses::2;" WMIclass="Win32_PerfRawData_ASPNET_ASPNETApplications" instance="false" methodName="OutputCacheMisses" isdinamic="Raw Value">false</metric>
+      <metric name="Blob cache hit count" resultParams="param11:Blob cache hit count::2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_SharePointDiskBasedCache" instance="false" methodName="Blobcachehitcount" isdinamic="Raw Value">false</metric>
+      <metric name="Blob cache hits/sec" resultParams="param12:Blob cache hits:sec:2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_SharePointDiskBasedCache" instance="false" methodName="BlobcachehitsPersec" isdinamic="Raw Value">false</metric>
+      <metric name="Blob cache miss count" resultParams="param13:Blob cache miss count::2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_SharePointDiskBasedCache" instance="false" methodName="Blobcachemisscount" isdinamic="Raw Value">false</metric>
+      <metric name="Total blob disk size" resultParams="param14:Total blob disk size::2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_SharePointDiskBasedCache" instance="false" methodName="Totalblobdisksize" isdinamic="Raw Value">false</metric>
+      <metric name="Total objects in the Blob cache" resultParams="param15:Total objects in the Blob cache:sec:2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_SharePointDiskBasedCache" instance="false" methodName="TotalobjectsinBlobCache" isdinamic="Raw Value">false</metric>
+      <metric name="Publishing cache hit count" resultParams="param16:Publishing cache hit count::2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_SharePointPublishingCache" instance="true" methodName="Publishingcachehitcount" isdinamic="Raw Value">false</metric>
+      <metric name="Publishing cache hits/sec" resultParams="param17:Publishing cache hits:sec:2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_SharePointPublishingCache" instance="true" methodName="PublishingcachehitsPersec" isdinamic="Raw Value">false</metric>
+      <metric name="Publishing cache miss count" resultParams="param18:Publishing cache miss count::2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_SharePointPublishingCache" instance="true" methodName="Publishingcachemisscount" isdinamic="Raw Value">false</metric>
+      <metric name="Total objects" resultParams="param19:Total objects::2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_SharePointPublishingCache" instance="true" methodName="Totalobjects" isdinamic="Raw Value">false</metric>
+      <metric name="Succeeded Search Queries" resultParams="param21:Succeeded Search Queries::2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_OSSSearchIndexerPlugin" instance="true" methodName="QueriesSucceeded" isdinamic="Raw Value">false</metric>
+      <metric name="Search Query Rate" resultParams="param22:Search Query Rate::2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_OSSSearchIndexerPlugin" instance="true" methodName="PropagationRate" isdinamic="Raw Value">false</metric>
+      <metric name="Queries" resultParams="param23:Queries::2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_OSSSearchIndexerPlugin" instance="true" methodName="Queries" isdinamic="Raw Value">false</metric>
+      <metric name="Active Requests" resultParams="param24:Active Requests::2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_ExcelCalculationServices" instance="true" methodName="ActiveRequests" isdinamic="Raw Value">false</metric>
+      <metric name="Cached charts Requested/sec" resultParams="param25:Cached charts Requested:sec:2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_ExcelCalculationServices" instance="true" methodName="CachedChartsRequestedPersec" isdinamic="Raw Value">false</metric>
+      <metric name="Current size of memory cache" resultParams="param26:Current size of memory cache::2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_ExcelCalculationServices" instance="true" methodName="CurrentSizeofMemoryCache" isdinamic="Raw Value">false</metric>
+      <metric name="Number of Business Logic Assemblies in Memory" resultParams="param27:No of business logic assemblies in memory::2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_InfoPathFormsServices14" instance="true" methodName="NumberBusinessLogicAssembliesinMemory" isdinamic="Raw Value">false</metric>
+      <metric name="Number of Cached Form Templates" resultParams="param28:No of cached form templates::2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_InfoPathFormsServices14" instance="true" methodName="NumberofCachedFormTemplates" isdinamic="Raw Value">false</metric>
+      <metric name="Number of Form Templates in Memory" resultParams="param29:No of form templates in memory::2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_InfoPathFormsServices14" instance="true" methodName="NumberofFormTemplatesinMemory" isdinamic="Raw Value">false</metric>
+      <metric name="Number of Forms in Memory" resultParams="param30:No of forms in memory::2;" WMIclass="Win32_PerfRawData_MicrosoftWindowsSharePointSharePointServer_InfoPathFormsServices14" instance="true" methodName="NumberofFormsinMemory" isdinamic="Raw Value">false</metric>
+    </metrics>
+  </SharePoint>
+</Monitor>

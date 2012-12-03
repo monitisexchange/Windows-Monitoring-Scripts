@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<Monitor>
+  <Bandwidth>
+    <properties>
+      <HostName></HostName>
+      <Monitor_Group></Monitor_Group>
+      <Name></Name>
+      <Type></Type>
+    </properties>
+    <InstanceName></InstanceName>
+    <monitorID>0</monitorID>
+	<DashboardTag exists = "false" ID = "0"></DashboardTag>
+    <task>
+    </task>
+	<filepath></filepath>
+    <metrics>
+      <metric name="Bytes Received/sec" resultParams="bytesRec:bytes Received:sec:2;" WMIclass="Win32_PerfRawData_Tcpip_NetworkInterface" instance="true" methodName="BytesReceivedPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Bytes Sent/sec" resultParams="BytesSent:Bytes Sent:sec:2;" WMIclass="Win32_PerfRawData_Tcpip_NetworkInterface" instance="true" methodName="BytesSentPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Bytes Total/sec" resultParams="BytesTotal:Bytes Total:sec:2;" WMIclass="Win32_PerfRawData_Tcpip_NetworkInterface" instance="true" methodName="BytesTotalPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Packets Received/sec" resultParams="PacketsReceived:Packets Received:sec:2;" WMIclass="Win32_PerfRawData_Tcpip_NetworkInterface" instance="true" methodName="PacketsReceivedPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Packets Sent/sec" resultParams="PacketsSent:Packets Sent:sec:2;" WMIclass="Win32_PerfRawData_Tcpip_NetworkInterface" instance="true" methodName="PacketsSentPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Packets Received Discarded" resultParams="PacketsRec:Packets Received::2;" WMIclass="Win32_PerfRawData_Tcpip_NetworkInterface" instance="true" methodName="PacketsReceivedDiscarded" isdinamic="Raw Value">false</metric>
+      <metric name="Packets Received Errors" resultParams="PacketsRec1:Packets Received Errors::2;" WMIclass="Win32_PerfRawData_Tcpip_NetworkInterface" instance="true" methodName="PacketsReceivedErrors" isdinamic="Difference">false</metric>
+      <metric name="Packets/sec" resultParams="Packets:Packets:sec:2;" WMIclass="Win32_PerfRawData_Tcpip_NetworkInterface" instance="true" methodName="PacketsPerSec" isdinamic="Per time Unit">false</metric>
+      <metric name="Packets Outbound Errors" resultParams="PacketsOutbound:Packets Outbound Errors::2;" WMIclass="Win32_PerfRawData_Tcpip_NetworkInterface" instance="true" methodName="PacketsOutboundErrors" isdinamic="Raw Value">false</metric>
+      <metric name="Packets Outbound Discarded" resultParams="PacketsOutbound1:Packets Outbound Discarded::2;" WMIclass="Win32_PerfRawData_Tcpip_NetworkInterface" instance="true" methodName="PacketsOutboundDiscarded" isdinamic="Raw Value">false</metric>
+    </metrics>
+  </Bandwidth>
+</Monitor>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<Monitor>
+  <MSSQL>
+    <properties>
+      <HostName></HostName>
+      <Monitor_Group></Monitor_Group>
+      <Name></Name>
+      <Type></Type>
+    </properties>
+    <InstanceName></InstanceName>
+    <monitorID>0</monitorID>
+	<DashboardTag exists = "" ID = ""></DashboardTag>
+	<task></task>
+	<filepath></filepath>
+    <metrics>
+      <metric name="Data Files SizeKB" resultParams="df:Data Files:KB:2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerDatabases" instance="true" methodName="DataFilesSizeKB" isdinamic="Raw Value">false</metric>
+      <metric name="Percent Log Used" resultParams="Lguse:Log Used:Perc:2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerDatabases" instance="true" methodName="PercentLogUsed" isdinamic="Percent">false</metric>
+      <metric name="Transactions/sec" resultParams="trans:Transactions:perc:2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerDatabases" instance="true" methodName="TransactionsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Log Bytes Flushed/sec" resultParams="Lgbytes:Log Bytes Flushed:perc:2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerDatabases" instance="true" methodName="LogBytesFlushedPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Log Flushes/sec" resultParams="LgFl:Log Flushes:perc:2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerDatabases" instance="true" methodName="LogFlushesPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Active Transactions" resultParams="actTrans:Active Transactions::2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerDatabases" instance="true" methodName="ActiveTransactions" isdinamic="Raw Value">false</metric>
+      <metric name="Log Cache Reads/sec" resultParams="LgChread:Log Cache Reads:perc:2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerDatabases " instance="true" methodName="LogCacheReadsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Cache Hit Ratio" resultParams="LgFlSize:Log File size::2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerCatalogMetadata" instance="true" methodName="CacheHitRatio" isdinamic="Raw Value">false</metric>
+      <metric name="Cache Entries Count" resultParams="hitrat:CacheHitRatio::2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerCatalogMetadata" instance="true" methodName="CacheEntriesCount" isdinamic="Raw Value">false</metric>
+      <metric name="Lock Timeouts/sec" resultParams="LchTmout:Lock Timeouts:perc:2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerLocks where name = 'Database'" instance="false" methodName="LockTimeoutsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Lock Requests/sec" resultParams="lochreq:Lock Requests:perc:2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerLocks where name = 'Database'" instance="false" methodName="LockRequestsPersec" isdinamic="Per time Unit">false</metric>
+      <metric name="Errors/sec" resultParams="err:Errors:perc:2;" WMIclass="Win32_PerfRawData_MSSQLSERVER_SQLServerSQLErrors where name = 'User Errors'" instance="false" methodName="ErrorsPersec" isdinamic="Per time Unit">false</metric>
+    </metrics>
+  </MSSQL>
+ </Monitor>
+  
