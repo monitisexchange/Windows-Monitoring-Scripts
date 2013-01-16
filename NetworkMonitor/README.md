@@ -51,11 +51,11 @@ Alternatively, you can run the __start.bat__ script from specified during setup 
 #### The Network monitor measures the following metrics  
 
 <pre>
-   server name
-   account ID
-   user’s full name
-   loggon time
-   status (OK/NOK)
+   server name       domain registered server name 
+   user ID           specifies the relative ID (RID) of the user.
+   full name         full name specifies the name of the user account on a particular domain or machine
+   loggon time       indicates the date and time the user last logged on to the system
+   status (OK/NOK)   indicates the avaliability of the server
 </pre>
 
 
