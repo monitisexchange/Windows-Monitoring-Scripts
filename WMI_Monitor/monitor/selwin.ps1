@@ -2,12 +2,16 @@
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Xml")
 clear-host
+[xml]$xmlApiKey = (Get-Content $path"\ApiKey.xml")
+$connect_to = $xmlApiKey.Key.ConnectTo
+$apikey = $xml1.Key.ApiKey
+$secretkey = $xml1.Key.SecretKey
 if($newFile -eq $null)
 {
 	New-Variable -Name newFile  -Value 0 -Visibility Public -Option AllScope
 }
 #get OS name
-$OS  = Systeminfo | find "OS Name"
+$OS  = (Get-WmiObject -class Win32_OperatingSystem).Caption
 $d = $OS.ToLower()
 $path = Get-Location
 #load XML file
@@ -62,13 +66,16 @@ function btn_Next
 				$newFile = "$path\metrics$(Get-Random).xml"
 				Copy-Item $path"\$bbb" $newFile
 				$new = '"'+"C:\Program Files\WMIMonitor"+ '"'
-				#read username and password from XML file
 				if (($d.Contains("windows 7")) -or ($d.Contains("server 2008")))
 				{
 					$command ="ICacls $new /grant Users:F /T"
 					cmd.exe /c $command
 				}
 				[xml]$xml1 = (Get-Content $newFile)
+				$xml1.Monitor.childnodes.item(0).SelectSingleNode("ConnectTo").InnerText = $connect_to
+				$xml1.Monitor.childnodes.item(0).SelectSingleNode("ApiKey").InnerText = $apikey
+				$xml1.Monitor.childnodes.item(0).SelectSingleNode("SecretKey").InnerText = $secretkey
+				$xml1.Save($newFile)
 			}
 		}
 		$Form.Close();

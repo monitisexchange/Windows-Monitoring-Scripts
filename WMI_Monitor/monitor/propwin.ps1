@@ -1,9 +1,6 @@
 ﻿[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
 clear-host
-#get OS name
-$OS  = Systeminfo | find "OS Name"
-$d = $OS.ToLower()
 $tabs_obj = New-Object 'System.Collections.Generic.Dictionary[String,String]'
 if($HostNameindex -eq $null)
 {
@@ -11,6 +8,10 @@ if($HostNameindex -eq $null)
 }
 $path = Get-Location
 #Close the current window
+[xml]$xmlApiKey = (Get-Content $path"\ApiKey.xml")
+$apikey = $xmlApiKey.Key.ApiKey
+
+
 function btnExit
 {
 	$res = [System.Windows.Forms.MessageBox]::Show("Are you sure?","Warning",[System.Windows.Forms.MessageBoxButtons]::YesNo)
@@ -28,7 +29,15 @@ $inst_list = @()
 $propCount = $xml1.Monitor.ChildNodes.item(0).SelectSingleNode("properties").ChildNodes.count
 $windowName = $xml1.Monitor.Childnodes.Item(0).Tostring()
 $windowName =  $windowName + " Monitor Properties"
-
+$connect_to = $xml1.Monitor.childnodes.item(0).SelectSingleNode("ConnectTo").InnerText
+if ($connect_to -eq "Monitis")
+{
+	$PortalUrl = "www.monitis.com"
+}
+elseif($connect_to -eq "Monitor.us")
+{
+	$PortalUrl = "www.monitor.us"
+}
 #read selected application properties' values from XML
 function Form_Load
 {
@@ -76,7 +85,10 @@ function Form_Load
 	$Boxes[$HostNameindex].Text = "localhost"
 	GetInstances
 	$Boxes[$HostNameindex].add_Leave({GetInstances})
-	GetPages
+	if ($connect_to -eq "Monitis")
+	{
+		GetPages
+	}
 }
 
 #show the previous window
@@ -141,7 +153,7 @@ function btnNext
 	{
 		$xml1.Monitor.childnodes.item(0).SelectSingleNode("DashboardTag").SetAttribute("exists","false") 
 		$xml1.Monitor.childnodes.item(0).SelectSingleNode("DashboardTag").SetAttribute("ID","")
-		$xml1.Monitor.childnodes.item(0).SelectSingleNode("DashboardTag").InnerText = "newtab"+"$(Get-Random)"
+		$xml1.Monitor.childnodes.item(0).SelectSingleNode("DashboardTag").InnerText = ""
 	}
 	if ($count -gt 0)
 	{
@@ -227,7 +239,7 @@ function GetInstances
 function GetPages
 {
 	$xmlHttp = New-Object -ComObject Microsoft.XMLHTTP
-	$xmlHttp.Open("GET", "http://new.monitis.com/api?apikey=5LDP4L43AM63JAC885MDI5C77I&output=xml&version=2&action=pages", $false)
+	$xmlHttp.Open("GET", "http://$PortalUrl/api?apikey="+$apikey+"&output=xml&version=2&action=pages", $false)
 	$xmlHttp.Send()
 	$response = $xmlHttp.ResponseText
 	$responseXml = $response -as [xml]
@@ -355,6 +367,10 @@ $tabs.Size = New-Object System.Drawing.Size(155, 21)
 $tabs.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDown
 $tabs.AllowDrop = $true;
 $tabs_lbl.Text = "Dashboard Tab"
+if ($connect_to -eq "Monitor.us")
+{
+	$tabs.Enabled = $false
+}
 #-------------------------------------------------------------------------------------------------------------
 #add controls to form
 $Form.Controls.Add($btn_Back)

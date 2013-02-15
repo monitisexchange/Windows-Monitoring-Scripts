@@ -33,7 +33,7 @@ for ($i=0; $i -lt $shortFormatArr.Length; $i++)
 $Format = $FormatStr.TrimEnd("/")
 
 #get OS name
-$OS  = Systeminfo | find "OS Name"
+$OS  = (Get-WmiObject -class Win32_OperatingSystem).Caption
 $d = $OS.ToLower()
 
 #read username and password from XML file
@@ -387,11 +387,14 @@ function startbtn_click
 					$Command = "schtasks /create /tn $taskname /tr ""$taskrun $argumentfile""  /sc $schedul  /mo $modifier /RI $repeat /du $duration /sd $startdate /st $starttime /ed $enddate >status"
 					cmd.exe /c $Command
 					$Form.Close()
+					
 					$xml1.Monitor.ChildNodes.Item(0).SelectSingleNode("task").InnerText = $taskname
 					$xml1.Save($newFile)
 					$Form.Visible = $false
 					$a = Get-Content $path"\status"
 					[System.Windows.Forms.MessageBox]::Show($a)
+					$commandRun = "schtasks /run /tn $taskname>runResult"
+					cmd.exe /c $commandRun
 				}
 				elseif(($d.Contains("windows xp")) -or ($d.Contains("server 2003")))
 				{
@@ -401,10 +404,13 @@ function startbtn_click
 						cmd.exe /c $Command
 						$Form.Close()
 						$Form.Visible = $false
+						
 						$xml1.Monitor.ChildNodes.Item(0).SelectSingleNode("task").InnerText = $taskname
 						$xml1.Save($newFile)
 						$a = Get-Content $path"\status"
 						[System.Windows.Forms.MessageBox]::Show($a)
+						$commandRun = "schtasks /run /tn $taskname>runResult"
+						cmd.exe /c $commandRun
 					}
 					else
 					{
@@ -477,10 +483,13 @@ function startbtn_click
 					cmd.exe /c $Command
 					$Form.Close()
 					$Form.Visible = $false
+					
 					$xml1.Monitor.ChildNodes.Item(0).SelectSingleNode("task").InnerText = $taskname
 					$xml1.Save($newFile)
 					$a = Get-Content $path"\status"
 					[System.Windows.Forms.MessageBox]::Show($a)
+					$commandRun = "schtasks /run /tn $taskname>runResult"
+					cmd.exe /c $commandRun
 				}
 				elseif(($d.Contains("windows xp")) -or ($d.Contains("server 2003")))
 				{
@@ -491,10 +500,13 @@ function startbtn_click
 						cmd.exe /c $Command
 						$Form.Close()
 						$Form.Visible = $false
+						
 						$xml1.Monitor.ChildNodes.Item(0).SelectSingleNode("task").InnerText = $taskname
 						$xml1.Save($newFile)
 						$a = Get-Content $path"\status"
 						[System.Windows.Forms.MessageBox]::Show($a)
+						$commandRun = "schtasks /run /tn $taskname>runResult"
+						cmd.exe /c $commandRun
 					}
 					else
 					{
@@ -539,10 +551,13 @@ function startbtn_click
 					cmd.exe /c $Command
 					$Form.Close()
 					$Form.Visible = $false
+					
 					$xml1.Monitor.ChildNodes.Item(0).SelectSingleNode("task").InnerText = $taskname
 					$xml1.Save($newFile)
 					$a = Get-Content $path"\status"
 					[System.Windows.Forms.MessageBox]::Show($a)
+					$commandRun = "schtasks /run /tn $taskname>runResult"
+					cmd.exe /c $commandRun
 				}
 				elseif(($d.Contains("windows xp")) -or ($d.Contains("server 2003")))
 				{
@@ -551,11 +566,14 @@ function startbtn_click
 						$Command = "schtasks /create /tn $taskname /tr ""C:\WINDOWS\system32\wscript.exe $taskrun $argumentfile"" /sc $schedul /sd $startdate /st $starttime /ru $username /rp $password >status"
 						cmd.exe /c $Command
 						$Form.Close()
-						$Form.Visible = $false
+						
+						#$Form.Visible = $false
 						$xml1.Monitor.ChildNodes.Item(0).SelectSingleNode("task").InnerText = $taskname
 						$xml1.Save($newFile)
 						$a = Get-Content $path"\status"
 						[System.Windows.Forms.MessageBox]::Show($a)
+						$commandRun = "schtasks /run /tn $taskname>runResult"
+						cmd.exe /c $commandRun
 					}
 					else
 					{
@@ -630,10 +648,13 @@ function startbtn_click
 					cmd.exe /c $Command
 					$Form.Close()
 					$Form.Visible = $false
+					
 					$xml1.Monitor.ChildNodes.Item(0).SelectSingleNode("task").InnerText = $taskname
 					$xml1.Save($newFile)
 					$a = Get-Content $path"\status"
 					[System.Windows.Forms.MessageBox]::Show($a)
+					$commandRun = "schtasks /run /tn $Taskname>runResult"
+					cmd.exe /c $commandRun
 				}
 				elseif(($d.Contains("windows xp")) -or ($d.Contains("server 2003")))
 				{
@@ -643,10 +664,13 @@ function startbtn_click
 						cmd.exe /c $Command
 						$Form.Close()
 						$Form.Visible = $false
+						
 						$xml1.Monitor.ChildNodes.Item(0).SelectSingleNode("task").InnerText = $taskname
 						$xml1.Save($newFile)
 						$a = Get-Content $path"\status"
 						[System.Windows.Forms.MessageBox]::Show($a)
+						$commandRun = "schtasks /run /tn $Taskname>runResult"
+						cmd.exe /c $commandRun
 					}
 					else
 					{
@@ -668,10 +692,13 @@ function startbtn_click
 				cmd.exe /c $myCmd 
 				$Form.Close()
 				$Form.Visible = $false
+				
 				$xml1.Monitor.ChildNodes.Item(0).SelectSingleNode("task").InnerText = $taskname
 				$xml1.Save($newFile)
 				$a = Get-Content $path"\status"
 				[System.Windows.Forms.MessageBox]::Show($a)
+				$commandRun = "schtasks /run /tn $Taskname>runResult"
+				cmd.exe /c $commandRun
 			}
 			elseif(($d.Contains("windows xp")) -or ($d.Contains("server 2003")))
 			{
@@ -681,10 +708,13 @@ function startbtn_click
 					cmd.exe /c $myCmd 
 					$Form.Close()
 					$Form.Visible = $false
+					
 					$xml1.Monitor.ChildNodes.Item(0).SelectSingleNode("task").InnerText = $taskname
 					$xml1.Save($newFile)
 					$a = Get-Content $path"\status"
 					[System.Windows.Forms.MessageBox]::Show($a)
+					$commandRun = "schtasks /run /tn $Taskname>runResult"
+					cmd.exe /c $commandRun
 				}
 				else
 				{
@@ -724,10 +754,13 @@ function startbtn_click
 					cmd.exe /c $Command
 					$Form.Close()
 					$Form.Visible = $false
+					
 					$xml1.Monitor.ChildNodes.Item(0).SelectSingleNode("task").InnerText = $taskname
 					$xml1.Save($newFile)
 					$a = Get-Content $path"\status"
 					[System.Windows.Forms.MessageBox]::Show($a)
+					$commandRun = "schtasks /run /tn $taskname>runResult"
+					cmd.exe /c $commandRun
 				}
 				else
 				{
@@ -751,8 +784,7 @@ $Form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedToolWindow
 $Form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
 $Form.ResumeLayout($false)
 $Form.PerformLayout
-$title = $OS.Substring(36)
-$Form.Text = "Create task for " + $title
+$Form.Text = "Create task for " + $OS
 
 # declaration of variables 
 $splitContainer1 = New-Object System.Windows.Forms.SplitContainer

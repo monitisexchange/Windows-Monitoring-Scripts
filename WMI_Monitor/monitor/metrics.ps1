@@ -6,7 +6,7 @@ clear-host
 $path = Get-Location
 
 #get OS name
-$OS  = Systeminfo | find "OS Name"
+$OS  = (Get-WmiObject -class Win32_OperatingSystem).Caption
 $d = $OS.ToLower()
 
 #load XML file

@@ -8,6 +8,9 @@
       <Type></Type>
     </properties>
     <InstanceName></InstanceName>
+	<ConnectTo></ConnectTo>
+	<ApiKey></ApiKey>
+	<SecretKey></SecretKey>
     <monitorID>0</monitorID>
 	<DashboardTag exists = "false" ID = "0"></DashboardTag>
     <task>
